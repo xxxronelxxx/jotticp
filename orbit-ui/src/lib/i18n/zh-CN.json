@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "dashboard": "控制面板",
+    "websites": "网站",
+    "email": "电子邮件",
+    "dns": "DNS",
+    "ssl": "SSL",
+    "databases": "数据库",
+    "files": "文件管理器",
+    "backups": "备份",
+    "cron": "定时任务",
+    "php": "PHP",
+    "cache": "缓存",
+    "apps": "应用安装器",
+    "firewall": "防火墙",
+    "logs": "日志",
+    "users": "用户",
+    "servers": "服务器",
+    "settings": "设置",
+    "dbmanager": "数据库管理器",
+    "reseller": "代理商"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "loading": "加载中…",
+    "error": "错误",
+    "success": "成功",
+    "confirm_delete": "您确定要删除此项吗？此操作无法撤销。",
+    "no_results": "未找到结果",
+    "search": "搜索…",
+    "actions": "操作",
+    "status": "状态",
+    "created": "创建时间",
+    "updated": "更新时间"
+  },
+  "auth": {
+    "login": "登录",
+    "logout": "退出登录",
+    "email": "电子邮件地址",
+    "password": "密码",
+    "totp_code": "验证码",
+    "backup_code": "备用码",
+    "forgot_totp": "丢失了您的验证器？",
+    "signing_in": "正在登录…"
+  },
+  "sites": {
+    "title": "网站",
+    "subtitle": "管理您托管的网站",
+    "add": "添加网站",
+    "domain": "域名",
+    "status": "状态",
+    "php_version": "PHP 版本",
+    "disk_used": "已用磁盘",
+    "created": "创建时间",
+    "no_sites": "暂无网站。添加您的第一个网站以开始使用。"
+  },
+  "email": {
+    "title": "电子邮件",
+    "subtitle": "管理电子邮件账户和设置",
+    "add_account": "添加账户",
+    "mailbox": "邮箱",
+    "quota": "配额",
+    "used": "已用"
+  },
+  "errors": {
+    "network": "网络错误。请检查您的连接。",
+    "unauthorized": "您无权执行此操作。",
+    "not_found": "未找到请求的资源。",
+    "server_error": "服务器错误。请稍后重试。"
+  }
+}

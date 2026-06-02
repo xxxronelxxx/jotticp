@@ -1,0 +1,134 @@
+# OrbitCP App Manifest — Symfony
+# Format version: 1.0
+#
+# Symfony is installed via Composer (create-project symfony/skeleton).
+# Requires PHP 8.2+ and Composer on the server.
+# Uses PHP-FPM runtime with standard OLS/nginx vhost.
+
+[app]
+id              = "symfony"
+name            = "Symfony"
+version         = "7.1.0"
+category        = "framework"
+description     = "Professional PHP framework for web applications. Battle-tested components, Flex recipes, Messenger, Mailer, and an exceptional developer experience."
+min_disk_mb     = 200
+min_memory_mb   = 128
+php_required    = true
+php_min         = "8.2"
+php_max         = "8.4"
+requires_db     = false
+icon            = "https://symfony.com/logos/symfony_black_02.svg"
+docs_url        = "https://symfony.com/doc/7.1/"
+license         = "MIT"
+tags            = ["framework", "php", "composer", "flex", "rest-api"]
+
+[download]
+method  = "composer"
+command = "create-project symfony/skeleton . --no-interaction"
+
+[extract]
+dest_dir = ""
+
+[config]
+config_path = "/home/{{unix_user}}/public_html/.env"
+template = '''
+APP_ENV=prod
+APP_SECRET={{secret_1}}
+DATABASE_URL="mysql://{{db_user}}:{{db_password}}@127.0.0.1:3306/{{db_name}}?serverVersion=8.0"
+'''
+
+[[steps]]
+# Step 1: Install Symfony skeleton via Composer.
+type      = "cli"
+command   = "/usr/bin/composer"
+args      = [
+    "create-project",
+    "symfony/skeleton",
+    "/home/{{unix_user}}/public_html",
+    "7.1.*",
+    "--no-interaction",
+    "--prefer-dist",
+    "--no-dev",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 300
+
+[[steps]]
+# Step 2: Install common Symfony packs (webapp bundle).
+type      = "cli"
+command   = "/usr/bin/composer"
+args      = [
+    "require",
+    "symfony/webapp-meta",
+    "--no-interaction",
+    "--no-dev",
+    "--working-dir=/home/{{unix_user}}/public_html",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 180
+
+[[steps]]
+# Step 3: Clear and warm up the production cache.
+type      = "cli"
+command   = "/usr/bin/php{{php_version}}"
+args      = [
+    "/home/{{unix_user}}/public_html/bin/console",
+    "cache:warmup",
+    "--env=prod",
+    "--no-interaction",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 60
+
+[[steps]]
+# Step 4: Set permissions — var/ directory must be writable.
+type      = "permissions"
+path      = "/home/{{unix_user}}/public_html"
+dir_mode  = "0750"
+file_mode = "0640"
+owner     = "{{unix_user}}"
+group     = "www-data"
+
+[[steps]]
+type      = "permissions"
+path      = "/home/{{unix_user}}/public_html/var"
+dir_mode  = "0770"
+file_mode = "0660"
+owner     = "{{unix_user}}"
+group     = "www-data"
+
+[[steps]]
+# Step 5: Initialise git repository.
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["init", "/home/{{unix_user}}/public_html"]
+run_as    = "{{unix_user}}"
+timeout_s = 10
+
+[[steps]]
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["-C", "/home/{{unix_user}}/public_html", "add", "-A"]
+run_as    = "{{unix_user}}"
+timeout_s = 15
+
+[[steps]]
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["-C", "/home/{{unix_user}}/public_html", "commit", "-m", "Initial OrbitCP install"]
+run_as    = "{{unix_user}}"
+timeout_s = 15
+
+[wizard]
+[[wizard.fields]]
+name        = "php_version"
+label       = "PHP Version"
+type        = "select"
+options     = ["8.4", "8.3", "8.2"]
+default     = "8.3"
+required    = true
+
+[post_install]
+show_credentials = false
+admin_url        = "https://{{domain}}"
+notes            = "Symfony skeleton installed. Run 'php bin/console' for management. APP_SECRET has been auto-generated. var/ directory is writable."

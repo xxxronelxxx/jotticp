@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "websites": "Websites",
+    "email": "Email",
+    "dns": "DNS",
+    "ssl": "SSL",
+    "databases": "Databases",
+    "files": "File Manager",
+    "backups": "Backups",
+    "cron": "Cron Jobs",
+    "php": "PHP",
+    "cache": "Cache",
+    "apps": "App Installer",
+    "firewall": "Firewall",
+    "logs": "Logs",
+    "users": "Users",
+    "servers": "Servers",
+    "settings": "Settings",
+    "dbmanager": "DB Manager",
+    "reseller": "Reseller"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "loading": "Loading…",
+    "error": "Error",
+    "success": "Success",
+    "confirm_delete": "Are you sure you want to delete this? This cannot be undone.",
+    "no_results": "No results found",
+    "search": "Search…",
+    "actions": "Actions",
+    "status": "Status",
+    "created": "Created",
+    "updated": "Updated"
+  },
+  "auth": {
+    "login": "Sign In",
+    "logout": "Sign Out",
+    "email": "Email Address",
+    "password": "Password",
+    "totp_code": "Authentication Code",
+    "backup_code": "Backup Code",
+    "forgot_totp": "Lost your authenticator?",
+    "signing_in": "Signing in…"
+  },
+  "sites": {
+    "title": "Websites",
+    "subtitle": "Manage your hosted websites",
+    "add": "Add Website",
+    "domain": "Domain",
+    "status": "Status",
+    "php_version": "PHP Version",
+    "disk_used": "Disk Used",
+    "created": "Created",
+    "no_sites": "No websites yet. Add your first site to get started."
+  },
+  "email": {
+    "title": "Email",
+    "subtitle": "Manage email accounts and settings",
+    "add_account": "Add Account",
+    "mailbox": "Mailbox",
+    "quota": "Quota",
+    "used": "Used"
+  },
+  "errors": {
+    "network": "Network error. Please check your connection.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "not_found": "The requested resource was not found.",
+    "server_error": "Server error. Please try again later."
+  }
+}

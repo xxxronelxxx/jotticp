@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <!-- Planet core -->
+  <circle cx="12" cy="12" r="2.8" fill="#6366F1"/>
+  <!-- Orbit ring -->
+  <ellipse cx="12" cy="12" rx="8" ry="3.2" stroke="#6366F1" stroke-width="1.5" fill="none" transform="rotate(-30 12 12)"/>
+  <!-- Satellite -->
+  <circle cx="18.9" cy="8.0" r="1.4" fill="#8B5CF6"/>
+</svg>

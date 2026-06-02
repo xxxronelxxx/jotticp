@@ -1,0 +1,26 @@
+[package]
+name        = "orbit-cli"
+version     = "0.1.0"
+edition     = "2021"
+description = "OrbitCP command-line interface"
+license     = "AGPL-3.0-or-later"
+
+[[bin]]
+name = "orbit"
+path = "src/main.rs"
+
+[dependencies]
+clap        = { version = "4", features = ["derive"] }
+reqwest     = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+tokio       = { version = "1", features = ["full"] }
+serde       = { version = "1", features = ["derive"] }
+serde_json  = "1"
+anyhow      = "1"
+colored     = "2"
+tabled      = "0.15"
+dotenvy     = "0.15"
+keyring     = "2"
+toml        = "0.8"
+dirs            = "5"
+clap_complete   = "4"
+rpassword       = "7"

@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "dashboard": "Tableau de bord",
+    "websites": "Sites web",
+    "email": "E-mail",
+    "dns": "DNS",
+    "ssl": "SSL",
+    "databases": "Bases de données",
+    "files": "Gestionnaire de fichiers",
+    "backups": "Sauvegardes",
+    "cron": "Tâches planifiées",
+    "php": "PHP",
+    "cache": "Cache",
+    "apps": "Installateur d'applications",
+    "firewall": "Pare-feu",
+    "logs": "Journaux",
+    "users": "Utilisateurs",
+    "servers": "Serveurs",
+    "settings": "Paramètres",
+    "dbmanager": "Gestionnaire de BDD",
+    "reseller": "Revendeur"
+  },
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "create": "Créer",
+    "loading": "Chargement…",
+    "error": "Erreur",
+    "success": "Succès",
+    "confirm_delete": "Êtes-vous sûr de vouloir supprimer ceci ? Cette action est irréversible.",
+    "no_results": "Aucun résultat trouvé",
+    "search": "Rechercher…",
+    "actions": "Actions",
+    "status": "Statut",
+    "created": "Créé",
+    "updated": "Mis à jour"
+  },
+  "auth": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "totp_code": "Code d'authentification",
+    "backup_code": "Code de secours",
+    "forgot_totp": "Vous avez perdu votre authentificateur ?",
+    "signing_in": "Connexion en cours…"
+  },
+  "sites": {
+    "title": "Sites web",
+    "subtitle": "Gérez vos sites web hébergés",
+    "add": "Ajouter un site",
+    "domain": "Domaine",
+    "status": "Statut",
+    "php_version": "Version PHP",
+    "disk_used": "Espace utilisé",
+    "created": "Créé",
+    "no_sites": "Aucun site pour le moment. Ajoutez votre premier site pour commencer."
+  },
+  "email": {
+    "title": "E-mail",
+    "subtitle": "Gérez les comptes e-mail et les paramètres",
+    "add_account": "Ajouter un compte",
+    "mailbox": "Boîte aux lettres",
+    "quota": "Quota",
+    "used": "Utilisé"
+  },
+  "errors": {
+    "network": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "unauthorized": "Vous n'êtes pas autorisé à effectuer cette action.",
+    "not_found": "La ressource demandée est introuvable.",
+    "server_error": "Erreur serveur. Veuillez réessayer plus tard."
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "nav": {
+    "dashboard": "Panel de control",
+    "websites": "Sitios web",
+    "email": "Correo electrónico",
+    "dns": "DNS",
+    "ssl": "SSL",
+    "databases": "Bases de datos",
+    "files": "Administrador de archivos",
+    "backups": "Copias de seguridad",
+    "cron": "Tareas programadas",
+    "php": "PHP",
+    "cache": "Caché",
+    "apps": "Instalador de aplicaciones",
+    "firewall": "Cortafuegos",
+    "logs": "Registros",
+    "users": "Usuarios",
+    "servers": "Servidores",
+    "settings": "Configuración",
+    "dbmanager": "Gestor de BD",
+    "reseller": "Revendedor"
+  },
+  "common": {
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "loading": "Cargando…",
+    "error": "Error",
+    "success": "Éxito",
+    "confirm_delete": "¿Está seguro de que desea eliminar esto? Esta acción no se puede deshacer.",
+    "no_results": "No se encontraron resultados",
+    "search": "Buscar…",
+    "actions": "Acciones",
+    "status": "Estado",
+    "created": "Creado",
+    "updated": "Actualizado"
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "totp_code": "Código de autenticación",
+    "backup_code": "Código de respaldo",
+    "forgot_totp": "¿Perdió su autenticador?",
+    "signing_in": "Iniciando sesión…"
+  },
+  "sites": {
+    "title": "Sitios web",
+    "subtitle": "Administre sus sitios web alojados",
+    "add": "Agregar sitio web",
+    "domain": "Dominio",
+    "status": "Estado",
+    "php_version": "Versión de PHP",
+    "disk_used": "Disco utilizado",
+    "created": "Creado",
+    "no_sites": "Aún no hay sitios web. Agregue su primer sitio para comenzar."
+  },
+  "email": {
+    "title": "Correo electrónico",
+    "subtitle": "Administre cuentas de correo electrónico y configuración",
+    "add_account": "Agregar cuenta",
+    "mailbox": "Buzón de correo",
+    "quota": "Cuota",
+    "used": "Usado"
+  },
+  "errors": {
+    "network": "Error de red. Por favor, verifique su conexión.",
+    "unauthorized": "No está autorizado para realizar esta acción.",
+    "not_found": "El recurso solicitado no fue encontrado.",
+    "server_error": "Error del servidor. Por favor, inténtelo de nuevo más tarde."
+  }
+}

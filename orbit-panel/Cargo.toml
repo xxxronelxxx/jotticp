@@ -1,0 +1,83 @@
+[package]
+name        = "orbit-panel"
+version     = "0.1.0"
+edition     = "2021"
+description = "OrbitCP main panel API server — Axum/Tokio/PostgreSQL"
+license     = "AGPL-3.0-or-later"
+
+[[bin]]
+name = "orbit-panel"
+path = "src/main.rs"
+
+[dependencies]
+# Workspace shared dependencies
+axum             = { workspace = true }
+tokio            = { workspace = true }
+sqlx             = { workspace = true }
+serde            = { workspace = true }
+serde_json       = { workspace = true }
+tower            = { workspace = true }
+tower-http       = { workspace = true }
+tracing          = { workspace = true }
+tracing-subscriber = { workspace = true }
+anyhow           = { workspace = true }
+thiserror        = { workspace = true }
+uuid             = { workspace = true }
+chrono           = { workspace = true }
+jsonwebtoken     = { workspace = true }
+totp-rs          = { workspace = true }
+argon2           = { workspace = true }
+instant-acme     = { workspace = true }
+reqwest          = { workspace = true }
+rustls           = { workspace = true }
+futures-util     = { workspace = true }
+tokio-stream     = { workspace = true }
+tokio-util       = { workspace = true }
+bytes            = { workspace = true }
+rand             = { workspace = true }
+base64           = { workspace = true }
+sha2             = { workspace = true }
+hex              = { workspace = true }
+regex            = { workspace = true }
+handlebars       = { workspace = true }
+dotenvy          = { workspace = true }
+
+# orbit-panel specific
+axum-extra       = { version = "0.10", features = ["typed-header", "multipart"] }
+governor         = "0.7"          # rate limiting per API key
+redis            = { workspace = true }  # Valkey-compatible
+tonic            = { workspace = true }  # gRPC client to call orbit-agent
+prost            = { workspace = true }
+image            = { version = "0.25", default-features = false, features = ["png", "webp"] }  # logo resize
+rcgen            = { version = "0.13", features = ["pem"] }  # CSR + keypair generation for ACME
+zip              = "2"            # app installer: .zip archive support
+flate2           = "1"            # app installer: .tar.gz support
+tar              = "0.4"          # app installer: tar extraction
+ed25519-dalek    = { version = "2", features = ["std"] }  # app installer: Ed25519 archive signature verification
+toml             = "0.8"                                  # app installer: parse per-app TOML manifests from ORBIT_APPS_DIR
+walkdir          = "2"            # malware scanner: directory traversal
+time             = { version = "0.3", features = ["serde"] }
+urlencoding      = "2"            # URL-encode/decode for file manager paths, API params
+base32           = "0.4"          # TOTP secret encoding (RFC 4648 base32)
+rust_decimal     = { workspace = true }  # DECIMAL SQL type for package pricing
+async-trait      = { workspace = true }  # async fn in traits (axum 0.8 removed re-export)
+x509-parser      = "0.16"               # parse TLS cert notAfter for expiry tracking
+tower_governor   = { workspace = true }  # per-IP rate limiting on auth routes
+metrics          = { workspace = true }  # Prometheus metrics
+metrics-exporter-prometheus = { workspace = true }
+hmac             = "0.12"               # HMAC-SHA256 for webhook signatures
+
+[build-dependencies]
+tonic-build = "0.12"
+
+[dev-dependencies]
+axum-test  = "20"
+tokio-test = "0.4"
+
+[features]
+default     = []
+console     = ["dep:console-subscriber"]  # tokio-console profiling (dev only)
+
+[dependencies.console-subscriber]
+version  = "0.4"
+optional = true

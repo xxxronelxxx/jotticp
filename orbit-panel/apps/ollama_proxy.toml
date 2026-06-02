@@ -1,0 +1,170 @@
+# OrbitCP App Manifest — LangChain + Ollama Proxy
+# Format version: 1.0
+#
+# Installs a FastAPI-based proxy that bridges LangChain to a local or remote
+# Ollama instance. Requires Python runtime (Step 4.9). Set OLLAMA_BASE_URL
+# in .env to point at the Ollama server.
+
+[app]
+id              = "ollama_proxy"
+name            = "LangChain + Ollama Proxy"
+version         = "1.x"
+category        = "ai"
+description     = "AI inference proxy with LangChain integration and Ollama backend. Drop-in OpenAI-compatible REST layer over any Ollama model."
+min_disk_mb     = 200
+min_memory_mb   = 512
+python_required = true
+python_min      = "3.11"
+requires_db     = false
+runtime         = "python"
+icon            = ""
+docs_url        = "https://python.langchain.com/docs/"
+license         = "MIT"
+tags            = ["ai", "llm", "langchain", "ollama", "proxy", "python"]
+
+[download]
+method  = "pip"
+command = "pip install langchain langchain-community fastapi uvicorn httpx"
+
+[extract]
+dest_dir = ""
+
+[config]
+config_path = "/home/{{unix_user}}/.env"
+template = '''
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+MODEL_NAME=llama3.2
+SECRET_KEY={{secret_1}}
+APP_ENV=production
+ALLOWED_ORIGINS=https://{{domain}}
+'''
+
+[[steps]]
+# Step 1: Create virtualenv.
+type      = "cli"
+command   = "/usr/bin/python3"
+args      = ["-m", "venv", "/home/{{unix_user}}/.venv"]
+run_as    = "{{unix_user}}"
+timeout_s = 60
+
+[[steps]]
+# Step 2: Install LangChain and dependencies.
+type      = "cli"
+command   = "bash"
+args      = [
+    "-c",
+    "source /home/{{unix_user}}/.venv/bin/activate && pip install --quiet langchain langchain-community langchain-ollama fastapi 'uvicorn[standard]' httpx python-decouple",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 300
+
+[[steps]]
+# Step 3: Write proxy main.py scaffold.
+type    = "write_file"
+path    = "/home/{{unix_user}}/public_html/main.py"
+content = '''
+"""LangChain + Ollama proxy — installed by OrbitCP.
+
+Set OLLAMA_BASE_URL in your .env to point to your Ollama instance.
+Exposes an OpenAI-compatible /v1/chat/completions endpoint.
+"""
+import os
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+from langchain_ollama import OllamaLLM
+
+app = FastAPI(title="LangChain/Ollama Proxy", version="1.0.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.getenv("ALLOWED_ORIGINS", "*").split(","),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
+MODEL_NAME = os.getenv("MODEL_NAME", "llama3.2")
+
+class ChatRequest(BaseModel):
+    prompt: str
+    model: str = MODEL_NAME
+    temperature: float = 0.7
+
+class ChatResponse(BaseModel):
+    response: str
+    model: str
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy", "ollama_url": OLLAMA_BASE_URL, "model": MODEL_NAME}
+
+@app.post("/v1/chat", response_model=ChatResponse)
+async def chat(req: ChatRequest):
+    try:
+        llm = OllamaLLM(base_url=OLLAMA_BASE_URL, model=req.model, temperature=req.temperature)
+        result = llm.invoke(req.prompt)
+        return ChatResponse(response=result, model=req.model)
+    except Exception as e:
+        raise HTTPException(status_code=502, detail=f"Ollama error: {e}")
+'''
+
+[[steps]]
+# Step 4: Install systemd service unit.
+type = "systemd_unit"
+unit_name = "ollama-proxy-{{unix_user}}"
+unit_content = '''
+[Unit]
+Description=LangChain/Ollama Proxy — {{domain}}
+After=network.target
+
+[Service]
+Type=simple
+User={{unix_user}}
+Group={{unix_user}}
+WorkingDirectory=/home/{{unix_user}}/public_html
+EnvironmentFile=/home/{{unix_user}}/.env
+ExecStart=/home/{{unix_user}}/.venv/bin/uvicorn main:app \
+    --host 127.0.0.1 \
+    --port {{service_port}} \
+    --log-level info
+Restart=on-failure
+RestartSec=5s
+Slice=website-{{unix_user}}.slice
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
+'''
+enable = true
+start  = true
+
+[[steps]]
+# Step 5: Write nginx reverse proxy config.
+type = "nginx_proxy"
+upstream_url       = "http://127.0.0.1:{{service_port}}"
+proxy_read_timeout = "300s"
+proxy_set_headers  = { "X-Forwarded-For" = "$proxy_add_x_forwarded_for", "X-Forwarded-Proto" = "https" }
+
+[service_port]
+port_range_start = 8000
+port_range_end   = 9000
+
+[wizard]
+[[wizard.fields]]
+name        = "ollama_url"
+label       = "Ollama Base URL"
+type        = "text"
+placeholder = "http://127.0.0.1:11434"
+required    = false
+
+[[wizard.fields]]
+name        = "model_name"
+label       = "Default Model"
+type        = "text"
+placeholder = "llama3.2"
+required    = false
+
+[post_install]
+show_credentials = false
+admin_url        = "https://{{domain}}/docs"
+notes            = "LangChain + Ollama proxy running. Set OLLAMA_BASE_URL in ~/.env to point to your Ollama instance. POST to /v1/chat with {prompt, model, temperature}. Check /health for status."

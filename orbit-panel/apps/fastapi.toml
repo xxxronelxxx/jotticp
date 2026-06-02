@@ -1,0 +1,190 @@
+# OrbitCP App Manifest — FastAPI + Uvicorn
+# Format version: 1.0
+#
+# FastAPI is installed via pip into the site's .venv virtualenv.
+# Requires Python runtime (Step 4.9). Served by Uvicorn behind nginx.
+# Auto-generated API documentation at /docs (Swagger UI) and /redoc.
+
+[app]
+id              = "fastapi"
+name            = "FastAPI + Uvicorn"
+version         = "0.111.x"
+category        = "ai"
+description     = "Modern, fast Python API framework with async support. Automatic OpenAPI docs, Pydantic validation, async-first design. Perfect for AI/ML APIs."
+min_disk_mb     = 150
+min_memory_mb   = 256
+python_required = true
+python_min      = "3.11"
+requires_db     = false
+runtime         = "python"
+icon            = "https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png"
+docs_url        = "https://fastapi.tiangolo.com"
+license         = "MIT"
+tags            = ["api", "python", "async", "openapi", "ai", "ml"]
+
+[download]
+method  = "pip"
+command = "pip install fastapi uvicorn[standard] pydantic sqlalchemy alembic python-multipart"
+
+[extract]
+dest_dir = ""
+
+[config]
+config_path = "/home/{{unix_user}}/.env"
+template = '''
+APP_ENV=production
+SECRET_KEY={{secret_1}}
+DATABASE_URL=sqlite:////home/{{unix_user}}/public_html/app.db
+ALLOWED_ORIGINS=https://{{domain}}
+'''
+
+[[steps]]
+# Step 1: Create virtualenv.
+type      = "cli"
+command   = "/usr/bin/python3"
+args      = ["-m", "venv", "/home/{{unix_user}}/.venv"]
+run_as    = "{{unix_user}}"
+timeout_s = 60
+
+[[steps]]
+# Step 2: Install FastAPI and dependencies.
+type      = "cli"
+command   = "bash"
+args      = [
+    "-c",
+    "source /home/{{unix_user}}/.venv/bin/activate && pip install --quiet fastapi 'uvicorn[standard]' pydantic sqlalchemy alembic python-multipart python-decouple",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 180
+
+[[steps]]
+# Step 3: Write minimal main.py scaffold.
+type    = "write_file"
+path    = "/home/{{unix_user}}/public_html/main.py"
+content = '''
+"""FastAPI application — installed by OrbitCP."""
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import os
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # startup
+    yield
+    # shutdown
+
+app = FastAPI(
+    title="My API",
+    description="Deployed via OrbitCP AI Wizard",
+    lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=os.getenv("ALLOWED_ORIGINS", "*").split(","),
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+async def root():
+    return {"status": "ok", "message": "FastAPI is running"}
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+'''
+
+[[steps]]
+# Step 4: Write requirements.txt.
+type    = "write_file"
+path    = "/home/{{unix_user}}/public_html/requirements.txt"
+content = '''
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+pydantic>=2.7.0
+sqlalchemy>=2.0.0
+alembic>=1.13.0
+python-multipart>=0.0.9
+python-decouple>=3.8
+'''
+
+[[steps]]
+# Step 5: Install systemd service unit.
+type = "systemd_unit"
+unit_name = "fastapi-{{unix_user}}"
+unit_content = '''
+[Unit]
+Description=FastAPI (Uvicorn) — {{domain}}
+After=network.target
+
+[Service]
+Type=simple
+User={{unix_user}}
+Group={{unix_user}}
+WorkingDirectory=/home/{{unix_user}}/public_html
+EnvironmentFile=/home/{{unix_user}}/.env
+ExecStart=/home/{{unix_user}}/.venv/bin/uvicorn main:app \
+    --host 127.0.0.1 \
+    --port {{service_port}} \
+    --workers 4 \
+    --access-log \
+    --log-level info
+Restart=on-failure
+RestartSec=5s
+Slice=website-{{unix_user}}.slice
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
+'''
+enable = true
+start  = true
+
+[[steps]]
+# Step 6: Write nginx reverse proxy config.
+type = "nginx_proxy"
+upstream_url       = "http://127.0.0.1:{{service_port}}"
+proxy_read_timeout = "120s"
+proxy_set_headers  = { "X-Forwarded-For" = "$proxy_add_x_forwarded_for", "X-Forwarded-Proto" = "https" }
+
+[[steps]]
+# Step 7: Initialise git repository.
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["init", "/home/{{unix_user}}/public_html"]
+run_as    = "{{unix_user}}"
+timeout_s = 10
+
+[[steps]]
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["-C", "/home/{{unix_user}}/public_html", "add", "-A"]
+run_as    = "{{unix_user}}"
+timeout_s = 15
+
+[[steps]]
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["-C", "/home/{{unix_user}}/public_html", "commit", "-m", "Initial OrbitCP install"]
+run_as    = "{{unix_user}}"
+timeout_s = 15
+
+[service_port]
+port_range_start = 8000
+port_range_end   = 9000
+
+[wizard]
+[[wizard.fields]]
+name        = "app_title"
+label       = "API Title"
+type        = "text"
+placeholder = "My AI API"
+required    = false
+max_length  = 64
+
+[post_install]
+show_credentials = false
+admin_url        = "https://{{domain}}/docs"
+notes            = "FastAPI app running. Access /docs for auto-generated Swagger UI and /redoc for ReDoc. Update main.py to add your routes. Uvicorn running as systemd unit fastapi-{{unix_user}}."

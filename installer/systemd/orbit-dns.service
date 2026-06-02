@@ -1,0 +1,49 @@
+[Unit]
+Description=OrbitCP DNS Proxy Daemon (PowerDNS REST API wrapper)
+After=network.target pdns.service
+Wants=pdns.service
+
+[Service]
+Type=simple
+User=orbitcp
+Group=orbitcp
+WorkingDirectory=/opt/orbitcp
+ExecStart=/opt/orbitcp/bin/orbit-dns
+Restart=always
+RestartSec=5
+StartLimitBurst=3
+StartLimitIntervalSec=60
+EnvironmentFile=/etc/orbitcp/dns.env
+LimitNOFILE=16384
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=orbit-dns
+
+# Graceful shutdown
+TimeoutStopSec=15
+KillMode=mixed
+KillSignal=SIGTERM
+
+# Security hardening
+# orbit-dns only needs network access to talk to PowerDNS REST API
+# and make outbound UDP DNS queries for propagation checks
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log/orbitcp
+CapabilityBoundingSet=
+AmbientCapabilities=
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+RestrictRealtime=true
+SystemCallFilter=@system-service @network-io
+SystemCallErrorNumber=EPERM
+
+[Install]
+WantedBy=multi-user.target

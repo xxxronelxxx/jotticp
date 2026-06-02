@@ -1,0 +1,30 @@
+[Unit]
+Description=OrbitCP MCP Server
+Documentation=https://orbitcp.io/docs/mcp
+After=network.target orbit-panel.service
+Requires=orbit-panel.service
+
+[Service]
+Type=simple
+User=orbitcp
+Group=orbitcp
+ExecStart=/usr/local/bin/orbit-mcp --http
+Environment=ORBIT_PANEL_URL=http://127.0.0.1:2087
+EnvironmentFile=/etc/orbitcp/mcp.env
+
+# Restart policy
+Restart=on-failure
+RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/orbitcp
+
+# Resource limits
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+[package]
+name        = "orbit-mcp"
+version     = "0.1.0"
+edition     = "2021"
+description = "OrbitCP MCP server — exposes all admin operations as MCP tools for AI agents"
+license     = "AGPL-3.0-or-later"
+
+[[bin]]
+name = "orbit-mcp"
+path = "src/main.rs"
+
+[dependencies]
+axum          = { workspace = true }
+tokio         = { workspace = true }
+serde         = { workspace = true }
+serde_json    = { workspace = true }
+reqwest       = { workspace = true }
+tracing       = { workspace = true }
+tracing-subscriber = { workspace = true }
+anyhow        = { workspace = true }
+uuid          = { workspace = true }

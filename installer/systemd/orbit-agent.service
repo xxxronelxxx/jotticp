@@ -1,0 +1,42 @@
+[Unit]
+Description=OrbitCP Managed Server Agent (gRPC/mTLS)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/orbitcp
+ExecStart=/opt/orbitcp/bin/orbit-agent
+Restart=always
+RestartSec=5
+StartLimitBurst=3
+StartLimitIntervalSec=60
+EnvironmentFile=/etc/orbitcp/agent.env
+LimitNOFILE=65536
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=orbit-agent
+
+# Graceful shutdown
+TimeoutStopSec=30
+KillMode=mixed
+KillSignal=SIGTERM
+
+# orbit-agent requires elevated privileges to:
+# - create Unix users, set cgroup limits, write web server config,
+#   manage PHP-FPM pools, run postmap, install Let's Encrypt certs.
+# Hardened as much as possible while retaining those capabilities.
+NoNewPrivileges=false
+PrivateTmp=false
+ProtectSystem=false
+ProtectHome=false
+ReadWritePaths=/etc /var /opt /run /home
+CapabilityBoundingSet=CAP_CHOWN CAP_DAC_OVERRIDE CAP_SETUID CAP_SETGID CAP_NET_BIND_SERVICE CAP_KILL
+AmbientCapabilities=CAP_CHOWN CAP_DAC_OVERRIDE CAP_SETUID CAP_SETGID
+ProtectKernelTunables=false
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+# gRPC listens on port 7443
+[Install]
+WantedBy=multi-user.target

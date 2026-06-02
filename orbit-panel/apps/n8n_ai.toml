@@ -1,0 +1,131 @@
+# OrbitCP App Manifest — n8n AI Automation
+# Format version: 1.0
+#
+# n8n is installed via npm. Requires Node.js runtime (Step 4.10),
+# a PostgreSQL database (Step 2.10), and Valkey (Step 4.5).
+# Served via nginx reverse proxy.
+
+[app]
+id              = "n8n_ai"
+name            = "n8n AI Automation"
+version         = "1.43.x"
+category        = "ai"
+description     = "Workflow automation platform with 400+ integrations and native AI nodes. Connect APIs, databases, and AI models visually."
+min_disk_mb     = 500
+min_memory_mb   = 512
+node_required   = true
+node_min        = "18"
+node_max        = "22"
+requires_db     = "postgresql"
+valkey_required = true
+runtime         = "nodejs"
+icon            = "https://n8n.io/favicon.ico"
+docs_url        = "https://docs.n8n.io"
+license         = "Sustainable Use"
+tags            = ["automation", "workflow", "ai", "integration", "nodejs", "nocode"]
+
+[download]
+method  = "npm"
+command = "install n8n"
+
+[extract]
+dest_dir = ""
+
+[config]
+config_path = "/home/{{unix_user}}/.env"
+template = '''
+N8N_HOST=0.0.0.0
+N8N_PORT={{service_port}}
+N8N_PROTOCOL=https
+N8N_EDITOR_BASE_URL=https://{{domain}}
+WEBHOOK_URL=https://{{domain}}
+DB_TYPE=postgresdb
+DB_POSTGRESDB_HOST=127.0.0.1
+DB_POSTGRESDB_PORT=5432
+DB_POSTGRESDB_DATABASE={{db_name}}
+DB_POSTGRESDB_USER={{db_user}}
+DB_POSTGRESDB_PASSWORD={{db_password}}
+QUEUE_MODE=redis
+QUEUE_BULL_REDIS_HOST=127.0.0.1
+QUEUE_BULL_REDIS_PORT=6379
+N8N_ENCRYPTION_KEY={{secret_1}}
+N8N_USER_FOLDER=/home/{{unix_user}}/.n8n
+EXECUTIONS_DATA_PRUNE=true
+EXECUTIONS_DATA_MAX_AGE=720
+'''
+
+[[steps]]
+# Step 1: Install n8n globally under site user (via nvm-managed npm).
+type      = "cli"
+command   = "bash"
+args      = [
+    "--login", "-c",
+    "source /home/{{unix_user}}/.nvm/nvm.sh && nvm use {{node_version}} && cd /home/{{unix_user}} && npm install n8n",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 600
+
+[[steps]]
+# Step 2: Create .n8n user data directory.
+type  = "makedirs"
+paths = ["/home/{{unix_user}}/.n8n"]
+owner = "{{unix_user}}"
+group = "{{unix_user}}"
+mode  = "0750"
+
+[[steps]]
+# Step 3: Install systemd service unit.
+type = "systemd_unit"
+unit_name = "n8n-{{unix_user}}"
+unit_content = '''
+[Unit]
+Description=n8n Workflow Automation — {{domain}}
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User={{unix_user}}
+Group={{unix_user}}
+WorkingDirectory=/home/{{unix_user}}
+EnvironmentFile=/home/{{unix_user}}/.env
+ExecStart=/home/{{unix_user}}/.nvm/versions/node/v{{node_version}}/bin/node \
+    /home/{{unix_user}}/node_modules/n8n/bin/n8n start
+Restart=on-failure
+RestartSec=10s
+# n8n needs enough file descriptors for webhooks
+LimitNOFILE=65536
+Slice=website-{{unix_user}}.slice
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
+'''
+enable = true
+start  = true
+
+[[steps]]
+# Step 4: Write nginx reverse proxy config (WebSocket support required).
+type = "nginx_proxy"
+upstream_url           = "http://127.0.0.1:{{service_port}}"
+proxy_read_timeout     = "300s"
+proxy_http_version     = "1.1"
+websocket_upgrade      = true
+proxy_set_headers = {Upgrade = "$http_upgrade", Connection = "upgrade", "X-Forwarded-For" = "$proxy_add_x_forwarded_for", "X-Forwarded-Proto" = "https"}
+
+[service_port]
+port_range_start = 5678
+port_range_end   = 6678
+
+[wizard]
+[[wizard.fields]]
+name     = "node_version"
+label    = "Node.js Version"
+type     = "select"
+options  = ["22", "20", "18"]
+default  = "20"
+required = true
+
+[post_install]
+show_credentials = false
+admin_url        = "https://{{domain}}"
+notes            = "n8n running as systemd unit n8n-{{unix_user}}. Open the UI to create your first workflow. The encryption key is stored in ~/.env — back it up! Executions older than 30 days are pruned automatically."

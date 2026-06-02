@@ -1,0 +1,11 @@
+# OrbitCP — authenticate Dovecot against postgres email_accounts table.
+driver = pgsql
+connect = host=127.0.0.1 dbname=orbitcp user=orbitcp password=orbitcp_dev_pass
+default_pass_scheme = ARGON2ID
+
+# %u = full email; we treat address (or domain_id+local_part) as the username.
+password_query =   SELECT     ea.address           AS user,     ea.password_hash     AS password   FROM email_accounts ea   WHERE ea.address = '%u'     AND ea.deleted_at IS NULL     AND ea.status NOT IN ('suspended', 'disabled')
+
+# Static userdb — all mailboxes under /var/mail/vhosts/domain/local_part
+# We split %u into local + domain via SQL too.
+user_query =   SELECT     999                 AS uid,     988                 AS gid,     '/var/mail/vhosts/' || split_part(ea.address, '@', 2) || '/' || split_part(ea.address, '@', 1) AS home,     'maildir:/var/mail/vhosts/' || split_part(ea.address, '@', 2) || '/' || split_part(ea.address, '@', 1) AS mail   FROM email_accounts ea   WHERE ea.address = '%u'     AND ea.deleted_at IS NULL
