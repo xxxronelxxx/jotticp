@@ -1,0 +1,36 @@
+# Secrets — NEVER commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.csr
+secrets/
+certs/
+
+# Build artifacts
+target/
+node_modules/
+.svelte-kit/
+build/
+dist/
+
+# Databases
+*.db
+*.sqlite
+
+# Logs
+*.log
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
