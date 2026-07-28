@@ -1,6 +1,6 @@
-# OrbitCP — authenticate Dovecot against postgres email_accounts table.
+# JottiCP — authenticate Dovecot against postgres email_accounts table.
 driver = pgsql
-connect = host=127.0.0.1 dbname=orbitcp user=orbitcp password=orbitcp_dev_pass
+connect = host=127.0.0.1 dbname=jottiecp user=jottiecp password=jottiecp_dev_pass
 default_pass_scheme = ARGON2ID
 
 # %u = full email; we treat address (or domain_id+local_part) as the username.

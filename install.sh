@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 # ============================================================
-# OrbitCP — One-Command Installer
-# https://github.com/multidigitaltools/OrbitCP
+# JottiCP — One-Command Installer
+# https://jottiecp.dev-spb.ru
 # ============================================================
 set -euo pipefail
 
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; BOLD='\033[1m'; NC='\033[0m'
 
-log()  { echo -e "${GREEN}[OrbitCP]${NC} $*"; }
+log()  { echo -e "${GREEN}[JottiCP]${NC} $*"; }
 warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 err()  { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 
-ORBITCP_VERSION="1.0.0"
-INSTALL_DIR="/opt/orbitcp"
-DATA_DIR="/var/lib/orbitcp"
-BACKUP_DIR="/var/backups/orbitcp"
-LOG_DIR="/var/log/orbitcp"
+JOTTICP_VERSION="0.0.1"
+INSTALL_DIR="/opt/jottiecp"
+DATA_DIR="/var/lib/jottiecp"
+BACKUP_DIR="/var/backups/jottiecp"
+LOG_DIR="/var/log/jottiecp"
 
 banner() {
 cat << 'BANNER'
@@ -26,8 +26,8 @@ cat << 'BANNER'
 | |_| | |  | |_) | | | |___ |  __/
  \___/|_|  |_.__/|_|_|\____||_|
 BANNER
-echo -e "${BLUE}OrbitCP v${ORBITCP_VERSION} — Rust-Powered Web Hosting Panel${NC}"
-echo -e "${YELLOW}https://multidigitaltools.com/products/orbitcp${NC}"
+echo -e "${BLUE}JottiCP v${JOTTICP_VERSION} — Rust-Powered Web Hosting Panel${NC}"
+echo -e "${YELLOW}https://dev-spb.ru/products/jottiecp${NC}"
 echo ""
 }
 
@@ -79,11 +79,11 @@ setup_database() {
   systemctl start postgresql
   systemctl enable postgresql
 
-  sudo -u postgres psql -c "CREATE USER orbitcp WITH PASSWORD '${DB_PASS}';" 2>/dev/null || true
-  sudo -u postgres psql -c "CREATE DATABASE orbitcp OWNER orbitcp;" 2>/dev/null || true
-  sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE orbitcp TO orbitcp;" 2>/dev/null || true
+  sudo -u postgres psql -c "CREATE USER jottiecp WITH PASSWORD '${DB_PASS}';" 2>/dev/null || true
+  sudo -u postgres psql -c "CREATE DATABASE jottiecp OWNER jottiecp;" 2>/dev/null || true
+  sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE jottiecp TO jottiecp;" 2>/dev/null || true
 
-  echo "DATABASE_URL=postgresql://orbitcp:${DB_PASS}@127.0.0.1:5432/orbitcp"
+  echo "DATABASE_URL=postgresql://jottiecp:${DB_PASS}@127.0.0.1:5432/jottiecp"
 }
 
 setup_valkey() {
@@ -92,11 +92,11 @@ setup_valkey() {
   systemctl enable redis-server 2>/dev/null || systemctl enable redis 2>/dev/null || true
 }
 
-build_orbitcp() {
-  log "Building OrbitCP from source..."
+build_jottiecp() {
+  log "Building JottiCP from source..."
   source "$HOME/.cargo/env" 2>/dev/null || true
 
-  [ -d "${INSTALL_DIR}" ] || git clone https://github.com/multidigitaltools/OrbitCP.git "${INSTALL_DIR}"
+  [ -d "${INSTALL_DIR}" ] || git clone https://dev-spb.ru/jottiecp.git "${INSTALL_DIR}"
   cd "${INSTALL_DIR}"
   cargo build --release --workspace 2>&1 | tail -10
   log "Build complete"
@@ -113,11 +113,11 @@ setup_env() {
 DATABASE_URL=${DB_URL}
 VALKEY_URL=redis://127.0.0.1:6379
 JWT_SECRET=${JWT_SECRET}
-ORBIT_LISTEN=127.0.0.1:2087
-ORBIT_LOG_LEVEL=info
-ORBIT_APPS_DIR=${DATA_DIR}/apps
-ORBIT_BACKUPS_DIR=${BACKUP_DIR}
-ORBIT_PLAN=community
+JOTTI_LISTEN=127.0.0.1:2087
+JOTTI_LOG_LEVEL=info
+JOTTI_APPS_DIR=${DATA_DIR}/apps
+JOTTI_BACKUPS_DIR=${BACKUP_DIR}
+JOTTI_PLAN=community
 PDNS_API_URL=http://127.0.0.1:8053
 PDNS_API_KEY=${PDNS_KEY}
 EOF
@@ -130,16 +130,16 @@ setup_systemd() {
 
   cat > /etc/systemd/system/orbit-panel.service << 'SVC'
 [Unit]
-Description=OrbitCP Panel API
+Description=JottiCP Panel API
 After=network.target postgresql.service redis.service
 Requires=postgresql.service
 
 [Service]
 Type=exec
-User=orbitcp
-WorkingDirectory=/opt/orbitcp
-EnvironmentFile=/opt/orbitcp/.env
-ExecStart=/opt/orbitcp/target/release/orbit-panel
+User=jottiecp
+WorkingDirectory=/opt/jottiecp
+EnvironmentFile=/opt/jottiecp/.env
+ExecStart=/opt/jottiecp/target/release/jotti-panel
 Restart=on-failure
 RestartSec=5
 LimitNOFILE=65536
@@ -149,14 +149,14 @@ WantedBy=multi-user.target
 SVC
 
   systemctl daemon-reload
-  systemctl enable orbit-panel
+  systemctl enable jotti-panel
 }
 
 setup_nginx() {
   local DOMAIN="${1:-localhost}"
   log "Configuring nginx for domain: ${DOMAIN}..."
 
-  cat > /etc/nginx/sites-available/orbitcp << EOF
+  cat > /etc/nginx/sites-available/jottiecp << EOF
 server {
     listen 80;
     server_name ${DOMAIN};
@@ -179,22 +179,22 @@ server {
     }
 }
 EOF
-  ln -sf /etc/nginx/sites-available/orbitcp /etc/nginx/sites-enabled/orbitcp
+  ln -sf /etc/nginx/sites-available/jottiecp /etc/nginx/sites-enabled/jottiecp
   nginx -t && systemctl reload nginx
 }
 
 print_success() {
   echo ""
   echo -e "${GREEN}${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-  echo -e "${GREEN}${BOLD}  ✅  OrbitCP Installation Complete!${NC}"
+  echo -e "${GREEN}${BOLD}  ✅  JottiCP Installation Complete!${NC}"
   echo -e "${GREEN}${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
   echo ""
   echo -e "  Panel URL:   ${BLUE}http://${DOMAIN:-localhost}${NC}"
   echo -e "  First login: ${YELLOW}Create admin at /setup${NC}"
-  echo -e "  Logs:        ${BLUE}journalctl -u orbit-panel -f${NC}"
-  echo -e "  Docs:        ${BLUE}https://multidigitaltools.com/docs/orbitcp/${NC}"
+  echo -e "  Logs:        ${BLUE}journalctl -u jotti-panel -f${NC}"
+  echo -e "  Docs:        ${BLUE}https://dev-spb.ru/docs/jottiecp/${NC}"
   echo ""
-  echo -e "  ${YELLOW}⚠  14-day trial active. Activate at: https://multidigitaltools.com/products/orbitcp${NC}"
+  echo -e "  ${YELLOW}⚠  14-day trial active. Activate at: https://dev-spb.ru/products/jottiecp${NC}"
   echo ""
 }
 
@@ -209,17 +209,17 @@ main() {
   install_rust
   DB_URL=$(setup_database)
   setup_valkey
-  build_orbitcp
+  build_jottiecp
   setup_env "$DB_URL"
   setup_systemd
 
   [ -n "$DOMAIN" ] && setup_nginx "$DOMAIN"
 
   mkdir -p "${DATA_DIR}" "${BACKUP_DIR}" "${LOG_DIR}"
-  useradd -r -s /bin/false orbitcp 2>/dev/null || true
-  chown -R orbitcp:orbitcp "${INSTALL_DIR}" "${DATA_DIR}" "${BACKUP_DIR}" "${LOG_DIR}"
+  useradd -r -s /bin/false jottiecp 2>/dev/null || true
+  chown -R jottiecp:jottiecp "${INSTALL_DIR}" "${DATA_DIR}" "${BACKUP_DIR}" "${LOG_DIR}"
 
-  systemctl start orbit-panel
+  systemctl start jotti-panel
 
   print_success
 }

@@ -1,0 +1,30 @@
+[Unit]
+Description=JottiCP MCP Server
+Documentation=https://jottiecp.dev-spb.ru/docs/mcp
+After=network.target jotti-panel.service
+Requires=jotti-panel.service
+
+[Service]
+Type=simple
+User=jottiecp
+Group=jottiecp
+ExecStart=/usr/local/bin/orbit-mcp --http
+Environment=JOTTI_PANEL_URL=http://127.0.0.1:2087
+EnvironmentFile=/etc/jottiecp/mcp.env
+
+# Restart policy
+Restart=on-failure
+RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/log/jottiecp
+
+# Resource limits
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

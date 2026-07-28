@@ -1,13 +1,13 @@
 [workspace]
 resolver = "2"
 members = [
-    "orbit-panel",
-    "orbit-agent",
-    "orbit-dns",
-    "orbit-mail",
-    "orbit-cron",
-    "orbit-cli",
-    "orbit-mcp",
+    "jotti-panel",
+    "jotti-agent",
+    "jotti-dns",
+    "jotti-mail",
+    "jotti-cron",
+    "jotti-cli",
+    "jotti-mcp",
 ]
 
 [workspace.dependencies]

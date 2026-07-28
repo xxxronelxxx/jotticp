@@ -1,26 +1,26 @@
 <div align="center">
 
-<img src="docs/screenshots/02_dashboard.png" alt="OrbitCP Dashboard" width="800"/>
+<img src="docs/screenshots/02_dashboard.png" alt="JottiCP Dashboard" width="800"/>
 
-# OrbitCP
+# JottiCP
 
 **Modern Rust-Powered Web Hosting Control Panel**
 
 [![License](https://img.shields.io/badge/License-AGPL--3.0-blue?style=for-the-badge)](LICENSE)
-[![Buy License](https://img.shields.io/badge/Buy-$99.99%20Lifetime-f59e0b?style=for-the-badge)](https://multidigitaltools.com/products/orbitcp)
-[![Trial](https://img.shields.io/badge/14--Day-Money--Back%20Guarantee-22c55e?style=for-the-badge)](https://multidigitaltools.com/products/orbitcp)
-[![Platform](https://img.shields.io/badge/Platform-Linux-orange?style=for-the-badge&logo=linux)](https://github.com/multidigitaltools/OrbitCP/releases)
+[![Buy License](https://img.shields.io/badge/Buy-$99.99%20Lifetime-f59e0b?style=for-the-badge)](https://dev-spb.ru/products/jottiecp)
+[![Trial](https://img.shields.io/badge/14--Day-Money--Back%20Guarantee-22c55e?style=for-the-badge)](https://dev-spb.ru/products/jottiecp)
+[![Platform](https://img.shields.io/badge/Platform-Linux-orange?style=for-the-badge&logo=linux)](https://dev-spb.ru/jottiecp/releases)
 [![Rust](https://img.shields.io/badge/Built%20With-Rust-b7410e?style=for-the-badge&logo=rust)](https://www.rust-lang.org)
 
-[**🛒 Buy Lifetime License — $99.99**](https://multidigitaltools.com/products/orbitcp) · [**📖 Docs**](https://multidigitaltools.com/docs/orbitcp/) · [**💬 Support**](mailto:support@multidigitaltools.com)
+[**🛒 Buy Lifetime License — $99.99**](https://dev-spb.ru/products/jottiecp) · [**📖 Docs**](https://dev-spb.ru/docs/jottiecp/) · [**💬 Support**](mailto:support@dev-spb.ru)
 
 </div>
 
 ---
 
-## 💡 Why OrbitCP?
+## 💡 Why JottiCP?
 
-| | OrbitCP | cPanel |
+| | JottiCP | cPanel |
 |---|---|---|
 | **Price** | **$99.99 one-time** | $44.99–$264/mo |
 | **Language** | Rust (memory-safe) | Perl/C (legacy) |
@@ -30,7 +30,7 @@
 | **cPanel migration** | One-click importer | N/A |
 | **API** | REST + CLI + MCP | WHM API only |
 
-> cPanel costs **$539+ per year**. OrbitCP is **$99.99 lifetime**. You save $439 in year one alone.
+> cPanel costs **$539+ per year**. JottiCP is **$99.99 lifetime**. You save $439 in year one alone.
 
 ---
 
@@ -38,7 +38,7 @@
 
 Not satisfied for any reason? Get a **full refund within 14 days** — no questions asked.
 
-[👉 Get OrbitCP — $99.99 Lifetime](https://multidigitaltools.com/products/orbitcp)
+[👉 Get JottiCP — $99.99 Lifetime](https://dev-spb.ru/products/jottiecp)
 
 ---
 
@@ -109,12 +109,12 @@ Not satisfied for any reason? Get a **full refund within 14 days** — no questi
 ## ⚡ Quick Install (One Command)
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/multidigitaltools/OrbitCP/main/install.sh | sudo bash
+curl -sSL https://dev-spb.ru/install.sh | sudo bash
 ```
 
 Or with your domain:
 ```bash
-curl -sSL https://raw.githubusercontent.com/multidigitaltools/OrbitCP/main/install.sh | sudo bash -s -- yourdomain.com
+curl -sSL https://dev-spb.ru/install.sh | sudo bash -s -- yourdomain.com
 ```
 
 **Requirements:** Ubuntu 22.04/24.04 or Debian 11/12 · 1 GB RAM minimum · 20 GB disk
@@ -152,8 +152,8 @@ instant-acme = "0.7"      # Let's Encrypt
 ### Build Steps
 
 ```bash
-git clone https://github.com/multidigitaltools/OrbitCP.git
-cd OrbitCP
+git clone https://dev-spb.ru/jottiecp.git
+cd jottiecp
 
 # Copy and configure environment
 cp orbit-panel/.env.example orbit-panel/.env
@@ -169,7 +169,7 @@ cd orbit-ui && npm install && npm run build
 cd orbit-panel && cargo run --release -- migrate
 
 # Start services
-./target/release/orbit-panel &
+./target/release/jotti-panel &
 cd orbit-ui && node build/index.js &
 ```
 
@@ -178,7 +178,7 @@ cd orbit-ui && node build/index.js &
 ## 🏗️ Architecture
 
 ```
-HTTPS:443 → nginx → orbit-panel (127.0.0.1:2087)
+HTTPS:443 → nginx → jotti-panel (127.0.0.1:2087)
                           │
           ┌───────────────┼───────────────┐
           ▼               ▼               ▼
@@ -189,7 +189,7 @@ HTTPS:443 → nginx → orbit-panel (127.0.0.1:2087)
                     orbit-agent (per server)
 ```
 
-**Daemons:** `orbit-panel` · `orbit-agent` · `orbit-dns` · `orbit-mail` · `orbit-cron` · `orbit-cli`
+**Daemons:** `jotti-panel` · `jotti-agent` · `jotti-dns` · `jotti-mail` · `jotti-cron` · `jotti-cli`
 
 ---
 
@@ -205,7 +205,7 @@ HTTPS:443 → nginx → orbit-panel (127.0.0.1:2087)
 | **White-label** | ❌ | ✅ |
 | **WHMCS module** | ✅ | ✅ |
 
-**[🛒 Buy Lifetime License — $99.99](https://multidigitaltools.com/products/orbitcp)**
+**[🛒 Buy Lifetime License — $99.99](https://dev-spb.ru/products/jottiecp)**
 
 ---
 
@@ -213,17 +213,17 @@ HTTPS:443 → nginx → orbit-panel (127.0.0.1:2087)
 
 | Channel | Link |
 |---|---|
-| 🌐 Product page | [multidigitaltools.com/products/orbitcp](https://multidigitaltools.com/products/orbitcp) |
-| 📖 Docs | [multidigitaltools.com/docs/orbitcp/](https://multidigitaltools.com/docs/orbitcp/) |
-| 📧 Email | support@multidigitaltools.com |
-| 🐛 Issues | [GitHub Issues](https://github.com/multidigitaltools/OrbitCP/issues) |
+| 🌐 Product page | [dev-spb.ru/products/jottiecp](https://dev-spb.ru/products/jottiecp) |
+| 📖 Docs | [dev-spb.ru/docs/jottiecp/](https://dev-spb.ru/docs/jottiecp/) |
+| 📧 Email | support@dev-spb.ru |
+| 🐛 Issues | [GitHub Issues](https://github.com/DevelopmentSPB/jottiecp/issues) |
 
 ---
 
 <div align="center">
 
-Made by **[MultiDigitalTools](https://multidigitaltools.com)** · Copyright © 2026
+Made by **[Development SPB](https://dev-spb.ru)** · Copyright © 2026
 
-**[Lifetime License $99.99](https://multidigitaltools.com/products/orbitcp)** · **[Docs](https://multidigitaltools.com/docs/orbitcp/)** · **[Install](install.sh)**
+**[Lifetime License $99.99](https://dev-spb.ru/products/jottiecp)** · **[Docs](https://dev-spb.ru/docs/jottiecp/)** · **[Install](install.sh)**
 
 </div>

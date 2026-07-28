@@ -1,11 +1,11 @@
 #!/bin/bash
-# CIS Level 1 hardening for OrbitCP servers
-# Part of OrbitCP Step 6.6 — sysctl + IO scheduler hardening
+# CIS Level 1 hardening for JottiCP servers
+# Part of JottiCP Step 6.6 — sysctl + IO scheduler hardening
 set -euo pipefail
 
 echo "Applying CIS Level 1 sysctl hardening..."
 
-cat > /etc/sysctl.d/99-orbitcp-hardening.conf << 'EOF'
+cat > /etc/sysctl.d/99-jottiecp-hardening.conf << 'EOF'
 # TCP BBR congestion control
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
@@ -43,7 +43,7 @@ fs.protected_hardlinks=1
 fs.protected_symlinks=1
 EOF
 
-sysctl -p /etc/sysctl.d/99-orbitcp-hardening.conf
+sysctl -p /etc/sysctl.d/99-jottiecp-hardening.conf
 
 echo "Applying IO scheduler udev rules..."
 

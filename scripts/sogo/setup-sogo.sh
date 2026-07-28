@@ -1,9 +1,9 @@
 #!/bin/bash
-# SOGo groupware setup script for OrbitCP
+# SOGo groupware setup script for JottiCP
 # Run as root on the target server (Ubuntu 24.04 / noble)
 set -e
 
-echo "=== SOGo Groupware Setup for OrbitCP ==="
+echo "=== SOGo Groupware Setup for JottiCP ==="
 
 # ── 1. Add SOGo repository ────────────────────────────────────────────────────
 cat > /etc/apt/sources.list.d/sogo.list << EOF

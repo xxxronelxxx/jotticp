@@ -1,0 +1,144 @@
+# JottiCP App Manifest — Next.js
+# Format version: 1.0
+#
+# Next.js is installed via npx create-next-app using nvm-managed Node.js.
+# Requires Node.js runtime (Step 4.10). Built in standalone output mode
+# and served via nginx reverse proxy.
+
+[app]
+id            = "nextjs"
+name          = "Next.js"
+version       = "14.x"
+category      = "framework"
+description   = "React framework for production-grade web apps. File-based routing, SSR, SSG, API routes, and built-in image optimisation."
+min_disk_mb   = 400
+min_memory_mb = 256
+node_required = true
+node_min      = "18"
+node_max      = "22"
+runtime       = "nodejs"
+icon          = "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
+docs_url      = "https://nextjs.org/docs"
+license       = "MIT"
+tags          = ["framework", "react", "ssr", "ssg", "typescript", "nodejs"]
+
+[download]
+method  = "npx"
+command = "create-next-app@latest . --typescript --tailwind --no-app --import-alias '@/*' --yes"
+
+[extract]
+dest_dir = ""
+
+[config]
+config_path = "/home/{{unix_user}}/.env.local"
+template = '''
+NODE_ENV=production
+NEXT_TELEMETRY_DISABLED=1
+NEXTAUTH_SECRET={{secret_1}}
+NEXTAUTH_URL=https://{{domain}}
+'''
+
+[[steps]]
+# Step 1: Create Next.js app via npx (uses site user's nvm Node.js).
+type      = "cli"
+command   = "bash"
+args      = [
+    "--login", "-c",
+    "source /home/{{unix_user}}/.nvm/nvm.sh && nvm use {{node_version}} && cd /home/{{unix_user}} && npx create-next-app@latest public_html --typescript --tailwind --no-app --import-alias '@/*' --yes",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 300
+
+[[steps]]
+# Step 2: Enable Next.js standalone output mode for production.
+type      = "file_replace"
+path      = "/home/{{unix_user}}/public_html/next.config.js"
+search    = "const nextConfig = {"
+replace   = "const nextConfig = {\n  output: 'standalone',"
+
+[[steps]]
+# Step 3: Build the application for production.
+type      = "cli"
+command   = "bash"
+args      = [
+    "--login", "-c",
+    "source /home/{{unix_user}}/.nvm/nvm.sh && nvm use {{node_version}} && cd /home/{{unix_user}}/public_html && npm run build",
+]
+run_as    = "{{unix_user}}"
+timeout_s = 300
+
+[[steps]]
+# Step 4: Install systemd service unit.
+type = "systemd_unit"
+unit_name = "nextjs-{{unix_user}}"
+unit_content = '''
+[Unit]
+Description=Next.js — {{domain}}
+After=network.target
+
+[Service]
+Type=simple
+User={{unix_user}}
+Group={{unix_user}}
+WorkingDirectory=/home/{{unix_user}}/public_html
+Environment=NODE_ENV=production
+Environment=PORT={{service_port}}
+Environment=NEXT_TELEMETRY_DISABLED=1
+ExecStart=/home/{{unix_user}}/.nvm/versions/node/v{{node_version}}/bin/node .next/standalone/server.js
+Restart=on-failure
+RestartSec=10s
+Slice=website-{{unix_user}}.slice
+NoNewPrivileges=yes
+
+[Install]
+WantedBy=multi-user.target
+'''
+enable = true
+start  = true
+
+[[steps]]
+# Step 5: Write nginx reverse proxy config.
+type = "nginx_proxy"
+upstream_url       = "http://127.0.0.1:{{service_port}}"
+proxy_read_timeout = "60s"
+proxy_set_headers  = { "X-Forwarded-For" = "$proxy_add_x_forwarded_for", "X-Forwarded-Proto" = "https" }
+
+[[steps]]
+# Step 6: Initialise git repository.
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["init", "/home/{{unix_user}}/public_html"]
+run_as    = "{{unix_user}}"
+timeout_s = 10
+
+[[steps]]
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["-C", "/home/{{unix_user}}/public_html", "add", "-A"]
+run_as    = "{{unix_user}}"
+timeout_s = 15
+
+[[steps]]
+type      = "cli"
+command   = "/usr/bin/git"
+args      = ["-C", "/home/{{unix_user}}/public_html", "commit", "-m", "Initial JottiCP install"]
+run_as    = "{{unix_user}}"
+timeout_s = 15
+
+[service_port]
+port_range_start = 3000
+port_range_end   = 4000
+
+[wizard]
+[[wizard.fields]]
+name     = "node_version"
+label    = "Node.js Version"
+type     = "select"
+options  = ["22", "20", "18"]
+default  = "20"
+required = true
+
+[post_install]
+show_credentials = false
+admin_url        = "https://{{domain}}"
+notes            = "Next.js app built in standalone mode. Service running as systemd unit nextjs-{{unix_user}}. Edit pages/ to start building. Push via git remote to trigger rebuild."

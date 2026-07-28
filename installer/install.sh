@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # ─────────────────────────────────────────────────────────────────────────────
-# OrbitCP One-Command Installer
-# Version: 1.0.0
+# JottiCP One-Command Installer
+# Version: 0.0.1
 #
 # Usage:
-#   curl -sL https://install.orbitcp.io | bash
+#   curl -sL https://install.jottiecp.dev-spb.ru | bash
 #   # or with options:
-#   ORBIT_ENV=pro bash install.sh
+#   JOTTI_ENV=pro bash install.sh
 #
 # Supported OS:
 #   Ubuntu 22.04 LTS, Ubuntu 24.04 LTS
@@ -32,29 +32,29 @@
 set -euo pipefail
 
 # ── Constants ─────────────────────────────────────────────────────────────────
-readonly ORBIT_VERSION="1.0.0"
-readonly ORBIT_INSTALL_DIR="/opt/orbitcp"
-readonly ORBIT_CONF_DIR="/etc/orbitcp"
-readonly ORBIT_LOG_DIR="/var/log/orbitcp"
-readonly ORBIT_DATA_DIR="/var/lib/orbitcp"
-readonly ORBIT_BACKUP_DIR="/var/backups/orbitcp"
+readonly JOTTI_VERSION="0.0.1"
+readonly JOTTI_INSTALL_DIR="/opt/jottiecp"
+readonly JOTTI_CONF_DIR="/etc/jottiecp"
+readonly JOTTI_LOG_DIR="/var/log/jottiecp"
+readonly JOTTI_DATA_DIR="/var/lib/jottiecp"
+readonly JOTTI_BACKUP_DIR="/var/backups/jottiecp"
 
-readonly ORBIT_PANEL_PORT=2087
-readonly ORBIT_AGENT_PORT=7443
-readonly ORBIT_PANEL_USER="orbitcp"
+readonly JOTTI_PANEL_PORT=2087
+readonly JOTTI_AGENT_PORT=7443
+readonly JOTTI_PANEL_USER="jottiecp"
 
 readonly PG_VERSION="17"
 readonly OLS_VERSION="1.8.4"
 readonly PDNS_VERSION="4.9"
 
-readonly BINARY_BASE_URL="https://releases.orbitcp.io/${ORBIT_VERSION}"
+readonly BINARY_BASE_URL="https://releases.jottiecp.dev-spb.ru/${JOTTI_VERSION}"
 
 # Ed25519 public key for binary signature verification.
-# HARDCODED here so a DNS hijack of releases.orbitcp.io cannot replace both
+# HARDCODED here so a DNS hijack of releases.jottiecp.dev-spb.ru cannot replace both
 # the binary AND the verification key. Generated at release time; rotate with
 # a new install.sh signed by the previous key (bootstrap trust on first install).
 # Verify: minisign -V -P <key> -m <binary> -x <binary>.minisig
-readonly ORBIT_SIGNING_PUBKEY="RWRPHu8VRhzFtQWnG2fxQBFvKYBiAeABXX7ZzKDqKJ2qNLJFv0bR8uDm"
+readonly JOTTI_SIGNING_PUBKEY="RWRPHu8VRhzFtQWnG2fxQBFvKYBiAeABXX7ZzKDqKJ2qNLJFv0bR8uDm"
 
 # Colors
 readonly RED='\033[0;31m'
@@ -104,7 +104,7 @@ check_root() {
 check_architecture() {
     local arch; arch="$(uname -m)"
     if [[ "$arch" != "x86_64" ]] && [[ "$arch" != "aarch64" ]]; then
-        die "Unsupported architecture: ${arch}. OrbitCP supports x86_64 and aarch64."
+        die "Unsupported architecture: ${arch}. JottiCP supports x86_64 and aarch64."
     fi
     log_ok "Architecture: ${arch}"
 }
@@ -168,7 +168,7 @@ check_conflicts() {
 
     if [[ ${#conflicts[@]} -gt 0 ]]; then
         log_warn "Existing control panel(s) detected: ${conflicts[*]}"
-        log_warn "OrbitCP can coexist with some panels but conflicts are possible."
+        log_warn "JottiCP can coexist with some panels but conflicts are possible."
         printf "\n  Continue installation anyway? [y/N] "
         read -r answer
         if [[ "${answer,,}" != "y" ]]; then
@@ -185,14 +185,14 @@ check_minimum_resources() {
     local ram_kb; ram_kb=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
     local ram_mb=$(( ram_kb / 1024 ))
     if [[ "${ram_mb}" -lt 512 ]]; then
-        die "Insufficient RAM: ${ram_mb} MB. OrbitCP requires at least 512 MB."
+        die "Insufficient RAM: ${ram_mb} MB. JottiCP requires at least 512 MB."
     fi
     log_ok "RAM: ${ram_mb} MB (minimum: 512 MB)"
 
     # Disk: minimum 5GB free on /
     local free_gb; free_gb=$(df -BG / | awk 'NR==2 {gsub("G",""); print $4}')
     if [[ "${free_gb}" -lt 5 ]]; then
-        die "Insufficient disk space: ${free_gb} GB free on /. OrbitCP requires at least 5 GB."
+        die "Insufficient disk space: ${free_gb} GB free on /. JottiCP requires at least 5 GB."
     fi
     log_ok "Free disk: ${free_gb} GB (minimum: 5 GB)"
 }
@@ -351,30 +351,30 @@ install_dependencies_dnf() {
     log_ok "PHP 8.1, 8.2, 8.3, 8.4 installed via Remi"
 }
 
-# ── Step 3: Download OrbitCP Binaries ────────────────────────────────────────
+# ── Step 3: Download JottiCP Binaries ────────────────────────────────────────
 
 download_orbit_binaries() {
-    log_step "Step 3/12: Downloading OrbitCP binaries"
+    log_step "Step 3/12: Downloading JottiCP binaries"
 
     local arch; arch="$(uname -m)"
     local os_suffix; os_suffix="linux-${arch}"
 
-    mkdir -p "${ORBIT_INSTALL_DIR}/bin"
-    mkdir -p "${ORBIT_CONF_DIR}"
-    mkdir -p "${ORBIT_LOG_DIR}"
-    mkdir -p "${ORBIT_DATA_DIR}"
-    mkdir -p "${ORBIT_BACKUP_DIR}"
+    mkdir -p "${JOTTI_INSTALL_DIR}/bin"
+    mkdir -p "${JOTTI_CONF_DIR}"
+    mkdir -p "${JOTTI_LOG_DIR}"
+    mkdir -p "${JOTTI_DATA_DIR}"
+    mkdir -p "${JOTTI_BACKUP_DIR}"
 
-    # Create the orbitcp system user (no login shell, no home directory needed for /bin)
-    if ! id "${ORBIT_PANEL_USER}" &>/dev/null; then
+    # Create the jottiecp system user (no login shell, no home directory needed for /bin)
+    if ! id "${JOTTI_PANEL_USER}" &>/dev/null; then
         useradd --system --no-create-home --shell /usr/sbin/nologin \
-            --comment "OrbitCP panel daemon" "${ORBIT_PANEL_USER}"
-        log_ok "System user '${ORBIT_PANEL_USER}' created"
+            --comment "JottiCP panel daemon" "${JOTTI_PANEL_USER}"
+        log_ok "System user '${JOTTI_PANEL_USER}' created"
     else
-        log_ok "System user '${ORBIT_PANEL_USER}' already exists"
+        log_ok "System user '${JOTTI_PANEL_USER}' already exists"
     fi
 
-    local binaries=("orbit-panel" "orbit-agent" "orbit-dns" "orbit-mail" "orbit-cron")
+    local binaries=("jotti-panel" "jotti-agent" "jotti-dns" "jotti-mail" "jotti-cron")
 
     # Require minisign for signature verification (available in most distro repos)
     if ! command -v minisign &>/dev/null; then
@@ -390,7 +390,7 @@ download_orbit_binaries() {
 
     for binary in "${binaries[@]}"; do
         local url="${BINARY_BASE_URL}/${binary}-${os_suffix}"
-        local dest="${ORBIT_INSTALL_DIR}/bin/${binary}"
+        local dest="${JOTTI_INSTALL_DIR}/bin/${binary}"
         local sig_url="${url}.minisig"
 
         log_detail "Downloading ${binary}..."
@@ -399,7 +399,7 @@ download_orbit_binaries() {
            curl -fsSL "${sig_url}" -o "${dest}.minisig" 2>/dev/null; then
             # Verify Ed25519 signature against the hardcoded public key embedded in this script.
             # The key is NOT fetched from the same server — a DNS hijack cannot forge signatures.
-            if minisign -V -P "${ORBIT_SIGNING_PUBKEY}" -m "${dest}" -x "${dest}.minisig" 2>/dev/null; then
+            if minisign -V -P "${JOTTI_SIGNING_PUBKEY}" -m "${dest}" -x "${dest}.minisig" 2>/dev/null; then
                 rm -f "${dest}.minisig"
                 chmod +x "${dest}"
                 log_ok "${binary} downloaded and signature verified"
@@ -409,15 +409,15 @@ download_orbit_binaries() {
             fi
         else
             log_warn "Could not download ${binary} from ${url}"
-            log_warn "You can build from source: https://github.com/orbitcp/orbitcp"
+            log_warn "You can build from source: https://dev-spb.ru/jottiecp"
         fi
     done
 
     # Install symlinks for easy CLI access
-    ln -sf "${ORBIT_INSTALL_DIR}/bin/orbit-panel" /usr/local/bin/orbit-panel
-    ln -sf "${ORBIT_INSTALL_DIR}/bin/orbit-agent" /usr/local/bin/orbit-agent
+    ln -sf "${JOTTI_INSTALL_DIR}/bin/jotti-panel" /usr/local/bin/jotti-panel
+    ln -sf "${JOTTI_INSTALL_DIR}/bin/jotti-agent" /usr/local/bin/jotti-agent
 
-    log_ok "OrbitCP binaries installed to ${ORBIT_INSTALL_DIR}/bin/"
+    log_ok "JottiCP binaries installed to ${JOTTI_INSTALL_DIR}/bin/"
 }
 
 # ── Step 4: Initialize PostgreSQL ────────────────────────────────────────────
@@ -451,20 +451,20 @@ setup_postgresql() {
     # Generate random passwords
     local pg_orbit_password; pg_orbit_password=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
 
-    # Create orbitcp database user and database
+    # Create jottiecp database user and database
     sudo -u postgres psql -v ON_ERROR_STOP=1 <<SQL > /dev/null 2>&1
 DO \$\$
 BEGIN
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'orbitcp') THEN
-    CREATE ROLE orbitcp WITH LOGIN PASSWORD '${pg_orbit_password}';
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'jottiecp') THEN
+    CREATE ROLE jottiecp WITH LOGIN PASSWORD '${pg_orbit_password}';
   END IF;
 END
 \$\$;
 
-CREATE DATABASE orbitcp OWNER orbitcp;
+CREATE DATABASE jottiecp OWNER jottiecp;
 SQL
 
-    log_ok "PostgreSQL database 'orbitcp' created"
+    log_ok "PostgreSQL database 'jottiecp' created"
 
     # Harden PostgreSQL: bind to localhost only
     local pg_conf; pg_conf=$(sudo -u postgres psql -t -c "SHOW config_file" | tr -d ' ')
@@ -473,19 +473,19 @@ SQL
     # Set listen_addresses = 'localhost'
     sed -i "s/^#\?listen_addresses.*/listen_addresses = 'localhost'/" "${pg_conf}"
 
-    # pg_hba.conf: only allow orbitcp user from localhost
+    # pg_hba.conf: only allow jottiecp user from localhost
     cat >> "${pg_hba}" << 'HBA'
-# OrbitCP: allow local connections only
-host    orbitcp         orbitcp         127.0.0.1/32            scram-sha-256
-host    orbitcp         orbitcp         ::1/128                 scram-sha-256
+# JottiCP: allow local connections only
+host    jottiecp         jottiecp         127.0.0.1/32            scram-sha-256
+host    jottiecp         jottiecp         ::1/128                 scram-sha-256
 HBA
 
     systemctl reload postgresql || systemctl reload postgresql-17
 
     # Save DATABASE_URL
-    local database_url="postgresql://orbitcp:${pg_orbit_password}@127.0.0.1:5432/orbitcp"
-    mkdir -p "${ORBIT_CONF_DIR}"
-    printf "DATABASE_URL=%s\n" "${database_url}" >> "${ORBIT_CONF_DIR}/orbit-panel.env"
+    local database_url="postgresql://jottiecp:${pg_orbit_password}@127.0.0.1:5432/jottiecp"
+    mkdir -p "${JOTTI_CONF_DIR}"
+    printf "DATABASE_URL=%s\n" "${database_url}" >> "${JOTTI_CONF_DIR}/jotti-panel.env"
 
     log_ok "PostgreSQL hardened (localhost only, scram-sha-256)"
 }
@@ -506,16 +506,16 @@ setup_powerdns() {
 
     # Configure PowerDNS to use PostgreSQL backend
     cat > /etc/powerdns/pdns.conf << EOF
-# OrbitCP PowerDNS Configuration
+# JottiCP PowerDNS Configuration
 setuid=pdns
 setgid=pdns
 
 launch=gpgsql
 gpgsql-host=127.0.0.1
 gpgsql-port=5432
-gpgsql-dbname=orbitcp
-gpgsql-user=orbitcp
-gpgsql-password=$(grep DATABASE_URL "${ORBIT_CONF_DIR}/orbit-panel.env" | cut -d: -f3 | cut -d@ -f1)
+gpgsql-dbname=jottiecp
+gpgsql-user=jottiecp
+gpgsql-password=$(grep DATABASE_URL "${JOTTI_CONF_DIR}/jotti-panel.env" | cut -d: -f3 | cut -d@ -f1)
 
 # Disable built-in webserver (orbit-dns manages via API)
 webserver=no
@@ -532,7 +532,7 @@ receiver-threads=2
 EOF
 
     # Initialize PowerDNS schema in PostgreSQL
-    sudo -u postgres psql orbitcp < /usr/share/pdns-backend-pgsql/schema.pgsql.sql > /dev/null 2>&1 \
+    sudo -u postgres psql jottiecp < /usr/share/pdns-backend-pgsql/schema.pgsql.sql > /dev/null 2>&1 \
         || log_warn "PowerDNS schema may already exist"
 
     systemctl enable pdns
@@ -582,7 +582,7 @@ RSPAMD
     systemctl enable postfix dovecot rspamd
     systemctl restart postfix dovecot rspamd > /dev/null 2>&1 || log_warn "Mail services start with warnings — configure via orbit-panel"
 
-    log_ok "Mail stack configured (full configuration via orbit-panel)"
+    log_ok "Mail stack configured (full configuration via jotti-panel)"
 }
 
 # ── Step 7: Setup OpenLiteSpeed ──────────────────────────────────────────────
@@ -602,22 +602,22 @@ setup_openlitespeed() {
     log_ok "OpenLiteSpeed installed"
 
     # Disable OLS admin UI on 7080 from public internet — orbit-panel manages OLS
-    # The admin console is only needed locally; orbit-panel uses the config file API
+    # The admin console is only needed locally; jotti-panel uses the config file API
     local ols_conf="/usr/local/lsws/conf/httpd_config.conf"
     if [[ -f "${ols_conf}" ]]; then
         # Restrict admin listener to loopback
         sed -i 's/address.*:7080/address\t\t127.0.0.1:7080/' "${ols_conf}" 2>/dev/null || true
     fi
 
-    # Create orbit-panel reverse proxy vhost (serves the panel UI on HTTPS 443)
-    mkdir -p /usr/local/lsws/conf/vhosts/orbit-panel
-    cat > /usr/local/lsws/conf/vhosts/orbit-panel/vhconf.conf << 'OLS_VHOST'
-# OrbitCP panel vhost — served on HTTPS 443, proxied to orbit-panel:2087
+    # Create jotti-panel reverse proxy vhost (serves the panel UI on HTTPS 443)
+    mkdir -p /usr/local/lsws/conf/vhosts/jotti-panel
+    cat > /usr/local/lsws/conf/vhosts/jotti-panel/vhconf.conf << 'OLS_VHOST'
+# JottiCP panel vhost — served on HTTPS 443, proxied to jotti-panel:2087
 docRoot /usr/local/lsws/DEFAULT/html
 index {
   useServer 0
 }
-extprocessor orbit-panel {
+extprocessor jotti-panel {
   type proxy
   address 127.0.0.1:2087
   maxConns 100
@@ -626,7 +626,7 @@ extprocessor orbit-panel {
 }
 context / {
   type proxy
-  handler orbit-panel
+  handler jotti-panel
   addDefaultCharset off
 }
 OLS_VHOST
@@ -695,23 +695,23 @@ FPM_OVERRIDE
 setup_systemd_services() {
     log_step "Step 9/12: Creating and enabling systemd services"
 
-    local services=("orbit-panel" "orbit-agent" "orbit-dns" "orbit-mail" "orbit-cron")
+    local services=("jotti-panel" "jotti-agent" "jotti-dns" "jotti-mail" "jotti-cron")
 
     for svc in "${services[@]}"; do
         cat > "/etc/systemd/system/${svc}.service" << EOF
 [Unit]
-Description=OrbitCP ${svc} daemon
-Documentation=https://docs.orbitcp.io
+Description=JottiCP ${svc} daemon
+Documentation=https://docs.jottiecp.dev-spb.ru
 After=network.target postgresql.service postgresql-17.service
 Wants=network.target
 
 [Service]
 Type=notify
-User=${ORBIT_PANEL_USER}
-Group=${ORBIT_PANEL_USER}
-WorkingDirectory=${ORBIT_DATA_DIR}
-EnvironmentFile=${ORBIT_CONF_DIR}/${svc}.env
-ExecStart=${ORBIT_INSTALL_DIR}/bin/${svc}
+User=${JOTTI_PANEL_USER}
+Group=${JOTTI_PANEL_USER}
+WorkingDirectory=${JOTTI_DATA_DIR}
+EnvironmentFile=${JOTTI_CONF_DIR}/${svc}.env
+ExecStart=${JOTTI_INSTALL_DIR}/bin/${svc}
 ExecReload=/bin/kill -HUP \$MAINPID
 Restart=on-failure
 RestartSec=5s
@@ -721,7 +721,7 @@ TimeoutStartSec=30s
 NoNewPrivileges=yes
 PrivateDevices=yes
 ProtectSystem=strict
-ReadWritePaths=${ORBIT_DATA_DIR} ${ORBIT_LOG_DIR} ${ORBIT_CONF_DIR}
+ReadWritePaths=${JOTTI_DATA_DIR} ${JOTTI_LOG_DIR} ${JOTTI_CONF_DIR}
 ProtectHome=yes
 RestrictSUIDSGID=yes
 LockPersonality=yes
@@ -731,7 +731,7 @@ RestrictNamespaces=~user pid net
 SystemCallFilter=@system-service
 
 # orbit-panel specific: needs to call adduser, systemctl, etc. via sudo
-$([ "${svc}" == "orbit-panel" ] && echo "# (sudo rules in /etc/sudoers.d/orbitcp)" || true)
+$([ "${svc}" == "jotti-panel" ] && echo "# (sudo rules in /etc/sudoers.d/jottiecp)" || true)
 
 # Resource limits for the panel daemon itself
 MemoryMax=512M
@@ -742,52 +742,52 @@ WantedBy=multi-user.target
 EOF
 
         # Create empty env file if it doesn't exist
-        touch "${ORBIT_CONF_DIR}/${svc}.env"
-        chmod 640 "${ORBIT_CONF_DIR}/${svc}.env"
-        chown "root:${ORBIT_PANEL_USER}" "${ORBIT_CONF_DIR}/${svc}.env"
+        touch "${JOTTI_CONF_DIR}/${svc}.env"
+        chmod 640 "${JOTTI_CONF_DIR}/${svc}.env"
+        chown "root:${JOTTI_PANEL_USER}" "${JOTTI_CONF_DIR}/${svc}.env"
 
         log_ok "Service unit created: ${svc}.service"
     done
 
-    # Populate orbit-panel.env with generated values
+    # Populate jotti-panel.env with generated values
     local jwt_secret; jwt_secret=$(openssl rand -base64 48 | tr -dc 'a-zA-Z0-9' | head -c 48)
-    cat >> "${ORBIT_CONF_DIR}/orbit-panel.env" << EOF
-ORBIT_ENV=${ORBIT_ENV:-community}
+    cat >> "${JOTTI_CONF_DIR}/jotti-panel.env" << EOF
+JOTTI_ENV=${JOTTI_ENV:-community}
 JWT_SECRET=${jwt_secret}
 VALKEY_URL=redis://127.0.0.1:6379
-PANEL_PORT=${ORBIT_PANEL_PORT}
+PANEL_PORT=${JOTTI_PANEL_PORT}
 ALLOWED_ORIGINS=https://$(hostname -f 2>/dev/null || hostname)
 EOF
 
-    # sudo rules: orbit-panel can run specific privileged commands
-    cat > /etc/sudoers.d/orbitcp << 'SUDOERS'
-# OrbitCP sudo rules — allow orbit-panel to manage sites without root shell
+    # sudo rules: jotti-panel can run specific privileged commands
+    cat > /etc/sudoers.d/jottiecp << 'SUDOERS'
+# JottiCP sudo rules — allow jotti-panel to manage sites without root shell
 # All commands are explicitly listed — no wildcard root shell access
 
 # Unix user management for site isolation
-orbitcp ALL=(root) NOPASSWD: /usr/sbin/useradd --system * orbit_*
-orbitcp ALL=(root) NOPASSWD: /usr/sbin/userdel -r orbit_*
+jottiecp ALL=(root) NOPASSWD: /usr/sbin/useradd --system * jotti_*
+jottiecp ALL=(root) NOPASSWD: /usr/sbin/userdel -r jotti_*
 
 # systemd: manage PHP-FPM, OLS, and website slices
-orbitcp ALL=(root) NOPASSWD: /bin/systemctl enable php*-fpm
-orbitcp ALL=(root) NOPASSWD: /bin/systemctl disable php*-fpm
-orbitcp ALL=(root) NOPASSWD: /bin/systemctl restart php*-fpm
-orbitcp ALL=(root) NOPASSWD: /bin/systemctl reload php*-fpm
-orbitcp ALL=(root) NOPASSWD: /bin/systemctl start website-*.slice
-orbitcp ALL=(root) NOPASSWD: /bin/systemctl stop website-*.slice
+jottiecp ALL=(root) NOPASSWD: /bin/systemctl enable php*-fpm
+jottiecp ALL=(root) NOPASSWD: /bin/systemctl disable php*-fpm
+jottiecp ALL=(root) NOPASSWD: /bin/systemctl restart php*-fpm
+jottiecp ALL=(root) NOPASSWD: /bin/systemctl reload php*-fpm
+jottiecp ALL=(root) NOPASSWD: /bin/systemctl start website-*.slice
+jottiecp ALL=(root) NOPASSWD: /bin/systemctl stop website-*.slice
 
 # nftables: manage fail2ban IP blocks
-orbitcp ALL=(root) NOPASSWD: /usr/sbin/nft add element inet filter fail2ban_* *
-orbitcp ALL=(root) NOPASSWD: /usr/sbin/nft delete element inet filter fail2ban_* *
+jottiecp ALL=(root) NOPASSWD: /usr/sbin/nft add element inet filter fail2ban_* *
+jottiecp ALL=(root) NOPASSWD: /usr/sbin/nft delete element inet filter fail2ban_* *
 
 # OLS management
-orbitcp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl restart
-orbitcp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl reload
+jottiecp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl restart
+jottiecp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl reload
 
 # WP-CLI (run as site users)
-orbitcp ALL=(orbit_*) NOPASSWD: /usr/local/bin/wp *
+jottiecp ALL=(jotti_*) NOPASSWD: /usr/local/bin/wp *
 SUDOERS
-    chmod 440 /etc/sudoers.d/orbitcp
+    chmod 440 /etc/sudoers.d/jottiecp
 
     systemctl daemon-reload
 
@@ -796,11 +796,11 @@ SUDOERS
         systemctl enable "${svc}" > /dev/null 2>&1
     done
 
-    log_ok "All OrbitCP services enabled"
+    log_ok "All JottiCP services enabled"
 
     # Start orbit-panel
-    systemctl start orbit-panel > /dev/null 2>&1 \
-        || log_warn "orbit-panel start deferred (binary may not be present yet)"
+    systemctl start jotti-panel > /dev/null 2>&1 \
+        || log_warn "jotti-panel start deferred (binary may not be present yet)"
 }
 
 # ── Step 10: Setup nftables Firewall ─────────────────────────────────────────
@@ -818,8 +818,8 @@ setup_nftables() {
 
     cat > /etc/nftables.conf << 'NFTABLES'
 #!/usr/sbin/nft -f
-# OrbitCP nftables ruleset
-# Generated by orbit-installer
+# JottiCP nftables ruleset
+# Generated by jotti-installer
 
 flush ruleset
 
@@ -879,7 +879,7 @@ table inet filter {
         # ADMIN PORT 2087 IS INTENTIONALLY NOT OPENED HERE
         # orbit-panel binds to 127.0.0.1:2087 — accessed via OLS/nginx reverse proxy on 443
 
-        log prefix "orbitcp-drop: " flags all limit rate 5/minute drop
+        log prefix "jottiecp-drop: " flags all limit rate 5/minute drop
     }
 
     chain forward {
@@ -903,8 +903,8 @@ apply_cis_baseline() {
     log_step "Step 11/12: Applying CIS Level 1 security baseline"
 
     # Kernel hardening via sysctl
-    cat > /etc/sysctl.d/99-orbitcp-hardening.conf << 'SYSCTL'
-# OrbitCP CIS Level 1 sysctl hardening
+    cat > /etc/sysctl.d/99-jottiecp-hardening.conf << 'SYSCTL'
+# JottiCP CIS Level 1 sysctl hardening
 net.ipv4.ip_forward = 0
 net.ipv4.conf.all.send_redirects = 0
 net.ipv4.conf.default.send_redirects = 0
@@ -936,12 +936,12 @@ SYSCTL
 
     # SSH hardening
     local sshd_conf="/etc/ssh/sshd_config"
-    cp "${sshd_conf}" "${sshd_conf}.backup-pre-orbitcp"
+    cp "${sshd_conf}" "${sshd_conf}.backup-pre-jottiecp"
 
     # Apply SSH settings (append to avoid breaking any include directives)
     cat >> "${sshd_conf}" << 'SSH'
 
-# OrbitCP SSH hardening (appended by installer)
+# JottiCP SSH hardening (appended by installer)
 PermitRootLogin no
 PasswordAuthentication no
 PubkeyAuthentication yes
@@ -960,7 +960,7 @@ SSH
         log_ok "SSH hardened (PasswordAuthentication disabled, PermitRootLogin disabled)"
     else
         log_warn "sshd_config validation failed — SSH config not applied. Check ${sshd_conf}."
-        cp "${sshd_conf}.backup-pre-orbitcp" "${sshd_conf}"
+        cp "${sshd_conf}.backup-pre-jottiecp" "${sshd_conf}"
     fi
 
     # Remove unnecessary services
@@ -998,7 +998,7 @@ UNATTENDED
     log_ok "auditd enabled"
 
     # fail2ban configuration
-    cat > /etc/fail2ban/jail.d/orbitcp.conf << 'FAIL2BAN'
+    cat > /etc/fail2ban/jail.d/jottiecp.conf << 'FAIL2BAN'
 [DEFAULT]
 bantime   = 15m
 findtime  = 10m
@@ -1010,11 +1010,11 @@ enabled  = true
 maxretry = 3
 bantime  = 1h
 
-[orbit-panel-auth]
+[jotti-panel-auth]
 enabled  = true
 port     = 443
 filter   = orbit-panel-auth
-logpath  = /var/log/orbitcp/auth.log
+logpath  = /var/log/jottiecp/auth.log
 maxretry = 5
 bantime  = 15m
 
@@ -1029,7 +1029,7 @@ maxretry = 5
 bantime  = 30m
 FAIL2BAN
 
-    cat > /etc/fail2ban/filter.d/orbit-panel-auth.conf << 'F2B_FILTER'
+    cat > /etc/fail2ban/filter.d/jotti-panel-auth.conf << 'F2B_FILTER'
 [Definition]
 failregex = ^.*FAILED_LOGIN.*ip=<HOST>.*$
             ^.*TOTP_FAILED.*ip=<HOST>.*$
@@ -1050,13 +1050,13 @@ launch_wizard() {
 
     # Generate a first-run token (valid for 30 minutes, single-use)
     local firstrun_token; firstrun_token=$(openssl rand -hex 16)
-    echo "${firstrun_token}" > "${ORBIT_DATA_DIR}/firstrun.token"
-    chmod 600 "${ORBIT_DATA_DIR}/firstrun.token"
-    chown "${ORBIT_PANEL_USER}:${ORBIT_PANEL_USER}" "${ORBIT_DATA_DIR}/firstrun.token"
+    echo "${firstrun_token}" > "${JOTTI_DATA_DIR}/firstrun.token"
+    chmod 600 "${JOTTI_DATA_DIR}/firstrun.token"
+    chown "${JOTTI_PANEL_USER}:${JOTTI_PANEL_USER}" "${JOTTI_DATA_DIR}/firstrun.token"
 
     printf "\n"
     printf "${GREEN}═══════════════════════════════════════════════════════════════${NC}\n"
-    printf "${GREEN}  OrbitCP ${ORBIT_VERSION} installed successfully!${NC}\n"
+    printf "${GREEN}  JottiCP ${JOTTI_VERSION} installed successfully!${NC}\n"
     printf "${GREEN}═══════════════════════════════════════════════════════════════${NC}\n"
     printf "\n"
     printf "  ${CYAN}Continue setup in your browser:${NC}\n"
@@ -1070,14 +1070,14 @@ launch_wizard() {
     printf "  • To add your SSH key:\n"
     printf "    mkdir -p ~/.ssh && echo 'YOUR_PUBLIC_KEY' >> ~/.ssh/authorized_keys\n"
     printf "\n"
-    printf "  ${CYAN}Configuration files:${NC} %s\n" "${ORBIT_CONF_DIR}"
-    printf "  ${CYAN}Log files:${NC}            %s\n" "${ORBIT_LOG_DIR}"
-    printf "  ${CYAN}Documentation:${NC}        https://docs.orbitcp.io\n"
+    printf "  ${CYAN}Configuration files:${NC} %s\n" "${JOTTI_CONF_DIR}"
+    printf "  ${CYAN}Log files:${NC}            %s\n" "${JOTTI_LOG_DIR}"
+    printf "  ${CYAN}Documentation:${NC}        https://docs.jottiecp.dev-spb.ru\n"
     printf "\n"
 
     # Summarize what was installed
     printf "  ${GREEN}Installed:${NC}\n"
-    printf "    ✓ OrbitCP panel & agent (v%s)\n" "${ORBIT_VERSION}"
+    printf "    ✓ JottiCP panel & agent (v%s)\n" "${JOTTI_VERSION}"
     printf "    ✓ PostgreSQL %s (localhost only)\n" "${PG_VERSION}"
     printf "    ✓ OpenLiteSpeed %s\n" "${OLS_VERSION}"
     printf "    ✓ PowerDNS %s\n" "${PDNS_VERSION}"
@@ -1091,10 +1091,10 @@ launch_wizard() {
 
     # Log install completion
     {
-        printf "OrbitCP %s installed at %s\n" "${ORBIT_VERSION}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        printf "JottiCP %s installed at %s\n" "${JOTTI_VERSION}" "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
         printf "OS: %s\n" "${OS_NAME}"
         printf "Server IP: %s\n" "${server_ip}"
-    } >> "${ORBIT_LOG_DIR}/install.log" 2>/dev/null || true
+    } >> "${JOTTI_LOG_DIR}/install.log" 2>/dev/null || true
 }
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -1109,7 +1109,7 @@ main() {
     printf " ╚██████╔╝██║  ██║██████╔╝██║   ██║   ╚██████╗██║     \n"
     printf "  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝   ╚═╝    ╚═════╝╚═╝     \n"
     printf "${NC}"
-    printf "\n  Hosting Control Panel v%s — Installer\n\n" "${ORBIT_VERSION}"
+    printf "\n  Hosting Control Panel v%s — Installer\n\n" "${JOTTI_VERSION}"
 
     check_root
     check_architecture
@@ -1143,5 +1143,5 @@ main() {
 }
 
 # Run installer with error trap
-trap 'stop_spinner; log_error "Installation failed on line ${LINENO}. Check ${ORBIT_LOG_DIR}/install.log for details."; exit 1' ERR
+trap 'stop_spinner; log_error "Installation failed on line ${LINENO}. Check ${JOTTI_LOG_DIR}/install.log for details."; exit 1' ERR
 main "$@"

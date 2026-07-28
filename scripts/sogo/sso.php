@@ -1,17 +1,17 @@
 <?php
 /**
- * OrbitCP Webmail SSO Bridge — 1-click auto-login for SOGo
+ * JottiCP Webmail SSO Bridge — 1-click auto-login for SOGo
  * Validates Valkey token, syncs plaintext password to sogo_users,
  * POSTs to SOGo /connect, relays session cookies to browser.
  */
 
-session_name('orbit_webmail');
+session_name('jotti_webmail');
 session_start();
 
 $token = trim($_GET['token'] ?? '');
 if (empty($token)) {
     http_response_code(400);
-    die(renderPage('Invalid Link', 'No SSO token provided. Return to OrbitCP and click Webmail again.', 'error'));
+    die(renderPage('Invalid Link', 'No SSO token provided. Return to JottiCP and click Webmail again.', 'error'));
 }
 
 // Connect to Valkey/Redis
@@ -23,12 +23,12 @@ try {
     die(renderPage('Service Unavailable', 'Cannot reach mail session store. Please try again.', 'error'));
 }
 
-$key  = 'orbit:webmail:' . preg_replace('/[^a-f0-9]/', '', $token);
+$key  = 'jotti:webmail:' . preg_replace('/[^a-f0-9]/', '', $token);
 $data = $redis->get($key);
 
 if ($data === false) {
     http_response_code(401);
-    die(renderPage('Link Expired', 'This webmail link has expired or already been used. Return to OrbitCP and click Webmail again.', 'warn'));
+    die(renderPage('Link Expired', 'This webmail link has expired or already been used. Return to JottiCP and click Webmail again.', 'warn'));
 }
 
 $payload  = json_decode($data, true);
@@ -38,7 +38,7 @@ $password = $payload['password'] ?? null;
 
 if (empty($email) || time() > $expires) {
     http_response_code(401);
-    die(renderPage('Link Expired', 'This webmail link has expired. Return to OrbitCP and click Webmail again.', 'warn'));
+    die(renderPage('Link Expired', 'This webmail link has expired. Return to JottiCP and click Webmail again.', 'warn'));
 }
 
 // Single-use: delete token immediately
@@ -60,7 +60,7 @@ if ($password !== null && $password !== '') {
         );
         $stmt->execute([':u' => $email, ':cn' => $cn, ':pw' => $password]);
     } catch (Throwable $e) {
-        error_log('OrbitCP SSO: sogo_users sync failed: ' . $e->getMessage());
+        error_log('JottiCP SSO: sogo_users sync failed: ' . $e->getMessage());
     }
 
     // ── Auto-login via SOGo /connect ──────────────────────────────────────────
@@ -93,12 +93,12 @@ if ($password !== null && $password !== '') {
         exit;
     }
 
-    error_log('OrbitCP SOGo SSO: login failed for ' . $email . ' (HTTP ' . $httpCode . ')');
+    error_log('JottiCP SOGo SSO: login failed for ' . $email . ' (HTTP ' . $httpCode . ')');
 }
 
 // ── Fallback: send user to SOGo login form ────────────────────────────────────
-$_SESSION['orbit_sso_email']   = $email;
-$_SESSION['orbit_sso_expires'] = time() + 300;
+$_SESSION['jotti_sso_email']   = $email;
+$_SESSION['jotti_sso_expires'] = time() + 300;
 header('Location: /SOGo/');
 exit;
 
@@ -111,7 +111,7 @@ function renderPage(string $title, string $message, string $type): string {
 <head>
 <meta charset=UTF-8>
 <meta name=viewport content=width=device-width, initial-scale=1>
-<title>{$title} — OrbitCP Webmail</title>
+<title>{$title} — JottiCP Webmail</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: system-ui, sans-serif; min-height: 100vh; display: flex; align-items: center;

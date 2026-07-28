@@ -28,11 +28,11 @@ pub struct AppState {
     pub db:                PgPool,
     pub config:            config::Config,
     pub valkey:            redis::aio::ConnectionManager,
-    /// ES256 ECDSA P-256 signing key — built from /etc/orbitcp/jwt_ec_key.pem at startup.
+    /// ES256 ECDSA P-256 signing key — built from /etc/jottiecp/jwt_ec_key.pem at startup.
     pub jwt_encoding_key:  EncodingKey,
-    /// ES256 ECDSA P-256 verification key — built from /etc/orbitcp/jwt_ec_key.pub.pem at startup.
+    /// ES256 ECDSA P-256 verification key — built from /etc/jottiecp/jwt_ec_key.pub.pem at startup.
     pub jwt_decoding_key:  DecodingKey,
-    /// Shared reqwest HTTP client for calling internal daemons (orbit-mail, orbit-dns).
+    /// Shared reqwest HTTP client for calling internal daemons (jotti-mail, jotti-dns).
     pub http:              reqwest::Client,
 }
 
@@ -47,7 +47,7 @@ async fn main() -> anyhow::Result<()> {
     #[cfg(not(feature = "console"))]
     tracing_subscriber::registry()
         .with(EnvFilter::try_from_default_env()
-            .unwrap_or_else(|_| "orbit_panel=info,tower_http=info".into()))
+            .unwrap_or_else(|_| "jotti_panel=info,tower_http=info".into()))
         .with(tracing_subscriber::fmt::layer().json())
         .init();
 
@@ -69,7 +69,7 @@ async fn main() -> anyhow::Result<()> {
 
     dotenvy::dotenv().ok();
     let config = config::Config::from_env()?;
-    tracing::info!(version = env!("CARGO_PKG_VERSION"), env = %config.orbit_env, "orbit-panel starting");
+    tracing::info!(version = env!("CARGO_PKG_VERSION"), env = %config.orbit_env, "jotti-panel starting");
 
     // Load or generate EC keypair for JWT ES256 signing
     let (jwt_encoding_key, jwt_decoding_key) = config.load_jwt_keys()?;
@@ -95,7 +95,7 @@ async fn main() -> anyhow::Result<()> {
         .map_err(|e| anyhow::anyhow!("Valkey connect failed: {}", e))?;
     tracing::info!("Valkey connected");
 
-    // Internal HTTP client for orbit-mail / orbit-dns daemon calls
+    // Internal HTTP client for jotti-mail / jotti-dns daemon calls
     let http = reqwest::Client::builder()
         .timeout(Duration::from_secs(30))
         .build()
@@ -244,9 +244,9 @@ async fn main() -> anyhow::Result<()> {
         )
         .with_state(state.clone());
 
-    // orbit-panel binds to 127.0.0.1 ONLY — nginx/OLS reverse-proxies to :443
+    // jotti-panel binds to 127.0.0.1 ONLY — nginx/OLS reverse-proxies to :443
     let addr = SocketAddr::from(([127, 0, 0, 1], config.panel_port));
-    tracing::info!(%addr, "orbit-panel listening");
+    tracing::info!(%addr, "jotti-panel listening");
 
     let listener = tokio::net::TcpListener::bind(addr).await
         .map_err(|e| anyhow::anyhow!("Bind failed {}: {}", addr, e))?;
@@ -262,7 +262,7 @@ async fn main() -> anyhow::Result<()> {
     .await
     .map_err(|e| anyhow::anyhow!("Server error: {}", e))?;
 
-    tracing::info!("orbit-panel shut down gracefully");
+    tracing::info!("jotti-panel shut down gracefully");
     Ok(())
 }
 
