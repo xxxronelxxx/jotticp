@@ -7,12 +7,12 @@
 **Modern Rust-Powered Web Hosting Control Panel**
 
 [![License](https://img.shields.io/badge/License-AGPL--3.0-blue?style=for-the-badge)](LICENSE)
-[![Buy License](https://img.shields.io/badge/Buy-$99.99%20Lifetime-f59e0b?style=for-the-badge)](https://dev-spb.ru/products/jottiecp)
-[![Trial](https://img.shields.io/badge/14--Day-Money--Back%20Guarantee-22c55e?style=for-the-badge)](https://dev-spb.ru/products/jottiecp)
-[![Platform](https://img.shields.io/badge/Platform-Linux-orange?style=for-the-badge&logo=linux)](https://dev-spb.ru/jottiecp/releases)
+[![Buy License](https://img.shields.io/badge/Buy-$99.99%20Lifetime-f59e0b?style=for-the-badge)](https://jotti.ru/products/jottiecp)
+[![Trial](https://img.shields.io/badge/14--Day-Money--Back%20Guarantee-22c55e?style=for-the-badge)](https://jotti.ru/products/jottiecp)
+[![Platform](https://img.shields.io/badge/Platform-Linux-orange?style=for-the-badge&logo=linux)](https://jotti.ru/jottiecp/releases)
 [![Rust](https://img.shields.io/badge/Built%20With-Rust-b7410e?style=for-the-badge&logo=rust)](https://www.rust-lang.org)
 
-[**🛒 Buy Lifetime License — $99.99**](https://dev-spb.ru/products/jottiecp) · [**📖 Docs**](https://dev-spb.ru/docs/jottiecp/) · [**💬 Support**](mailto:support@dev-spb.ru)
+[**🛒 Buy Lifetime License — $99.99**](https://jotti.ru/products/jottiecp) · [**📖 Docs**](https://jotti.ru/docs/jottiecp/) · [**💬 Support**](mailto:support@jotti.ru)
 
 </div>
 
@@ -38,7 +38,7 @@
 
 Not satisfied for any reason? Get a **full refund within 14 days** — no questions asked.
 
-[👉 Get JottiCP — $99.99 Lifetime](https://dev-spb.ru/products/jottiecp)
+[👉 Get JottiCP — $99.99 Lifetime](https://jotti.ru/products/jottiecp)
 
 ---
 
@@ -109,12 +109,12 @@ Not satisfied for any reason? Get a **full refund within 14 days** — no questi
 ## ⚡ Quick Install (One Command)
 
 ```bash
-curl -sSL https://dev-spb.ru/install.sh | sudo bash
+curl -sSL https://jotti.ru/install.sh | sudo bash
 ```
 
 Or with your domain:
 ```bash
-curl -sSL https://dev-spb.ru/install.sh | sudo bash -s -- yourdomain.com
+curl -sSL https://jotti.ru/install.sh | sudo bash -s -- yourdomain.com
 ```
 
 **Requirements:** Ubuntu 22.04/24.04 or Debian 11/12 · 1 GB RAM minimum · 20 GB disk
@@ -136,7 +136,7 @@ curl -sSL https://dev-spb.ru/install.sh | sudo bash -s -- yourdomain.com
 ### NuGet / Cargo Dependencies
 
 ```toml
-# orbit-panel/Cargo.toml (key crates)
+# jotti-panel/Cargo.toml (key crates)
 axum = "0.8"              # HTTP framework
 tokio = "1"               # Async runtime
 sqlx = "0.8"              # Async PostgreSQL
@@ -145,32 +145,32 @@ jsonwebtoken = "9"        # ES256 JWT
 argon2 = "0.5"            # Password hashing
 totp-rs = "5"             # TOTP 2FA
 redis = "0.26"            # Valkey/Redis client
-tonic = "0.12"            # gRPC (orbit-agent)
+tonic = "0.12"            # gRPC (jotti-agent)
 instant-acme = "0.7"      # Let's Encrypt
 ```
 
 ### Build Steps
 
 ```bash
-git clone https://dev-spb.ru/jottiecp.git
+git clone https://jotti.ru/jottiecp.git
 cd jottiecp
 
 # Copy and configure environment
-cp orbit-panel/.env.example orbit-panel/.env
-# Edit orbit-panel/.env with your database credentials
+cp jotti-panel/.env.example jotti-panel/.env
+# Edit jotti-panel/.env with your database credentials
 
 # Build all Rust daemons
 cargo build --release --workspace
 
 # Build SvelteKit frontend
-cd orbit-ui && npm install && npm run build
+cd jotti-ui && npm install && npm run build
 
 # Run database migrations
-cd orbit-panel && cargo run --release -- migrate
+cd jotti-panel && cargo run --release -- migrate
 
 # Start services
 ./target/release/jotti-panel &
-cd orbit-ui && node build/index.js &
+cd jotti-ui && node build/index.js &
 ```
 
 ---
@@ -182,11 +182,11 @@ HTTPS:443 → nginx → jotti-panel (127.0.0.1:2087)
                           │
           ┌───────────────┼───────────────┐
           ▼               ▼               ▼
-    PostgreSQL 17    Valkey 8.1      orbit-dns
+    PostgreSQL 17    Valkey 8.1      jotti-dns
     (all state)      (cache+jobs)    (PowerDNS API)
                           │
                     gRPC mTLS :7443
-                    orbit-agent (per server)
+                    jotti-agent (per server)
 ```
 
 **Daemons:** `jotti-panel` · `jotti-agent` · `jotti-dns` · `jotti-mail` · `jotti-cron` · `jotti-cli`
@@ -205,7 +205,7 @@ HTTPS:443 → nginx → jotti-panel (127.0.0.1:2087)
 | **White-label** | ❌ | ✅ |
 | **WHMCS module** | ✅ | ✅ |
 
-**[🛒 Buy Lifetime License — $99.99](https://dev-spb.ru/products/jottiecp)**
+**[🛒 Buy Lifetime License — $99.99](https://jotti.ru/products/jottiecp)**
 
 ---
 
@@ -213,17 +213,17 @@ HTTPS:443 → nginx → jotti-panel (127.0.0.1:2087)
 
 | Channel | Link |
 |---|---|
-| 🌐 Product page | [dev-spb.ru/products/jottiecp](https://dev-spb.ru/products/jottiecp) |
-| 📖 Docs | [dev-spb.ru/docs/jottiecp/](https://dev-spb.ru/docs/jottiecp/) |
-| 📧 Email | support@dev-spb.ru |
+| 🌐 Product page | [jotti.ru/products/jottiecp](https://jotti.ru/products/jottiecp) |
+| 📖 Docs | [jotti.ru/docs/jottiecp/](https://jotti.ru/docs/jottiecp/) |
+| 📧 Email | support@jotti.ru |
 | 🐛 Issues | [GitHub Issues](https://github.com/DevelopmentSPB/jottiecp/issues) |
 
 ---
 
 <div align="center">
 
-Made by **[Development SPB](https://dev-spb.ru)** · Copyright © 2026
+Made by **[Development SPB](https://jotti.ru)** · Copyright © 2026
 
-**[Lifetime License $99.99](https://dev-spb.ru/products/jottiecp)** · **[Docs](https://dev-spb.ru/docs/jottiecp/)** · **[Install](install.sh)**
+**[Lifetime License $99.99](https://jotti.ru/products/jottiecp)** · **[Docs](https://jotti.ru/docs/jottiecp/)** · **[Install](install.sh)**
 
 </div>

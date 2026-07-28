@@ -1,6 +1,6 @@
 [Unit]
 Description=JottiCP MCP Server
-Documentation=https://jottiecp.dev-spb.ru/docs/mcp
+Documentation=https://jotti.ru/docs/mcp
 After=network.target jotti-panel.service
 Requires=jotti-panel.service
 

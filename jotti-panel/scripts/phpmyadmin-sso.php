@@ -53,5 +53,5 @@ function render(string $title, string $msg, string $type): string {
         . '.c{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:2rem;max-width:400px;text-align:center}'
         . 'h1{color:' . $color . ';margin:0 0 .5rem}p{color:#94a3b8;margin:0 0 1rem}a{color:#60a5fa}</style></head><body><div class=c>'
         . '<h1>' . htmlspecialchars($title) . '</h1><p>' . htmlspecialchars($msg) . '</p>'
-        . '<a href=https://jottiecp.dev-spb.ru>← Back to JottiCP</a></div></body></html>';
+        . '<a href=https://jotti.ru>← Back to JottiCP</a></div></body></html>';
 }

@@ -61,7 +61,7 @@ curl_setopt_array($ch, [
     CURLOPT_HEADER         => true,
     CURLOPT_COOKIEJAR      => $cookieJar,
     CURLOPT_COOKIEFILE     => $cookieJar,
-    CURLOPT_HTTPHEADER     => ['Host: ' . ($_SERVER['HTTP_HOST'] ?? 'jottiecp.dev-spb.ru')],
+    CURLOPT_HTTPHEADER     => ['Host: ' . ($_SERVER['HTTP_HOST'] ?? 'jotti.ru')],
     CURLOPT_TIMEOUT        => 8,
 ]);
 $loginPage = curl_exec($ch);
@@ -95,7 +95,7 @@ curl_setopt_array($ch, [
     CURLOPT_COOKIEJAR       => $cookieJar,
     CURLOPT_COOKIEFILE      => $cookieJar,
     CURLOPT_HTTPHEADER      => [
-        'Host: ' . ($_SERVER['HTTP_HOST'] ?? 'jottiecp.dev-spb.ru'),
+        'Host: ' . ($_SERVER['HTTP_HOST'] ?? 'jotti.ru'),
         'Content-Type: application/x-www-form-urlencoded',
     ],
     CURLOPT_TIMEOUT         => 8,
@@ -140,6 +140,6 @@ min-height:100vh;display:flex;align-items:center;justify-content:center;padding:
 h1{margin:0 0 .5rem;color:{$color};font-size:1.25rem}p{color:#94a3b8;margin:0 0 1rem;line-height:1.5}
 a{display:inline-block;margin-top:.5rem;color:#60a5fa;text-decoration:none}</style></head>
 <body><div class=c><h1>{$titleHtml}</h1><p>{$msgHtml}</p>
-<a href=https://jottiecp.dev-spb.ru>← Back to JottiCP</a></div></body></html>
+<a href=https://jotti.ru>← Back to JottiCP</a></div></body></html>
 HTML;
 }

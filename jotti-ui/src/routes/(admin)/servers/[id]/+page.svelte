@@ -315,7 +315,7 @@
               SSH into <span class="font-mono text-foreground">{server.ip}</span> and run the orbit-agent enrollment command to connect this server to JottiCP.
             </p>
             <div class="bg-black/30 rounded-lg px-3 py-2 font-mono text-xs text-green-300 break-all">
-              curl -s https://jottiecp.dev-spb.ru/api/v1/servers/{server.id}/enroll | bash
+              curl -s https://jotti.ru/api/v1/servers/{server.id}/enroll | bash
             </div>
             <p class="text-xs text-muted-foreground mt-2">
               Once enrolled, metrics and site management will be available.

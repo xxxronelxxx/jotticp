@@ -4,7 +4,7 @@
 # Version: 0.0.1
 #
 # Usage:
-#   curl -sL https://install.jottiecp.dev-spb.ru | bash
+#   curl -sL https://install.jotti.ru | bash
 #   # or with options:
 #   JOTTI_ENV=pro bash install.sh
 #
@@ -47,10 +47,10 @@ readonly PG_VERSION="17"
 readonly OLS_VERSION="1.8.4"
 readonly PDNS_VERSION="4.9"
 
-readonly BINARY_BASE_URL="https://releases.jottiecp.dev-spb.ru/${JOTTI_VERSION}"
+readonly BINARY_BASE_URL="https://releases.jotti.ru/${JOTTI_VERSION}"
 
 # Ed25519 public key for binary signature verification.
-# HARDCODED here so a DNS hijack of releases.jottiecp.dev-spb.ru cannot replace both
+# HARDCODED here so a DNS hijack of releases.jotti.ru cannot replace both
 # the binary AND the verification key. Generated at release time; rotate with
 # a new install.sh signed by the previous key (bootstrap trust on first install).
 # Verify: minisign -V -P <key> -m <binary> -x <binary>.minisig
@@ -409,7 +409,7 @@ download_orbit_binaries() {
             fi
         else
             log_warn "Could not download ${binary} from ${url}"
-            log_warn "You can build from source: https://dev-spb.ru/jottiecp"
+            log_warn "You can build from source: https://jotti.ru/jottiecp"
         fi
     done
 
@@ -701,7 +701,7 @@ setup_systemd_services() {
         cat > "/etc/systemd/system/${svc}.service" << EOF
 [Unit]
 Description=JottiCP ${svc} daemon
-Documentation=https://docs.jottiecp.dev-spb.ru
+Documentation=https://docs.jotti.ru
 After=network.target postgresql.service postgresql-17.service
 Wants=network.target
 
@@ -1072,7 +1072,7 @@ launch_wizard() {
     printf "\n"
     printf "  ${CYAN}Configuration files:${NC} %s\n" "${JOTTI_CONF_DIR}"
     printf "  ${CYAN}Log files:${NC}            %s\n" "${JOTTI_LOG_DIR}"
-    printf "  ${CYAN}Documentation:${NC}        https://docs.jottiecp.dev-spb.ru\n"
+    printf "  ${CYAN}Documentation:${NC}        https://docs.jotti.ru\n"
     printf "\n"
 
     # Summarize what was installed

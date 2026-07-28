@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ============================================================
 # JottiCP — One-Command Installer
-# https://jottiecp.dev-spb.ru
+# https://jotti.ru
 # ============================================================
 set -euo pipefail
 
@@ -27,7 +27,7 @@ cat << 'BANNER'
  \___/|_|  |_.__/|_|_|\____||_|
 BANNER
 echo -e "${BLUE}JottiCP v${JOTTICP_VERSION} — Rust-Powered Web Hosting Panel${NC}"
-echo -e "${YELLOW}https://dev-spb.ru/products/jottiecp${NC}"
+echo -e "${YELLOW}https://jotti.ru/products/jottiecp${NC}"
 echo ""
 }
 
@@ -96,7 +96,7 @@ build_jottiecp() {
   log "Building JottiCP from source..."
   source "$HOME/.cargo/env" 2>/dev/null || true
 
-  [ -d "${INSTALL_DIR}" ] || git clone https://dev-spb.ru/jottiecp.git "${INSTALL_DIR}"
+  [ -d "${INSTALL_DIR}" ] || git clone https://jotti.ru/jottiecp.git "${INSTALL_DIR}"
   cd "${INSTALL_DIR}"
   cargo build --release --workspace 2>&1 | tail -10
   log "Build complete"
@@ -192,9 +192,9 @@ print_success() {
   echo -e "  Panel URL:   ${BLUE}http://${DOMAIN:-localhost}${NC}"
   echo -e "  First login: ${YELLOW}Create admin at /setup${NC}"
   echo -e "  Logs:        ${BLUE}journalctl -u jotti-panel -f${NC}"
-  echo -e "  Docs:        ${BLUE}https://dev-spb.ru/docs/jottiecp/${NC}"
+  echo -e "  Docs:        ${BLUE}https://jotti.ru/docs/jottiecp/${NC}"
   echo ""
-  echo -e "  ${YELLOW}⚠  14-day trial active. Activate at: https://dev-spb.ru/products/jottiecp${NC}"
+  echo -e "  ${YELLOW}⚠  14-day trial active. Activate at: https://jotti.ru/products/jottiecp${NC}"
   echo ""
 }
 
