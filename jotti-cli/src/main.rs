@@ -1,6 +1,6 @@
 /// orbit — JottiCP command-line interface
 ///
-/// Reads base URL from ~/.jottiecp/config.toml or ORBIT_URL env var.
+/// Reads base URL from ~/.jotticp/config.toml or ORBIT_URL env var.
 /// Reads auth token from OS keychain (keyring) or ORBIT_TOKEN env var.
 /// All list commands support --json for machine-readable output.
 
@@ -17,7 +17,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use tabled::{Table, Tabled};
 
-const KEYRING_SERVICE: &str = "jottiecp";
+const KEYRING_SERVICE: &str = "jotticp";
 const KEYRING_USER: &str = "token";
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -31,7 +31,7 @@ struct CliConfig {
 
 fn config_path() -> PathBuf {
     let home = dirs::home_dir().unwrap_or_else(|| PathBuf::from("."));
-    home.join(".jottiecp").join("config.toml")
+    home.join(".jotticp").join("config.toml")
 }
 
 fn load_config() -> CliConfig {

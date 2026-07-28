@@ -11,7 +11,7 @@ use uuid::Uuid;
 /// Create a complete backup of a site: files + all databases.
 ///
 /// Backup layout:
-///   /var/backups/jottiecp/{site_id}/{YYYY-MM-DD-HHMMSS}/
+///   /var/backups/jotticp/{site_id}/{YYYY-MM-DD-HHMMSS}/
 ///     ├── files.tar.gz          — full site homedir
 ///     ├── {db_name}.sql.gz      — one file per MySQL/MariaDB database
 ///     ├── {db_name}_pg.sql.gz   — one file per PostgreSQL database
@@ -54,7 +54,7 @@ pub async fn backup_site(state: &Arc<AppState>, site_id: Uuid) -> anyhow::Result
     // ── 2. Create timestamped backup directory ────────────────────────────────
 
     let ts = chrono::Utc::now().format("%Y-%m-%d-%H%M%S").to_string();
-    let backup_dir = PathBuf::from(format!("/var/backups/jottiecp/{}/{}", site_id, ts));
+    let backup_dir = PathBuf::from(format!("/var/backups/jotticp/{}/{}", site_id, ts));
     std::fs::create_dir_all(&backup_dir)
         .map_err(|e| anyhow::anyhow!("create backup dir failed: {}", e))?;
 
@@ -386,7 +386,7 @@ async fn apply_retention_policy(state: &Arc<AppState>, site_id: Uuid) -> anyhow:
             if let Some(ref manifest) = b.manifest_path {
                 // manifest is at BACKUP_DIR/manifest.json — delete parent dir
                 if let Some(parent) = PathBuf::from(manifest).parent() {
-                    if parent.starts_with("/var/backups/jottiecp") {
+                    if parent.starts_with("/var/backups/jotticp") {
                         let _ = std::fs::remove_dir_all(parent);
                     }
                 }
@@ -433,7 +433,7 @@ pub async fn restore_site(
 
     // Safety: backup_dir must be within the expected path prefix.
     anyhow::ensure!(
-        backup_dir.starts_with("/var/backups/jottiecp"),
+        backup_dir.starts_with("/var/backups/jotticp"),
         "restore_site: backup dir '{}' is outside allowed prefix",
         backup_dir.display()
     );

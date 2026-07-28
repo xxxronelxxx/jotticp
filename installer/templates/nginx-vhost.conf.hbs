@@ -22,7 +22,7 @@ server {
     # ACME HTTP-01 challenge directory — always served even during redirect.
     # jotti-agent writes challenge tokens here; path must not be proxied.
     location ^~ /.well-known/acme-challenge/ {
-        root         /var/lib/jottiecp/acme/{{domain}};
+        root         /var/lib/jotticp/acme/{{domain}};
         default_type text/plain;
         try_files    $uri =404;
     }
@@ -54,8 +54,8 @@ server {
     server_name {{domain}} www.{{domain}};
 
     # ── TLS configuration ────────────────────────────────────────────────────
-    ssl_certificate     /etc/jottiecp/ssl/{{domain}}/fullchain.pem;
-    ssl_certificate_key /etc/jottiecp/ssl/{{domain}}/key.pem;
+    ssl_certificate     /etc/jotticp/ssl/{{domain}}/fullchain.pem;
+    ssl_certificate_key /etc/jotticp/ssl/{{domain}}/key.pem;
 
     # Session resumption — shared cache so all workers benefit
     ssl_session_cache   shared:SSL_{{unix_user}}:10m;
@@ -83,7 +83,7 @@ server {
 
     # ── ACME challenge (reachable on 443 too for completeness) ───────────────
     location ^~ /.well-known/acme-challenge/ {
-        root         /var/lib/jottiecp/acme/{{domain}};
+        root         /var/lib/jotticp/acme/{{domain}};
         default_type text/plain;
         try_files    $uri =404;
     }
@@ -93,7 +93,7 @@ server {
     return 503;
     error_page 503 @suspended;
     location @suspended {
-        root          /usr/share/jottiecp/suspended;
+        root          /usr/share/jotticp/suspended;
         try_files     /index.html =503;
         default_type  text/html;
         add_header    Retry-After 3600 always;

@@ -3,7 +3,7 @@
   * JottiCP WHMCS Provisioning Module
   *
   * Implements all 7 WHMCS module hooks for JottiCP integration.
-  * Place this directory in: /path/to/whmcs/modules/servers/jottiecp/
+  * Place this directory in: /path/to/whmcs/modules/servers/jotticp/
  *
  * Requires: WHMCS 8.x, PHP 8.1+, ext-curl, ext-json
  * API Version: 1.1

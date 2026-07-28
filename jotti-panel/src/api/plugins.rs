@@ -17,7 +17,7 @@ use super::auth::Claims;
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const MAX_PLUGIN_BYTES: usize = 50 * 1024 * 1024; // 50 MB
-const PLUGIN_INSTALL_DIR: &str = "/var/jottiecp/plugins";
+const PLUGIN_INSTALL_DIR: &str = "/var/jotticp/plugins";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 

@@ -17,8 +17,8 @@ set -euo pipefail
 
 IP="${1:?usage: gen-agent-bundle.sh <server-ip> [label]}"
 LABEL="${2:-$IP}"
-PKI=/etc/jottiecp/agent
-AGENT_BIN=/opt/jottiecp/src/target/release/jotti-agent
+PKI=/etc/jotticp/agent
+AGENT_BIN=/opt/jotticp/src/target/release/jotti-agent
 OUT="/tmp/jotti-agent-bundle-$IP"
 
 [ -f "$PKI/ca.pem" ]     || { echo "ERROR: panel agent CA missing at $PKI/ca.pem"; exit 1; }
@@ -45,22 +45,22 @@ set -euo pipefail
 [ "$(id -u)" = 0 ] || { echo "run as root"; exit 1; }
 DIR="$(cd "$(dirname "$0")" && pwd)"
 install -m755 "$DIR/jotti-agent" /usr/local/bin/jotti-agent
-mkdir -p /etc/jottiecp/agent /var/lib/jottiecp/agent
-install -m644 "$DIR/agent/ca.pem"  /etc/jottiecp/agent/ca.pem
-install -m644 "$DIR/agent/agent.pem" /etc/jottiecp/agent/agent.pem
-install -m600 "$DIR/agent/agent-key.pem" /etc/jottiecp/agent/agent-key.pem
+mkdir -p /etc/jotticp/agent /var/lib/jotticp/agent
+install -m644 "$DIR/agent/ca.pem"  /etc/jotticp/agent/ca.pem
+install -m644 "$DIR/agent/agent.pem" /etc/jotticp/agent/agent.pem
+install -m600 "$DIR/agent/agent-key.pem" /etc/jotticp/agent/agent-key.pem
 
 # DB-admin credentials the agent uses to provision databases (CreateDatabase RPC).
-# The agent runs `mysql --defaults-file=/etc/jottiecp/mysql-admin.cnf`. Default to unix_socket
+# The agent runs `mysql --defaults-file=/etc/jotticp/mysql-admin.cnf`. Default to unix_socket
 # auth (works out-of-box on most MariaDB/MySQL where root uses the socket plugin). If this
 # server's root requires a password, edit the file and set `password=...`.
-if [ ! -f /etc/jottiecp/mysql-admin.cnf ]; then
+if [ ! -f /etc/jotticp/mysql-admin.cnf ]; then
   SOCK="$(mysqladmin --silent var 2>/dev/null | awk '/ socket /{print $4; exit}')"
   SOCK="${SOCK:-/run/mysqld/mysqld.sock}"
   printf '[client]\nuser=root\nsocket=%s\n# If root needs a password, uncomment & set:\n# password=CHANGE_ME\n' "$SOCK" \
-    > /etc/jottiecp/mysql-admin.cnf
-  chmod 600 /etc/jottiecp/mysql-admin.cnf
-  echo "ℹ  wrote /etc/jottiecp/mysql-admin.cnf (socket auth). Set a password there if 'mysql --defaults-file=/etc/jottiecp/mysql-admin.cnf -e \"SELECT 1\"' is denied."
+    > /etc/jotticp/mysql-admin.cnf
+  chmod 600 /etc/jotticp/mysql-admin.cnf
+  echo "ℹ  wrote /etc/jotticp/mysql-admin.cnf (socket auth). Set a password there if 'mysql --defaults-file=/etc/jotticp/mysql-admin.cnf -e \"SELECT 1\"' is denied."
 fi
 
 # PowerDNS REST API endpoint the agent uses for DNS zone/record management. Auto-detect

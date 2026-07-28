@@ -388,7 +388,7 @@ pub async fn import_plesk_backup(
 
     // Write to a unique temp path so background worker can process it
     let job_id = Uuid::new_v4();
-    let archive_path = format!("/tmp/jottiecp_migration_{}.tar.gz", job_id);
+    let archive_path = format!("/tmp/jotticp_migration_{}.tar.gz", job_id);
     tokio::fs::write(&archive_path, &archive_bytes).await
         .map_err(|e| ApiError::Internal(anyhow::anyhow!("Write archive: {}", e)))?;
 

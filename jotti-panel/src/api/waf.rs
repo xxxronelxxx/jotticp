@@ -68,8 +68,8 @@ pub struct MessageResponse {
 // ── Constants ─────────────────────────────────────────────────────────────────
 
 const MODSEC_AUDIT_LOG: &str = "/var/log/nginx/modsec_audit.log";
-const WAF_WHITELIST_CONF: &str = "/etc/jottiecp/waf/whitelist.conf";
-const WAF_CRS_CONF: &str = "/etc/jottiecp/waf/crs.conf";
+const WAF_WHITELIST_CONF: &str = "/etc/jotticp/waf/whitelist.conf";
+const WAF_CRS_CONF: &str = "/etc/jotticp/waf/crs.conf";
 
 /// nginx vhost directory where per-site configs live.
 const NGINX_VHOST_DIR: &str = "/etc/nginx/sites-enabled";

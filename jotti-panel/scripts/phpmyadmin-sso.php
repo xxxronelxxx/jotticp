@@ -9,7 +9,7 @@ session_start();
 $token = preg_replace('/[^a-f0-9\-]/', '', trim($_GET['token'] ?? ''));
 if ($token === '') { http_response_code(400); die(render('Invalid Link', 'No SSO token provided.', 'error')); }
 
-$valkey_pass = trim(@file_get_contents('/etc/jottiecp/webmail-valkey-pass') ?: '');
+$valkey_pass = trim(@file_get_contents('/etc/jotticp/webmail-valkey-pass') ?: '');
 try {
     $redis = new Redis();
     $redis->connect('127.0.0.1', 6379, 3.0);

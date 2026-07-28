@@ -33,15 +33,15 @@ set -euo pipefail
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 readonly JOTTI_VERSION="0.0.1"
-readonly JOTTI_INSTALL_DIR="/opt/jottiecp"
-readonly JOTTI_CONF_DIR="/etc/jottiecp"
-readonly JOTTI_LOG_DIR="/var/log/jottiecp"
-readonly JOTTI_DATA_DIR="/var/lib/jottiecp"
-readonly JOTTI_BACKUP_DIR="/var/backups/jottiecp"
+readonly JOTTI_INSTALL_DIR="/opt/jotticp"
+readonly JOTTI_CONF_DIR="/etc/jotticp"
+readonly JOTTI_LOG_DIR="/var/log/jotticp"
+readonly JOTTI_DATA_DIR="/var/lib/jotticp"
+readonly JOTTI_BACKUP_DIR="/var/backups/jotticp"
 
 readonly JOTTI_PANEL_PORT=2087
 readonly JOTTI_AGENT_PORT=7443
-readonly JOTTI_PANEL_USER="jottiecp"
+readonly JOTTI_PANEL_USER="jotticp"
 
 readonly PG_VERSION="17"
 readonly OLS_VERSION="1.8.4"
@@ -365,7 +365,7 @@ download_orbit_binaries() {
     mkdir -p "${JOTTI_DATA_DIR}"
     mkdir -p "${JOTTI_BACKUP_DIR}"
 
-    # Create the jottiecp system user (no login shell, no home directory needed for /bin)
+    # Create the jotticp system user (no login shell, no home directory needed for /bin)
     if ! id "${JOTTI_PANEL_USER}" &>/dev/null; then
         useradd --system --no-create-home --shell /usr/sbin/nologin \
             --comment "JottiCP panel daemon" "${JOTTI_PANEL_USER}"
@@ -409,7 +409,7 @@ download_orbit_binaries() {
             fi
         else
             log_warn "Could not download ${binary} from ${url}"
-            log_warn "You can build from source: https://jotti.ru/jottiecp"
+            log_warn "You can build from source: https://jotti.ru/jotticp"
         fi
     done
 
@@ -451,20 +451,20 @@ setup_postgresql() {
     # Generate random passwords
     local pg_orbit_password; pg_orbit_password=$(openssl rand -base64 32 | tr -dc 'a-zA-Z0-9' | head -c 32)
 
-    # Create jottiecp database user and database
+    # Create jotticp database user and database
     sudo -u postgres psql -v ON_ERROR_STOP=1 <<SQL > /dev/null 2>&1
 DO \$\$
 BEGIN
-  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'jottiecp') THEN
-    CREATE ROLE jottiecp WITH LOGIN PASSWORD '${pg_orbit_password}';
+  IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'jotticp') THEN
+    CREATE ROLE jotticp WITH LOGIN PASSWORD '${pg_orbit_password}';
   END IF;
 END
 \$\$;
 
-CREATE DATABASE jottiecp OWNER jottiecp;
+CREATE DATABASE jotticp OWNER jotticp;
 SQL
 
-    log_ok "PostgreSQL database 'jottiecp' created"
+    log_ok "PostgreSQL database 'jotticp' created"
 
     # Harden PostgreSQL: bind to localhost only
     local pg_conf; pg_conf=$(sudo -u postgres psql -t -c "SHOW config_file" | tr -d ' ')
@@ -473,17 +473,17 @@ SQL
     # Set listen_addresses = 'localhost'
     sed -i "s/^#\?listen_addresses.*/listen_addresses = 'localhost'/" "${pg_conf}"
 
-    # pg_hba.conf: only allow jottiecp user from localhost
+    # pg_hba.conf: only allow jotticp user from localhost
     cat >> "${pg_hba}" << 'HBA'
 # JottiCP: allow local connections only
-host    jottiecp         jottiecp         127.0.0.1/32            scram-sha-256
-host    jottiecp         jottiecp         ::1/128                 scram-sha-256
+host    jotticp         jotticp         127.0.0.1/32            scram-sha-256
+host    jotticp         jotticp         ::1/128                 scram-sha-256
 HBA
 
     systemctl reload postgresql || systemctl reload postgresql-17
 
     # Save DATABASE_URL
-    local database_url="postgresql://jottiecp:${pg_orbit_password}@127.0.0.1:5432/jottiecp"
+    local database_url="postgresql://jotticp:${pg_orbit_password}@127.0.0.1:5432/jotticp"
     mkdir -p "${JOTTI_CONF_DIR}"
     printf "DATABASE_URL=%s\n" "${database_url}" >> "${JOTTI_CONF_DIR}/jotti-panel.env"
 
@@ -513,8 +513,8 @@ setgid=pdns
 launch=gpgsql
 gpgsql-host=127.0.0.1
 gpgsql-port=5432
-gpgsql-dbname=jottiecp
-gpgsql-user=jottiecp
+gpgsql-dbname=jotticp
+gpgsql-user=jotticp
 gpgsql-password=$(grep DATABASE_URL "${JOTTI_CONF_DIR}/jotti-panel.env" | cut -d: -f3 | cut -d@ -f1)
 
 # Disable built-in webserver (orbit-dns manages via API)
@@ -532,7 +532,7 @@ receiver-threads=2
 EOF
 
     # Initialize PowerDNS schema in PostgreSQL
-    sudo -u postgres psql jottiecp < /usr/share/pdns-backend-pgsql/schema.pgsql.sql > /dev/null 2>&1 \
+    sudo -u postgres psql jotticp < /usr/share/pdns-backend-pgsql/schema.pgsql.sql > /dev/null 2>&1 \
         || log_warn "PowerDNS schema may already exist"
 
     systemctl enable pdns
@@ -731,7 +731,7 @@ RestrictNamespaces=~user pid net
 SystemCallFilter=@system-service
 
 # orbit-panel specific: needs to call adduser, systemctl, etc. via sudo
-$([ "${svc}" == "jotti-panel" ] && echo "# (sudo rules in /etc/sudoers.d/jottiecp)" || true)
+$([ "${svc}" == "jotti-panel" ] && echo "# (sudo rules in /etc/sudoers.d/jotticp)" || true)
 
 # Resource limits for the panel daemon itself
 MemoryMax=512M
@@ -760,34 +760,34 @@ ALLOWED_ORIGINS=https://$(hostname -f 2>/dev/null || hostname)
 EOF
 
     # sudo rules: jotti-panel can run specific privileged commands
-    cat > /etc/sudoers.d/jottiecp << 'SUDOERS'
+    cat > /etc/sudoers.d/jotticp << 'SUDOERS'
 # JottiCP sudo rules — allow jotti-panel to manage sites without root shell
 # All commands are explicitly listed — no wildcard root shell access
 
 # Unix user management for site isolation
-jottiecp ALL=(root) NOPASSWD: /usr/sbin/useradd --system * jotti_*
-jottiecp ALL=(root) NOPASSWD: /usr/sbin/userdel -r jotti_*
+jotticp ALL=(root) NOPASSWD: /usr/sbin/useradd --system * jotti_*
+jotticp ALL=(root) NOPASSWD: /usr/sbin/userdel -r jotti_*
 
 # systemd: manage PHP-FPM, OLS, and website slices
-jottiecp ALL=(root) NOPASSWD: /bin/systemctl enable php*-fpm
-jottiecp ALL=(root) NOPASSWD: /bin/systemctl disable php*-fpm
-jottiecp ALL=(root) NOPASSWD: /bin/systemctl restart php*-fpm
-jottiecp ALL=(root) NOPASSWD: /bin/systemctl reload php*-fpm
-jottiecp ALL=(root) NOPASSWD: /bin/systemctl start website-*.slice
-jottiecp ALL=(root) NOPASSWD: /bin/systemctl stop website-*.slice
+jotticp ALL=(root) NOPASSWD: /bin/systemctl enable php*-fpm
+jotticp ALL=(root) NOPASSWD: /bin/systemctl disable php*-fpm
+jotticp ALL=(root) NOPASSWD: /bin/systemctl restart php*-fpm
+jotticp ALL=(root) NOPASSWD: /bin/systemctl reload php*-fpm
+jotticp ALL=(root) NOPASSWD: /bin/systemctl start website-*.slice
+jotticp ALL=(root) NOPASSWD: /bin/systemctl stop website-*.slice
 
 # nftables: manage fail2ban IP blocks
-jottiecp ALL=(root) NOPASSWD: /usr/sbin/nft add element inet filter fail2ban_* *
-jottiecp ALL=(root) NOPASSWD: /usr/sbin/nft delete element inet filter fail2ban_* *
+jotticp ALL=(root) NOPASSWD: /usr/sbin/nft add element inet filter fail2ban_* *
+jotticp ALL=(root) NOPASSWD: /usr/sbin/nft delete element inet filter fail2ban_* *
 
 # OLS management
-jottiecp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl restart
-jottiecp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl reload
+jotticp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl restart
+jotticp ALL=(root) NOPASSWD: /usr/local/lsws/bin/lswsctrl reload
 
 # WP-CLI (run as site users)
-jottiecp ALL=(jotti_*) NOPASSWD: /usr/local/bin/wp *
+jotticp ALL=(jotti_*) NOPASSWD: /usr/local/bin/wp *
 SUDOERS
-    chmod 440 /etc/sudoers.d/jottiecp
+    chmod 440 /etc/sudoers.d/jotticp
 
     systemctl daemon-reload
 
@@ -879,7 +879,7 @@ table inet filter {
         # ADMIN PORT 2087 IS INTENTIONALLY NOT OPENED HERE
         # orbit-panel binds to 127.0.0.1:2087 — accessed via OLS/nginx reverse proxy on 443
 
-        log prefix "jottiecp-drop: " flags all limit rate 5/minute drop
+        log prefix "jotticp-drop: " flags all limit rate 5/minute drop
     }
 
     chain forward {
@@ -903,7 +903,7 @@ apply_cis_baseline() {
     log_step "Step 11/12: Applying CIS Level 1 security baseline"
 
     # Kernel hardening via sysctl
-    cat > /etc/sysctl.d/99-jottiecp-hardening.conf << 'SYSCTL'
+    cat > /etc/sysctl.d/99-jotticp-hardening.conf << 'SYSCTL'
 # JottiCP CIS Level 1 sysctl hardening
 net.ipv4.ip_forward = 0
 net.ipv4.conf.all.send_redirects = 0
@@ -936,7 +936,7 @@ SYSCTL
 
     # SSH hardening
     local sshd_conf="/etc/ssh/sshd_config"
-    cp "${sshd_conf}" "${sshd_conf}.backup-pre-jottiecp"
+    cp "${sshd_conf}" "${sshd_conf}.backup-pre-jotticp"
 
     # Apply SSH settings (append to avoid breaking any include directives)
     cat >> "${sshd_conf}" << 'SSH'
@@ -960,7 +960,7 @@ SSH
         log_ok "SSH hardened (PasswordAuthentication disabled, PermitRootLogin disabled)"
     else
         log_warn "sshd_config validation failed — SSH config not applied. Check ${sshd_conf}."
-        cp "${sshd_conf}.backup-pre-jottiecp" "${sshd_conf}"
+        cp "${sshd_conf}.backup-pre-jotticp" "${sshd_conf}"
     fi
 
     # Remove unnecessary services
@@ -998,7 +998,7 @@ UNATTENDED
     log_ok "auditd enabled"
 
     # fail2ban configuration
-    cat > /etc/fail2ban/jail.d/jottiecp.conf << 'FAIL2BAN'
+    cat > /etc/fail2ban/jail.d/jotticp.conf << 'FAIL2BAN'
 [DEFAULT]
 bantime   = 15m
 findtime  = 10m
@@ -1014,7 +1014,7 @@ bantime  = 1h
 enabled  = true
 port     = 443
 filter   = orbit-panel-auth
-logpath  = /var/log/jottiecp/auth.log
+logpath  = /var/log/jotticp/auth.log
 maxretry = 5
 bantime  = 15m
 

@@ -7,12 +7,12 @@
 **Modern Rust-Powered Web Hosting Control Panel**
 
 [![License](https://img.shields.io/badge/License-AGPL--3.0-blue?style=for-the-badge)](LICENSE)
-[![Buy License](https://img.shields.io/badge/Buy-$99.99%20Lifetime-f59e0b?style=for-the-badge)](https://jotti.ru/products/jottiecp)
-[![Trial](https://img.shields.io/badge/14--Day-Money--Back%20Guarantee-22c55e?style=for-the-badge)](https://jotti.ru/products/jottiecp)
-[![Platform](https://img.shields.io/badge/Platform-Linux-orange?style=for-the-badge&logo=linux)](https://jotti.ru/jottiecp/releases)
+[![Buy License](https://img.shields.io/badge/Buy-$99.99%20Lifetime-f59e0b?style=for-the-badge)](https://jotti.ru/products/jotticp)
+[![Trial](https://img.shields.io/badge/14--Day-Money--Back%20Guarantee-22c55e?style=for-the-badge)](https://jotti.ru/products/jotticp)
+[![Platform](https://img.shields.io/badge/Platform-Linux-orange?style=for-the-badge&logo=linux)](https://jotti.ru/jotticp/releases)
 [![Rust](https://img.shields.io/badge/Built%20With-Rust-b7410e?style=for-the-badge&logo=rust)](https://www.rust-lang.org)
 
-[**🛒 Buy Lifetime License — $99.99**](https://jotti.ru/products/jottiecp) · [**📖 Docs**](https://jotti.ru/docs/jottiecp/) · [**💬 Support**](mailto:support@jotti.ru)
+[**🛒 Buy Lifetime License — $99.99**](https://jotti.ru/products/jotticp) · [**📖 Docs**](https://jotti.ru/docs/jotticp/) · [**💬 Support**](mailto:support@jotti.ru)
 
 </div>
 
@@ -38,7 +38,7 @@
 
 Not satisfied for any reason? Get a **full refund within 14 days** — no questions asked.
 
-[👉 Get JottiCP — $99.99 Lifetime](https://jotti.ru/products/jottiecp)
+[👉 Get JottiCP — $99.99 Lifetime](https://jotti.ru/products/jotticp)
 
 ---
 
@@ -152,8 +152,8 @@ instant-acme = "0.7"      # Let's Encrypt
 ### Build Steps
 
 ```bash
-git clone https://jotti.ru/jottiecp.git
-cd jottiecp
+git clone https://jotti.ru/jotticp.git
+cd jotticp
 
 # Copy and configure environment
 cp jotti-panel/.env.example jotti-panel/.env
@@ -205,7 +205,7 @@ HTTPS:443 → nginx → jotti-panel (127.0.0.1:2087)
 | **White-label** | ❌ | ✅ |
 | **WHMCS module** | ✅ | ✅ |
 
-**[🛒 Buy Lifetime License — $99.99](https://jotti.ru/products/jottiecp)**
+**[🛒 Buy Lifetime License — $99.99](https://jotti.ru/products/jotticp)**
 
 ---
 
@@ -213,10 +213,10 @@ HTTPS:443 → nginx → jotti-panel (127.0.0.1:2087)
 
 | Channel | Link |
 |---|---|
-| 🌐 Product page | [jotti.ru/products/jottiecp](https://jotti.ru/products/jottiecp) |
-| 📖 Docs | [jotti.ru/docs/jottiecp/](https://jotti.ru/docs/jottiecp/) |
+| 🌐 Product page | [jotti.ru/products/jotticp](https://jotti.ru/products/jotticp) |
+| 📖 Docs | [jotti.ru/docs/jotticp/](https://jotti.ru/docs/jotticp/) |
 | 📧 Email | support@jotti.ru |
-| 🐛 Issues | [GitHub Issues](https://github.com/DevelopmentSPB/jottiecp/issues) |
+| 🐛 Issues | [GitHub Issues](https://github.com/DevelopmentSPB/jotticp/issues) |
 
 ---
 
@@ -224,6 +224,6 @@ HTTPS:443 → nginx → jotti-panel (127.0.0.1:2087)
 
 Made by **[Development SPB](https://jotti.ru)** · Copyright © 2026
 
-**[Lifetime License $99.99](https://jotti.ru/products/jottiecp)** · **[Docs](https://jotti.ru/docs/jottiecp/)** · **[Install](install.sh)**
+**[Lifetime License $99.99](https://jotti.ru/products/jotticp)** · **[Docs](https://jotti.ru/docs/jotticp/)** · **[Install](install.sh)**
 
 </div>

@@ -238,7 +238,7 @@ pub fn verify_archive_signature(
 // ── TOML manifest loader ──────────────────────────────────────────────────────
 
 /// Load app TOML manifests from the directory pointed to by the
-/// `ORBIT_APPS_DIR` environment variable (default: `/etc/jottiecp/apps`).
+/// `ORBIT_APPS_DIR` environment variable (default: `/etc/jotticp/apps`).
 ///
 /// Each `*.toml` file in the directory is expected to have at minimum:
 /// ```toml
@@ -254,7 +254,7 @@ pub fn verify_archive_signature(
 /// not require a server restart.
 pub fn load_app_manifests() -> Vec<AppManifest> {
     let apps_dir = std::env::var("ORBIT_APPS_DIR")
-        .unwrap_or_else(|_| "/etc/jottiecp/apps".to_string());
+        .unwrap_or_else(|_| "/etc/jotticp/apps".to_string());
 
     let dir = match std::fs::read_dir(&apps_dir) {
         Ok(d) => d,
@@ -440,7 +440,7 @@ fn caller(claims: &Claims) -> ApiResult<(Uuid, bool)> {
 // ── Handlers ──────────────────────────────────────────────────────────────────
 
 /// List all available apps in the marketplace.
-/// Manifests are loaded from `ORBIT_APPS_DIR` (default `/etc/jottiecp/apps`)
+/// Manifests are loaded from `ORBIT_APPS_DIR` (default `/etc/jotticp/apps`)
 /// on each request, with a fall-through to the built-in list.
 async fn list_apps(
     State(_state): State<Arc<AppState>>,

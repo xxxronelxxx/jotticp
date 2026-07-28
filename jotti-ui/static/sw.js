@@ -5,7 +5,7 @@
 //   - Static assets:       cache-first, fall back to network
 //   - HTML pages:          network-first, fall back to cache (stale-while-revalidate)
 
-const CACHE_NAME    = 'jottiecp-v2';
+const CACHE_NAME    = 'jotticp-v2';
 const STATIC_ASSETS = [
     '/',
     '/dashboard',
@@ -106,7 +106,7 @@ self.addEventListener('push', (event) => {
         body:    data.body   || '',
         icon:    '/icon-192.png',
         badge:   '/icon-192.png',
-        tag:     data.tag    || 'jottiecp',
+        tag:     data.tag    || 'jotticp',
         data:    { url: data.url || '/dashboard' },
         actions: data.actions || [],
     };

@@ -6,11 +6,11 @@ Requires=jotti-panel.service
 
 [Service]
 Type=simple
-User=jottiecp
-Group=jottiecp
+User=jotticp
+Group=jotticp
 ExecStart=/usr/local/bin/orbit-mcp --http
 Environment=JOTTI_PANEL_URL=http://127.0.0.1:2087
-EnvironmentFile=/etc/jottiecp/mcp.env
+EnvironmentFile=/etc/jotticp/mcp.env
 
 # Restart policy
 Restart=on-failure
@@ -21,7 +21,7 @@ NoNewPrivileges=yes
 PrivateTmp=yes
 ProtectSystem=strict
 ProtectHome=yes
-ReadWritePaths=/var/log/jottiecp
+ReadWritePaths=/var/log/jotticp
 
 # Resource limits
 LimitNOFILE=65536

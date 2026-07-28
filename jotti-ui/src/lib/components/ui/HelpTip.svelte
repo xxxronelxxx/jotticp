@@ -96,7 +96,7 @@
   <!-- Panel footer -->
   <div class="shrink-0 px-5 py-3 border-t border-[var(--border)]">
     <a
-      href="https://docs.jottiecp.io"
+      href="https://docs.jotticp.io"
       target="_blank"
       rel="noopener noreferrer"
       class="text-xs text-[var(--accent)] hover:underline inline-flex items-center gap-1"

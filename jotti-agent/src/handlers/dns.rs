@@ -59,14 +59,14 @@ async fn do_create_dns_zone(
     };
 
     // Default nameservers if not provided
-    let ns1 = if ns1.is_empty() { "ns1.jottiecp.local." } else { ns1 };
-    let ns2 = if ns2.is_empty() { "ns2.jottiecp.local." } else { ns2 };
+    let ns1 = if ns1.is_empty() { "ns1.jotticp.local." } else { ns1 };
+    let ns2 = if ns2.is_empty() { "ns2.jotticp.local." } else { ns2 };
 
     // PowerDNS API endpoint (local socket or localhost:8081)
     let pdns_api_url = std::env::var("PDNS_API_URL")
         .unwrap_or_else(|_| "http://127.0.0.1:8081".to_string());
     let pdns_api_key = std::env::var("PDNS_API_KEY")
-        .unwrap_or_else(|_| "jottiecp-pdns-key".to_string());
+        .unwrap_or_else(|_| "jotticp-pdns-key".to_string());
 
     // Build the zone creation payload
     let payload = serde_json::json!({
@@ -151,7 +151,7 @@ async fn do_delete_dns_zone(zone: &str) -> Result<tonic::Response<StatusResponse
     let pdns_api_url = std::env::var("PDNS_API_URL")
         .unwrap_or_else(|_| "http://127.0.0.1:8081".to_string());
     let pdns_api_key = std::env::var("PDNS_API_KEY")
-        .unwrap_or_else(|_| "jottiecp-pdns-key".to_string());
+        .unwrap_or_else(|_| "jotticp-pdns-key".to_string());
 
     let client = reqwest::Client::new();
     let resp = client
@@ -187,7 +187,7 @@ async fn do_delete_dns_zone(zone: &str) -> Result<tonic::Response<StatusResponse
 
 fn pdns_api() -> (String, String) {
     let url = std::env::var("PDNS_API_URL").unwrap_or_else(|_| "http://127.0.0.1:8081".to_string());
-    let key = std::env::var("PDNS_API_KEY").unwrap_or_else(|_| "jottiecp-pdns-key".to_string());
+    let key = std::env::var("PDNS_API_KEY").unwrap_or_else(|_| "jotticp-pdns-key".to_string());
     (url, key)
 }
 

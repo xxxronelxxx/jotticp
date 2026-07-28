@@ -178,7 +178,7 @@
             <p class="text-sm font-semibold text-foreground">Need help?</p>
             <p class="text-xs text-muted-foreground mt-0.5">Our support team is here to assist you.</p>
           </div>
-          <a href="mailto:support@jottiecp.io"
+          <a href="mailto:support@jotticp.io"
              class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                     hover:bg-primary/90 transition-colors inline-flex items-center">
             Contact Support

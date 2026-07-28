@@ -633,8 +633,8 @@ fn do_setup_dotnet(site_id: &str, unix_user: &str, dotnet_version: &str, port: u
     let dotnet_bin = "/usr/bin/dotnet";
 
     // Environment file location for Kestrel URLs
-    let env_file = format!("/etc/jottiecp/dotnet/{}.env", site_id);
-    let env_dir  = "/etc/jottiecp/dotnet";
+    let env_file = format!("/etc/jotticp/dotnet/{}.env", site_id);
+    let env_dir  = "/etc/jotticp/dotnet";
     std::fs::create_dir_all(env_dir)
         .map_err(|e| Status::internal(format!("create dotnet env dir: {}", e)))?;
 

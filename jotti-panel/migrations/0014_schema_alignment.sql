@@ -176,7 +176,7 @@ SELECT
     accent_color,
     support_email,
     support_url,
-    hide_jottiecp_credit,
+    hide_jotticp_credit,
     custom_css,
     created_at,
     updated_at

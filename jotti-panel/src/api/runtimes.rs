@@ -376,7 +376,7 @@ async fn nodejs_status(
     let (user_id, is_admin) = caller(&claims)?;
     let (_, domain, _) = resolve_site(&state, site_id, user_id, is_admin).await?;
 
-    let unit = format!("jottiecp-nodejs-{}", domain);
+    let unit = format!("jotticp-nodejs-{}", domain);
 
     let out = tokio::process::Command::new("systemctl")
         .args(["show", &unit,
@@ -431,7 +431,7 @@ async fn nodejs_process(
     let (user_id, is_admin) = caller(&claims)?;
     let (_, domain, _) = resolve_site(&state, site_id, user_id, is_admin).await?;
 
-    let unit = format!("jottiecp-nodejs-{}", domain);
+    let unit = format!("jotticp-nodejs-{}", domain);
 
     let systemctl_action = match req.action.as_str() {
         "start"   => "start",
@@ -467,7 +467,7 @@ async fn nodejs_logs(
     let (user_id, is_admin) = caller(&claims)?;
     let (_, domain, _) = resolve_site(&state, site_id, user_id, is_admin).await?;
 
-    let log_dir = format!("/var/log/jottiecp/sites/{}", domain);
+    let log_dir = format!("/var/log/jotticp/sites/{}", domain);
     let out_log = format!("{}/nodejs.log",       log_dir);
     let err_log = format!("{}/nodejs-error.log", log_dir);
 
@@ -496,7 +496,7 @@ async fn python_logs(
     let (user_id, is_admin) = caller(&claims)?;
     let (_, domain, _) = resolve_site(&state, site_id, user_id, is_admin).await?;
 
-    let log_dir = format!("/var/log/jottiecp/sites/{}", domain);
+    let log_dir = format!("/var/log/jotticp/sites/{}", domain);
     let out_log = format!("{}/python.log",       log_dir);
     let err_log = format!("{}/python-error.log", log_dir);
 

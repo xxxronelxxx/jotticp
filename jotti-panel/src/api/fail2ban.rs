@@ -163,7 +163,7 @@ async fn systemctl_is_active(unit: &str) -> bool {
 /// ```
 /// Status
 /// |- Number of jail:	2
-/// `- Jail list:	sshd, jottiecp-admin
+/// `- Jail list:	sshd, jotticp-admin
 /// ```
 fn parse_jail_list(output: &str) -> Vec<String> {
     for line in output.lines() {
@@ -313,7 +313,7 @@ async fn list_all_banned(
 
 /// PUT /api/v1/fail2ban/jails/{jail}/maxretry — update maxretry for a jail
 ///
-/// Writes `/etc/fail2ban/jail.d/jottiecp-JAIL.conf` then reloads fail2ban.
+/// Writes `/etc/fail2ban/jail.d/jotticp-JAIL.conf` then reloads fail2ban.
 async fn set_maxretry(
     State(_state): State<Arc<AppState>>,
     claims: Claims,
@@ -333,7 +333,7 @@ async fn set_maxretry(
         return Err(ApiError::Validation("Invalid jail name".into()));
     }
 
-    let conf_path = format!("/etc/fail2ban/jail.d/jottiecp-{jail}.conf");
+    let conf_path = format!("/etc/fail2ban/jail.d/jotticp-{jail}.conf");
     let conf_content = format!(
         "[{jail}]\nenabled = true\nmaxretry = {}\n",
         req.maxretry

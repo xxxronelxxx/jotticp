@@ -21,9 +21,9 @@ pub struct AppState {
     pub db:                PgPool,
     pub config:            config::Config,
     pub valkey:            redis::aio::ConnectionManager,
-    /// ES256 ECDSA P-256 signing key — built from /etc/jottiecp/jwt_ec_key.pem at startup.
+    /// ES256 ECDSA P-256 signing key — built from /etc/jotticp/jwt_ec_key.pem at startup.
     pub jwt_encoding_key:  EncodingKey,
-    /// ES256 ECDSA P-256 verification key — built from /etc/jottiecp/jwt_ec_key.pub.pem at startup.
+    /// ES256 ECDSA P-256 verification key — built from /etc/jotticp/jwt_ec_key.pub.pem at startup.
     pub jwt_decoding_key:  DecodingKey,
     /// Shared reqwest HTTP client for calling internal daemons (jotti-mail, jotti-dns).
     pub http:              reqwest::Client,

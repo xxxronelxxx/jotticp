@@ -204,7 +204,7 @@ fn do_delete_site(
     let home_dir = format!("/home/{}", unix_user);
     if delete_files && Path::new(&home_dir).exists() {
         let ts        = Utc::now().format("%Y%m%d%H%M%S");
-        let backup_dir = "/var/backups/jottiecp/deleted";
+        let backup_dir = "/var/backups/jotticp/deleted";
         std::fs::create_dir_all(backup_dir)
             .map_err(|e| Status::internal(format!("create backup dir failed: {}", e)))?;
 
@@ -470,7 +470,7 @@ fn nginx_suspended_vhost(domain: &str) -> String {
 
     error_page 503 /503.html;
     location = /503.html {{
-        root /var/www/jottiecp-suspended;
+        root /var/www/jotticp-suspended;
         internal;
     }}
 }}

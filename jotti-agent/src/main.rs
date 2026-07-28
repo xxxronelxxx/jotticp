@@ -411,11 +411,11 @@ async fn main() -> anyhow::Result<()> {
 
     // ── mTLS configuration ────────────────────────────────────────────────────
     let cert_path = std::env::var("AGENT_CERT_PATH")
-        .unwrap_or_else(|_| "/etc/jottiecp/agent/agent.pem".into());
+        .unwrap_or_else(|_| "/etc/jotticp/agent/agent.pem".into());
     let key_path = std::env::var("AGENT_KEY_PATH")
-        .unwrap_or_else(|_| "/etc/jottiecp/agent/agent-key.pem".into());
+        .unwrap_or_else(|_| "/etc/jotticp/agent/agent-key.pem".into());
     let ca_path = std::env::var("AGENT_CA_PATH")
-        .unwrap_or_else(|_| "/etc/jottiecp/agent/ca.pem".into());
+        .unwrap_or_else(|_| "/etc/jotticp/agent/ca.pem".into());
 
     let cert = std::fs::read_to_string(&cert_path)
         .map_err(|e| anyhow::anyhow!("Cannot read agent cert {}: {}", cert_path, e))?;
@@ -432,7 +432,7 @@ async fn main() -> anyhow::Result<()> {
 
     // ── SQLite journal ────────────────────────────────────────────────────────
     let journal_path = std::env::var("ORBIT_JOURNAL_PATH")
-        .unwrap_or_else(|_| "/var/lib/jottiecp/agent/journal.db".into());
+        .unwrap_or_else(|_| "/var/lib/jotticp/agent/journal.db".into());
 
     // Ensure journal directory exists
     if let Some(parent) = std::path::Path::new(&journal_path).parent() {

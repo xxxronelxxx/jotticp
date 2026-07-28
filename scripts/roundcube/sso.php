@@ -20,7 +20,7 @@ if ($token === '') {
 }
 
 // Read Valkey password from www-data readable file
-$valkey_pass = trim(@file_get_contents('/etc/jottiecp/webmail-valkey-pass') ?: '');
+$valkey_pass = trim(@file_get_contents('/etc/jotticp/webmail-valkey-pass') ?: '');
 
 try {
     $redis = new Redis();

@@ -14,7 +14,7 @@ use super::auth::Claims;
 
 // ── Hardening ─────────────────────────────────────────────────────────────────
 
-const HARDENING_CONF: &str = "/etc/sysctl.d/99-jottiecp-hardening.conf";
+const HARDENING_CONF: &str = "/etc/sysctl.d/99-jotticp-hardening.conf";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -67,7 +67,7 @@ pub struct LicenseInfo {
 
 #[derive(Debug, Serialize)]
 pub struct HardeningStatus {
-    /// True if /etc/sysctl.d/99-jottiecp-hardening.conf exists.
+    /// True if /etc/sysctl.d/99-jotticp-hardening.conf exists.
     pub applied:     bool,
     /// Key=value pairs parsed from the hardening config.
     pub parameters:  std::collections::HashMap<String, String>,

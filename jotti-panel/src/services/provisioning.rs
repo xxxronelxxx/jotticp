@@ -139,14 +139,14 @@ pub async fn provision_site(state: &Arc<AppState>, job: ProvisioningJob) -> anyh
 
 // ── Remote provisioning (via jotti-agent gRPC) ────────────────────────────────
 
-/// Build an mTLS gRPC channel to an jotti-agent (certs from /etc/jottiecp/agent/).
+/// Build an mTLS gRPC channel to an jotti-agent (certs from /etc/jotticp/agent/).
 pub async fn agent_channel(agent_addr: &str) -> anyhow::Result<tonic::transport::Channel> {
     let host = agent_addr.split(':').next().unwrap_or(agent_addr).to_string();
-    let ca   = tokio::fs::read("/etc/jottiecp/agent/ca.pem").await
+    let ca   = tokio::fs::read("/etc/jotticp/agent/ca.pem").await
         .map_err(|e| anyhow::anyhow!("read agent CA: {}", e))?;
-    let cert = tokio::fs::read("/etc/jottiecp/agent/panel-client.pem").await
+    let cert = tokio::fs::read("/etc/jotticp/agent/panel-client.pem").await
         .map_err(|e| anyhow::anyhow!("read panel client cert: {}", e))?;
-    let key  = tokio::fs::read("/etc/jottiecp/agent/panel-client-key.pem").await
+    let key  = tokio::fs::read("/etc/jotticp/agent/panel-client-key.pem").await
         .map_err(|e| anyhow::anyhow!("read panel client key: {}", e))?;
     let tls = tonic::transport::ClientTlsConfig::new()
         .ca_certificate(tonic::transport::Certificate::from_pem(ca))
@@ -513,7 +513,7 @@ fn write_php_fpm_pool(job: &ProvisioningJob) -> anyhow::Result<()> {
          php_admin_value[upload_tmp_dir]    = /tmp/uploads/{user}\n\
          \n\
          ; OPcache (shared; tuned for per-site isolation)\n\
-         php_admin_value[opcache.file_cache]           = /var/jottiecp/opcache/{user}\n\
+         php_admin_value[opcache.file_cache]           = /var/jotticp/opcache/{user}\n\
          php_admin_flag[opcache.enable]                = on\n\
          php_admin_flag[opcache.enable_cli]            = off\n\
          php_admin_value[opcache.memory_consumption]   = 64\n\
@@ -542,7 +542,7 @@ fn write_php_fpm_pool(job: &ProvisioningJob) -> anyhow::Result<()> {
     for dir in &[
         format!("/tmp/sessions/{}", job.unix_user),
         format!("/tmp/uploads/{}", job.unix_user),
-        format!("/var/jottiecp/opcache/{}", job.unix_user),
+        format!("/var/jotticp/opcache/{}", job.unix_user),
         format!("/home/{}/logs", job.unix_user),
     ] {
         std::fs::create_dir_all(dir)
@@ -622,7 +622,7 @@ fn write_nginx_vhost(job: &ProvisioningJob) -> anyhow::Result<()> {
          \n\
              # ACME HTTP-01 challenge dir\n\
              location ^~ /.well-known/acme-challenge/ {{\n\
-                 root /var/lib/jottiecp/acme/{domain};\n\
+                 root /var/lib/jotticp/acme/{domain};\n\
                  try_files $uri =404;\n\
              }}\n\
          }}\n",
@@ -674,7 +674,7 @@ fn write_nginx_proxy_vhost(domain: &str, backend_port: u16) -> anyhow::Result<()
          \n\
              # ACME HTTP-01 challenge\n\
              location ^~ /.well-known/acme-challenge/ {{\n\
-                 root /var/lib/jottiecp/acme/{domain};\n\
+                 root /var/lib/jotticp/acme/{domain};\n\
                  try_files $uri =404;\n\
              }}\n\
          \n\
@@ -950,7 +950,7 @@ pub async fn deprovision_site(
     let _ = run_cmd("systemctl", &["daemon-reload"]);
 
     // 7. Remove ACME challenge dir
-    let _ = std::fs::remove_dir_all(format!("/var/lib/jottiecp/acme/{}", domain));
+    let _ = std::fs::remove_dir_all(format!("/var/lib/jotticp/acme/{}", domain));
 
     // 8. Mark deleted in DB
     sqlx::query!(
@@ -1186,7 +1186,7 @@ pub fn deprovision_runtime_sync(domain: &str, unix_user: &str, prev_runtime: &st
     // Stop runtime-specific process (both nodejs and python use systemd units)
     match prev_runtime {
         "nodejs" => {
-            let unit = format!("jottiecp-nodejs-{}", domain);
+            let unit = format!("jotticp-nodejs-{}", domain);
             // Capture MainPID before stopping so we can force-kill orphans
             let main_pid: Option<u32> = std::process::Command::new("systemctl")
                 .args(["show", &unit, "--property=MainPID", "--value"])
@@ -1208,7 +1208,7 @@ pub fn deprovision_runtime_sync(domain: &str, unix_user: &str, prev_runtime: &st
             }
         }
         "python" => {
-            let unit = format!("jottiecp-python-{}", domain);
+            let unit = format!("jotticp-python-{}", domain);
             let main_pid: Option<u32> = std::process::Command::new("systemctl")
                 .args(["show", &unit, "--property=MainPID", "--value"])
                 .output()
@@ -1256,8 +1256,8 @@ pub fn provision_nodejs_sync(domain: &str, unix_user: &str, port: i32) -> anyhow
     );
 
     let docroot   = format!("/home/{}/public_html", unix_user);
-    let log_dir   = format!("/var/log/jottiecp/sites/{}", domain);
-    let unit_name = format!("jottiecp-nodejs-{}", domain);
+    let log_dir   = format!("/var/log/jotticp/sites/{}", domain);
+    let unit_name = format!("jotticp-nodejs-{}", domain);
     let unit_path = format!("/etc/systemd/system/{}.service", unit_name);
 
     std::fs::create_dir_all(&log_dir).unwrap_or(());
@@ -1356,8 +1356,8 @@ pub fn provision_python_sync(
 
     let venv_path   = format!("/home/{}/venv",        unix_user);
     let docroot     = format!("/home/{}/public_html",  unix_user);
-    let log_dir     = format!("/var/log/jottiecp/sites/{}", domain);
-    let unit_name   = format!("jottiecp-python-{}", domain);
+    let log_dir     = format!("/var/log/jotticp/sites/{}", domain);
+    let unit_name   = format!("jotticp-python-{}", domain);
     let unit_path   = format!("/etc/systemd/system/{}.service", unit_name);
 
     std::fs::create_dir_all(&log_dir).unwrap_or(());
@@ -1444,7 +1444,7 @@ fn write_runtime_proxy_vhost(domain: &str, port: u16) -> anyhow::Result<()> {
              client_max_body_size 100M;\n\
          \n\
              location ^~ /.well-known/acme-challenge/ {{\n\
-                 root /var/lib/jottiecp/acme/{domain};\n\
+                 root /var/lib/jotticp/acme/{domain};\n\
                  try_files $uri =404;\n\
              }}\n\
          \n\

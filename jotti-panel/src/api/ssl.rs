@@ -293,8 +293,8 @@ async fn upload_cert(
         return Err(ApiError::Validation("key.pem does not appear to be a PEM private key".into()));
     }
 
-    // Write cert files to disk under /etc/jottiecp/ssl/{site_id}/
-    let cert_dir = format!("/etc/jottiecp/ssl/{}", site_id);
+    // Write cert files to disk under /etc/jotticp/ssl/{site_id}/
+    let cert_dir = format!("/etc/jotticp/ssl/{}", site_id);
     let cert_path = format!("{}/cert.pem", cert_dir);
     let key_path  = format!("{}/key.pem", cert_dir);
 

@@ -95,7 +95,7 @@ fn create_mysql_database(db_name: &str, db_user: &str, db_password: &str) -> Res
     );
 
     let status = Command::new("/usr/bin/mysql")
-        .args(["--defaults-file=/etc/jottiecp/mysql-admin.cnf", "--execute", &sql])
+        .args(["--defaults-file=/etc/jotticp/mysql-admin.cnf", "--execute", &sql])
         .status()
         .map_err(|e| Status::internal(format!("mysql exec failed: {}", e)))?;
 
@@ -239,7 +239,7 @@ fn drop_mysql_database(db_name: &str, db_user: &str) -> Result<(), Status> {
     );
 
     let status = Command::new("/usr/bin/mysql")
-        .args(["--defaults-file=/etc/jottiecp/mysql-admin.cnf", "--execute", &sql])
+        .args(["--defaults-file=/etc/jotticp/mysql-admin.cnf", "--execute", &sql])
         .status()
         .map_err(|e| Status::internal(format!("mysql exec failed: {}", e)))?;
 

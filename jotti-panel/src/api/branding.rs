@@ -235,7 +235,7 @@ async fn upload_logo(
 
     // Determine output format
     let ext = if content_type.contains("webp") { "webp" } else { "png" };
-    let logo_dir = format!("/etc/jottiecp/branding/{}", lookup_id);
+    let logo_dir = format!("/etc/jotticp/branding/{}", lookup_id);
     let logo_path = format!("{}/logo.{}", logo_dir, ext);
     let logo_url  = format!("/api/v1/static/branding/{}/logo.{}", lookup_id, ext);
 
@@ -312,6 +312,6 @@ fn is_valid_domain(domain: &str) -> bool {
 
 fn logo_path_to_url(path: &str) -> String {
     // Convert filesystem path to served URL
-    // /etc/jottiecp/branding/{id}/logo.png -> /api/v1/static/branding/{id}/logo.png
-    path.replace("/etc/jottiecp/branding/", "/api/v1/static/branding/")
+    // /etc/jotticp/branding/{id}/logo.png -> /api/v1/static/branding/{id}/logo.png
+    path.replace("/etc/jotticp/branding/", "/api/v1/static/branding/")
 }

@@ -13,10 +13,10 @@ warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
 err()  { echo -e "${RED}[ERROR]${NC} $*"; exit 1; }
 
 JOTTICP_VERSION="0.0.1"
-INSTALL_DIR="/opt/jottiecp"
-DATA_DIR="/var/lib/jottiecp"
-BACKUP_DIR="/var/backups/jottiecp"
-LOG_DIR="/var/log/jottiecp"
+INSTALL_DIR="/opt/jotticp"
+DATA_DIR="/var/lib/jotticp"
+BACKUP_DIR="/var/backups/jotticp"
+LOG_DIR="/var/log/jotticp"
 
 banner() {
 cat << 'BANNER'
@@ -27,7 +27,7 @@ cat << 'BANNER'
  \___/|_|  |_.__/|_|_|\____||_|
 BANNER
 echo -e "${BLUE}JottiCP v${JOTTICP_VERSION} — Rust-Powered Web Hosting Panel${NC}"
-echo -e "${YELLOW}https://jotti.ru/products/jottiecp${NC}"
+echo -e "${YELLOW}https://jotti.ru/products/jotticp${NC}"
 echo ""
 }
 
@@ -79,11 +79,11 @@ setup_database() {
   systemctl start postgresql
   systemctl enable postgresql
 
-  sudo -u postgres psql -c "CREATE USER jottiecp WITH PASSWORD '${DB_PASS}';" 2>/dev/null || true
-  sudo -u postgres psql -c "CREATE DATABASE jottiecp OWNER jottiecp;" 2>/dev/null || true
-  sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE jottiecp TO jottiecp;" 2>/dev/null || true
+  sudo -u postgres psql -c "CREATE USER jotticp WITH PASSWORD '${DB_PASS}';" 2>/dev/null || true
+  sudo -u postgres psql -c "CREATE DATABASE jotticp OWNER jotticp;" 2>/dev/null || true
+  sudo -u postgres psql -c "GRANT ALL PRIVILEGES ON DATABASE jotticp TO jotticp;" 2>/dev/null || true
 
-  echo "DATABASE_URL=postgresql://jottiecp:${DB_PASS}@127.0.0.1:5432/jottiecp"
+  echo "DATABASE_URL=postgresql://jotticp:${DB_PASS}@127.0.0.1:5432/jotticp"
 }
 
 setup_valkey() {
@@ -92,11 +92,11 @@ setup_valkey() {
   systemctl enable redis-server 2>/dev/null || systemctl enable redis 2>/dev/null || true
 }
 
-build_jottiecp() {
+build_jotticp() {
   log "Building JottiCP from source..."
   source "$HOME/.cargo/env" 2>/dev/null || true
 
-  [ -d "${INSTALL_DIR}" ] || git clone https://jotti.ru/jottiecp.git "${INSTALL_DIR}"
+  [ -d "${INSTALL_DIR}" ] || git clone https://jotti.ru/jotticp.git "${INSTALL_DIR}"
   cd "${INSTALL_DIR}"
   cargo build --release --workspace 2>&1 | tail -10
   log "Build complete"
@@ -136,10 +136,10 @@ Requires=postgresql.service
 
 [Service]
 Type=exec
-User=jottiecp
-WorkingDirectory=/opt/jottiecp
-EnvironmentFile=/opt/jottiecp/.env
-ExecStart=/opt/jottiecp/target/release/jotti-panel
+User=jotticp
+WorkingDirectory=/opt/jotticp
+EnvironmentFile=/opt/jotticp/.env
+ExecStart=/opt/jotticp/target/release/jotti-panel
 Restart=on-failure
 RestartSec=5
 LimitNOFILE=65536
@@ -156,7 +156,7 @@ setup_nginx() {
   local DOMAIN="${1:-localhost}"
   log "Configuring nginx for domain: ${DOMAIN}..."
 
-  cat > /etc/nginx/sites-available/jottiecp << EOF
+  cat > /etc/nginx/sites-available/jotticp << EOF
 server {
     listen 80;
     server_name ${DOMAIN};
@@ -179,7 +179,7 @@ server {
     }
 }
 EOF
-  ln -sf /etc/nginx/sites-available/jottiecp /etc/nginx/sites-enabled/jottiecp
+  ln -sf /etc/nginx/sites-available/jotticp /etc/nginx/sites-enabled/jotticp
   nginx -t && systemctl reload nginx
 }
 
@@ -192,9 +192,9 @@ print_success() {
   echo -e "  Panel URL:   ${BLUE}http://${DOMAIN:-localhost}${NC}"
   echo -e "  First login: ${YELLOW}Create admin at /setup${NC}"
   echo -e "  Logs:        ${BLUE}journalctl -u jotti-panel -f${NC}"
-  echo -e "  Docs:        ${BLUE}https://jotti.ru/docs/jottiecp/${NC}"
+  echo -e "  Docs:        ${BLUE}https://jotti.ru/docs/jotticp/${NC}"
   echo ""
-  echo -e "  ${YELLOW}⚠  14-day trial active. Activate at: https://jotti.ru/products/jottiecp${NC}"
+  echo -e "  ${YELLOW}⚠  14-day trial active. Activate at: https://jotti.ru/products/jotticp${NC}"
   echo ""
 }
 
@@ -209,15 +209,15 @@ main() {
   install_rust
   DB_URL=$(setup_database)
   setup_valkey
-  build_jottiecp
+  build_jotticp
   setup_env "$DB_URL"
   setup_systemd
 
   [ -n "$DOMAIN" ] && setup_nginx "$DOMAIN"
 
   mkdir -p "${DATA_DIR}" "${BACKUP_DIR}" "${LOG_DIR}"
-  useradd -r -s /bin/false jottiecp 2>/dev/null || true
-  chown -R jottiecp:jottiecp "${INSTALL_DIR}" "${DATA_DIR}" "${BACKUP_DIR}" "${LOG_DIR}"
+  useradd -r -s /bin/false jotticp 2>/dev/null || true
+  chown -R jotticp:jotticp "${INSTALL_DIR}" "${DATA_DIR}" "${BACKUP_DIR}" "${LOG_DIR}"
 
   systemctl start jotti-panel
 

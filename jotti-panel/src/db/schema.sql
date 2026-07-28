@@ -55,7 +55,7 @@ CREATE TABLE servers (
     hostname        VARCHAR(255) NOT NULL,
     ip              INET         NOT NULL,
     ssh_port        INT          NOT NULL DEFAULT 22,
-    ssh_user        VARCHAR(64)  NOT NULL DEFAULT 'jottiecp-admin',
+    ssh_user        VARCHAR(64)  NOT NULL DEFAULT 'jotticp-admin',
     agent_port      INT          NOT NULL DEFAULT 7443,  -- orbit-agent gRPC port
     agent_cert      TEXT,                               -- mTLS client cert (PEM)
     agent_key       TEXT,                               -- mTLS client key  (PEM, encrypted at rest)
@@ -205,7 +205,7 @@ CREATE TABLE ssl_certs (
     challenge_type      ssl_challenge_type,
     issued_at           TIMESTAMPTZ,
     expires_at          TIMESTAMPTZ,
-    cert_path           TEXT,             -- /etc/jottiecp/ssl/<domain>/fullchain.pem
+    cert_path           TEXT,             -- /etc/jotticp/ssl/<domain>/fullchain.pem
     key_path            TEXT,
     chain_path          TEXT,
     auto_renew          BOOLEAN           NOT NULL DEFAULT true,
@@ -275,7 +275,7 @@ CREATE TABLE reseller_brands (
     accent_color        VARCHAR(7),
     support_email       VARCHAR(255),
     support_url         TEXT,
-    hide_jottiecp_credit BOOLEAN      NOT NULL DEFAULT false,
+    hide_jotticp_credit BOOLEAN      NOT NULL DEFAULT false,
     custom_css          TEXT,
     created_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW(),
     updated_at          TIMESTAMPTZ  NOT NULL DEFAULT NOW()

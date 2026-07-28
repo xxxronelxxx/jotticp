@@ -5,7 +5,7 @@ set -euo pipefail
 
 echo "Applying CIS Level 1 sysctl hardening..."
 
-cat > /etc/sysctl.d/99-jottiecp-hardening.conf << 'EOF'
+cat > /etc/sysctl.d/99-jotticp-hardening.conf << 'EOF'
 # TCP BBR congestion control
 net.core.default_qdisc=fq
 net.ipv4.tcp_congestion_control=bbr
@@ -43,7 +43,7 @@ fs.protected_hardlinks=1
 fs.protected_symlinks=1
 EOF
 
-sysctl -p /etc/sysctl.d/99-jottiecp-hardening.conf
+sysctl -p /etc/sysctl.d/99-jotticp-hardening.conf
 
 echo "Applying IO scheduler udev rules..."
 

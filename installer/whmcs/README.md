@@ -58,9 +58,9 @@ Tokens are scoped; use `Bearer` authentication.
   `CreateAccount` hook failed to save the user ID. Manually enter the JottiCP user UUID into the
   WHMCS service `username` field.
 - **SSL errors** — ensure the JottiCP panel has a valid TLS certificate. If using a self-signed
-  cert in development, set `CURLOPT_SSL_VERIFYPEER => false` in `_jottiecp_api()` (not for
+  cert in development, set `CURLOPT_SSL_VERIFYPEER => false` in `_jotticp_api()` (not for
   production).
-- **Timeout** — increase `CURLOPT_TIMEOUT` in `_jottiecp_api()` if the JottiCP server is slow.
+- **Timeout** — increase `CURLOPT_TIMEOUT` in `_jotticp_api()` if the JottiCP server is slow.
 
 ## Blesta Module
 

@@ -139,7 +139,7 @@ fn extract_key_data(public_key: &str) -> Option<&str> {
 /// Compute fingerprint by calling ssh-keygen.
 async fn compute_fingerprint(public_key: &str) -> String {
     use tokio::process::Command;
-    let tmp = format!("/tmp/jottiecp-key-{}.pub", Uuid::new_v4());
+    let tmp = format!("/tmp/jotticp-key-{}.pub", Uuid::new_v4());
     if tokio::fs::write(&tmp, public_key).await.is_err() {
         return "unknown".to_string();
     }
@@ -156,7 +156,7 @@ async fn compute_fingerprint(public_key: &str) -> String {
 
 /// Get home directory for a unix user.
 async fn get_home(unix_user: &str) -> String {
-    // Fast path: common jottiecp convention
+    // Fast path: common jotticp convention
     format!("/home/{}", unix_user)
 }
 
@@ -458,7 +458,7 @@ pub async fn sftp_configure(
         unix_user, unix_user, unix_user
     );
 
-    let sshd_conf_path = "/etc/ssh/sshd_config.d/jottiecp-sftp.conf";
+    let sshd_conf_path = "/etc/ssh/sshd_config.d/jotticp-sftp.conf";
 
     // Read existing config, add block if not already present
     let existing = tokio::fs::read_to_string(sshd_conf_path).await.unwrap_or_default();

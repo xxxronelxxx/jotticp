@@ -13,7 +13,7 @@ use tracing::info;
 
 /// Install a TLS certificate pair for a domain.
 ///
-/// Writes cert.pem (0644) and key.pem (0600) into /etc/jottiecp/ssl/{domain}/,
+/// Writes cert.pem (0644) and key.pem (0600) into /etc/jotticp/ssl/{domain}/,
 /// patches the nginx vhost to enable HTTPS, and reloads nginx.
 ///
 /// Returns the certificate expiry date as an RFC 3339 string.
@@ -25,7 +25,7 @@ pub fn install_ssl_cert(
     let domain = validate_domain(domain)?;
 
     // 1. Write cert files ───────────────────────────────────────────────────
-    let ssl_dir = format!("/etc/jottiecp/ssl/{}", domain);
+    let ssl_dir = format!("/etc/jotticp/ssl/{}", domain);
     std::fs::create_dir_all(&ssl_dir)
         .map_err(|e| Status::internal(format!("create SSL dir failed: {}", e)))?;
 
@@ -88,7 +88,7 @@ fn parse_cert_expiry(cert_path: &str) -> Option<String> {
 /// Remove SSL cert files for a domain (called during site deletion).
 pub fn remove_ssl_cert(domain: &str) -> Result<(), Status> {
     let domain  = validate_domain(domain)?;
-    let ssl_dir = format!("/etc/jottiecp/ssl/{}", domain);
+    let ssl_dir = format!("/etc/jotticp/ssl/{}", domain);
 
     if Path::new(&ssl_dir).exists() {
         std::fs::remove_dir_all(&ssl_dir)

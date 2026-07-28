@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS database_credentials (
 CREATE TABLE IF NOT EXISTS valkey_instances (
     id              UUID    PRIMARY KEY DEFAULT gen_random_uuid(),
     site_id         UUID    NOT NULL UNIQUE REFERENCES sites(id) ON DELETE CASCADE,
-    socket_path     TEXT    NOT NULL,    -- /var/run/jottiecp/valkey-SITEID.sock
+    socket_path     TEXT    NOT NULL,    -- /var/run/jotticp/valkey-SITEID.sock
     password_hash   TEXT    NOT NULL,    -- requirepass value
     maxmemory_mb    INT     NOT NULL DEFAULT 32,
     is_active       BOOLEAN NOT NULL DEFAULT FALSE,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS surrealdb_instances (
     id          UUID    PRIMARY KEY DEFAULT gen_random_uuid(),
     site_id     UUID    NOT NULL UNIQUE REFERENCES sites(id) ON DELETE CASCADE,
     port        INT     NOT NULL UNIQUE CHECK (port BETWEEN 49152 AND 65535),
-    data_dir    TEXT    NOT NULL,    -- /var/jottiecp/surrealdb/SITEID/
+    data_dir    TEXT    NOT NULL,    -- /var/jotticp/surrealdb/SITEID/
     root_user   TEXT    NOT NULL DEFAULT 'root',
     root_pass   TEXT    NOT NULL,    -- encrypted at rest
     is_active   BOOLEAN NOT NULL DEFAULT FALSE,

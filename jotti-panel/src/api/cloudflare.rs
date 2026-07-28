@@ -382,7 +382,7 @@ async fn list_cf_zones(
 fn encrypt_token(token: &str, config: &crate::config::Config) -> String {
     // XOR with a key derived from ORBIT_INTERNAL_TOKEN — simple obfuscation.
     // In production, replace with AES-256-GCM via the `aes-gcm` crate.
-    let fallback = "jottiecp_default_key_change_me".to_string();
+    let fallback = "jotticp_default_key_change_me".to_string();
     let key = config.internal_token.as_deref().unwrap_or(&fallback).as_bytes();
     let enc: Vec<u8> = token.bytes()
         .enumerate()
@@ -392,7 +392,7 @@ fn encrypt_token(token: &str, config: &crate::config::Config) -> String {
 }
 
 fn decrypt_token(enc: &str, config: &crate::config::Config) -> String {
-    let fallback = "jottiecp_default_key_change_me".to_string();
+    let fallback = "jotticp_default_key_change_me".to_string();
     let key = config.internal_token.as_deref().unwrap_or(&fallback).as_bytes();
     if let Ok(bytes) = base64::Engine::decode(&base64::engine::general_purpose::STANDARD, enc) {
         let dec: Vec<u8> = bytes.iter()

@@ -53,7 +53,7 @@ pub fn trigger_backup(
     let now           = Utc::now();
     let date_str      = now.format("%Y-%m-%d").to_string();
     let ts_str        = now.format("%Y%m%d%H%M%S").to_string();
-    let backup_dir    = format!("/var/backups/jottiecp/{}/{}", site_id, date_str);
+    let backup_dir    = format!("/var/backups/jotticp/{}/{}", site_id, date_str);
 
     std::fs::create_dir_all(&backup_dir)
         .map_err(|e| Status::internal(format!("create backup dir failed: {}", e)))?;

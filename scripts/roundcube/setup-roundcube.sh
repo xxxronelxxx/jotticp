@@ -10,20 +10,20 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
   dovecot-pgsql
 
 # 2. Drop JottiCP overrides (TLS, sieve, branding)
-install -m 640 -o root -g www-data jottiecp.inc.php /etc/roundcube/jottiecp.inc.php
-grep -q "jottiecp.inc.php" /etc/roundcube/config.inc.php || \
-  echo 'if (file_exists(__DIR__ . "/jottiecp.inc.php")) include __DIR__ . "/jottiecp.inc.php";' >> /etc/roundcube/config.inc.php
+install -m 640 -o root -g www-data jotticp.inc.php /etc/roundcube/jotticp.inc.php
+grep -q "jotticp.inc.php" /etc/roundcube/config.inc.php || \
+  echo 'if (file_exists(__DIR__ . "/jotticp.inc.php")) include __DIR__ . "/jotticp.inc.php";' >> /etc/roundcube/config.inc.php
 
 # 3. SSO bridge needs Valkey password (www-data readable)
-VALKEY_PASS=$(grep '^VALKEY_URL=' /etc/jottiecp/env | sed -n 's|.*://:\([^@]*\)@.*|\1|p')
-echo "$VALKEY_PASS" > /etc/jottiecp/webmail-valkey-pass
-chmod 640 /etc/jottiecp/webmail-valkey-pass
-chown root:www-data /etc/jottiecp/webmail-valkey-pass
+VALKEY_PASS=$(grep '^VALKEY_URL=' /etc/jotticp/env | sed -n 's|.*://:\([^@]*\)@.*|\1|p')
+echo "$VALKEY_PASS" > /etc/jotticp/webmail-valkey-pass
+chmod 640 /etc/jotticp/webmail-valkey-pass
+chown root:www-data /etc/jotticp/webmail-valkey-pass
 
 install -d -m 755 /var/www/webmail
 install -m 640 -o www-data -g www-data sso.php /var/www/webmail/sso.php
 
-# 4. Wire Dovecot SQL passdb against jottiecp.email_accounts
+# 4. Wire Dovecot SQL passdb against jotticp.email_accounts
 install -m 640 -o root -g dovecot dovecot-sql.conf.ext /etc/dovecot/
 sed -i 's|^!include auth-passwdfile.conf.ext|#!include auth-passwdfile.conf.ext\n!include auth-sql.conf.ext|' /etc/dovecot/conf.d/10-auth.conf
 
@@ -33,7 +33,7 @@ for p in archive zipdownload managesieve; do
 done
 
 # 6. Reload + nginx
-install -m 644 nginx-jottiecp.conf /etc/nginx/sites-enabled/jottiecp
+install -m 644 nginx-jotticp.conf /etc/nginx/sites-enabled/jotticp
 nginx -t && systemctl reload nginx
 systemctl reload dovecot
 systemctl reload php8.3-fpm

@@ -372,7 +372,7 @@ async fn dispatch_delete_backup_files(_state: &Arc<AppState>, job: &serde_json::
     if manifest_path.is_empty() { return; }
     let p = std::path::Path::new(manifest_path);
     match p.parent() {
-        Some(dir) if dir.starts_with("/var/backups/jottiecp") => {
+        Some(dir) if dir.starts_with("/var/backups/jotticp") => {
             if let Err(e) = std::fs::remove_dir_all(dir) {
                 tracing::warn!(dir = %dir.display(), error = %e, "delete_backup_files: cleanup failed");
             } else {
@@ -554,8 +554,8 @@ async fn dispatch_reload_php_pool(state: &Arc<AppState>, job: &serde_json::Value
     // (the DB rows alone have no effect on php-fpm — they must be written to the pool).
     match std::fs::read_to_string(&pool_path) {
         Ok(conf) => {
-            const BEGIN: &str = "; >>> jottiecp-custom (managed; do not edit)";
-            const END:   &str = "; <<< jottiecp-custom";
+            const BEGIN: &str = "; >>> jotticp-custom (managed; do not edit)";
+            const END:   &str = "; <<< jotticp-custom";
             let mut base = if let (Some(s), Some(e)) = (conf.find(BEGIN), conf.find(END)) {
                 let mut t = conf.clone();
                 t.replace_range(s..e + END.len(), "");
@@ -749,7 +749,7 @@ async fn dispatch_revoke_ssl(state: &Arc<AppState>, job: &serde_json::Value) {
     if domain.is_empty() || domain.contains('/') || domain.contains("..") {
         tracing::error!(job=%job, "revoke_ssl: bad domain"); return;
     }
-    let dir = format!("/etc/jottiecp/ssl/{}", domain);
+    let dir = format!("/etc/jotticp/ssl/{}", domain);
     let _ = std::fs::remove_dir_all(&dir);
     let _ = run_cmd("systemctl", &["reload", "nginx"]);
     let cert_id = parse_uuid(job, "cert_id");
@@ -767,7 +767,7 @@ async fn dispatch_activate_custom_ssl(state: &Arc<AppState>, job: &serde_json::V
         || cert_path.is_empty() || key_path.is_empty() {
         tracing::error!(job=%job, "activate_custom_ssl: bad params"); return;
     }
-    let dir = format!("/etc/jottiecp/ssl/{}", domain);
+    let dir = format!("/etc/jotticp/ssl/{}", domain);
     let _ = std::fs::create_dir_all(&dir);
     let ok = std::fs::copy(cert_path, format!("{}/cert.pem", dir)).is_ok()
           && std::fs::copy(key_path,  format!("{}/key.pem",  dir)).is_ok();
@@ -1020,7 +1020,7 @@ async fn dispatch_setup_runtime(
 
 /// Provision a per-site Valkey instance (Step 4.5).
 ///
-/// Writes /etc/jottiecp/valkey/SITEID.conf with:
+/// Writes /etc/jotticp/valkey/SITEID.conf with:
 ///   - port: 6378 + (index % 1000)
 ///   - unixsocket: /run/orbit/valkey/SITEID.sock
 ///   - maxmemory: 32mb community / 256mb pro
@@ -1052,7 +1052,7 @@ async fn dispatch_provision_valkey(state: &Arc<AppState>, job: &serde_json::Valu
     let maxmemory = if state.config.is_pro() { "256mb" } else { "32mb" };
 
     let socket_path = format!("/run/orbit/valkey/{}.sock", site_id);
-    let conf_dir    = "/etc/jottiecp/valkey";
+    let conf_dir    = "/etc/jotticp/valkey";
     let conf_path   = format!("{}/{}.conf", conf_dir, site_id);
     let log_path    = format!("/var/log/orbit/valkey/{}.log", site_id);
 
@@ -1134,7 +1134,7 @@ async fn dispatch_provision_valkey(state: &Arc<AppState>, job: &serde_json::Valu
 
 /// Provision a per-site SurrealDB instance (Step 4.6).
 ///
-/// Pro-only.  Writes /etc/jottiecp/surrealdb/SITEID.env and a systemd unit
+/// Pro-only.  Writes /etc/jotticp/surrealdb/SITEID.env and a systemd unit
 /// orbit-surrealdb-SITEID.service with 15-minute idle stop.
 async fn dispatch_provision_surrealdb(state: &Arc<AppState>, job: &serde_json::Value) {
     if !state.config.is_pro() {
@@ -1162,8 +1162,8 @@ async fn dispatch_provision_surrealdb(state: &Arc<AppState>, job: &serde_json::V
     let port: u16 = 5800 + (tail % 500) as u16;
 
     let surreal_pass = generate_random_hex(24);
-    let data_path    = format!("/var/jottiecp/surrealdb/{}", site_id);
-    let env_dir      = "/etc/jottiecp/surrealdb";
+    let data_path    = format!("/var/jotticp/surrealdb/{}", site_id);
+    let env_dir      = "/etc/jotticp/surrealdb";
     let env_path     = format!("{}/{}.env", env_dir, site_id);
 
     let env_content = format!(
@@ -1305,7 +1305,7 @@ async fn dispatch_cpanel_migration(state: &Arc<AppState>, job: &serde_json::Valu
 
 /// Forward the start_valkey job to jotti-agent (or start locally if no server_id).
 ///
-/// jotti-agent is responsible for executing `valkey-server /etc/jottiecp/valkey/SITEID.conf`
+/// jotti-agent is responsible for executing `valkey-server /etc/jotticp/valkey/SITEID.conf`
 /// inside the site's cgroup slice.  This dispatcher simply relays the config path.
 async fn dispatch_start_valkey(state: &Arc<AppState>, job: &serde_json::Value) {
     let site_id     = parse_uuid(job, "site_id");
@@ -1318,7 +1318,7 @@ async fn dispatch_start_valkey(state: &Arc<AppState>, job: &serde_json::Value) {
     }
 
     // Config path must be within the expected directory to prevent injection.
-    if !config_path.starts_with("/etc/jottiecp/valkey/") {
+    if !config_path.starts_with("/etc/jotticp/valkey/") {
         tracing::error!(
             config_path = %config_path,
             "start_valkey: config_path outside expected directory — refusing"
@@ -1418,7 +1418,7 @@ fn subst(template: &str, vars: &std::collections::HashMap<String, String>) -> St
 /// Load the raw TOML for a specific app from `ORBIT_APPS_DIR`.
 fn load_app_toml_raw(app_id: &str) -> Option<toml::Value> {
     let apps_dir = std::env::var("ORBIT_APPS_DIR")
-        .unwrap_or_else(|_| "/opt/jottiecp/apps".to_string());
+        .unwrap_or_else(|_| "/opt/jotticp/apps".to_string());
     let dir = std::fs::read_dir(&apps_dir).ok()?;
     for entry in dir.flatten() {
         let path = entry.path();

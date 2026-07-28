@@ -21,13 +21,13 @@ use crate::{AppState, ApiError, ApiResult};
 /// The public key is served at /api/v1/.well-known/jwks.json.
 ///
 /// `sub` is a String (JWT standard — contains the user UUID as text).
-/// `jti` is a per-token unique ID. Blocklist key is `jottiecp:blocklist:{jti}` —
+/// `jti` is a per-token unique ID. Blocklist key is `jotticp:blocklist:{jti}` —
 /// logging out one session does NOT invalidate other sessions for the same user.
 ///
 /// AppState MUST hold:
 ///   `jwt_encoding_key: EncodingKey`  — from `EncodingKey::from_ec_pem(private_pem)`
 ///   `jwt_decoding_key: DecodingKey`  — from `DecodingKey::from_ec_pem(public_pem)`
-/// Generated at first run, stored in /etc/jottiecp/jwt_ec_key.pem (private, 0600).
+/// Generated at first run, stored in /etc/jotticp/jwt_ec_key.pem (private, 0600).
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Claims {
     pub sub:              String,           // user UUID as string (JWT standard)
@@ -454,7 +454,7 @@ async fn logout(
         use redis::AsyncCommands;
         let mut conn = state.valkey.clone();
         let _: () = conn
-            .set_ex(format!("jottiecp:blocklist:{}", claims.jti), "1", ttl)
+            .set_ex(format!("jotticp:blocklist:{}", claims.jti), "1", ttl)
             .await
             .unwrap_or(());
     }
@@ -483,7 +483,7 @@ async fn setup_totp(
     {
         use redis::AsyncCommands;
         let mut conn = state.valkey.clone();
-        let key = format!("jottiecp:totp_setup:{}", user_id);
+        let key = format!("jotticp:totp_setup:{}", user_id);
         let _: () = conn.set_ex(&key, &secret_b32, 600u64).await.unwrap_or(());
     }
 
@@ -513,7 +513,7 @@ async fn confirm_totp(
     let secret_b32: String = {
         use redis::AsyncCommands;
         let mut conn = state.valkey.clone();
-        let key = format!("jottiecp:totp_setup:{}", user_id);
+        let key = format!("jotticp:totp_setup:{}", user_id);
         conn.get::<_, Option<String>>(&key).await
             .map_err(|e| ApiError::Internal(anyhow::anyhow!("Valkey error: {}", e)))?
             .ok_or_else(|| ApiError::Validation(
@@ -557,7 +557,7 @@ async fn confirm_totp(
     {
         use redis::AsyncCommands;
         let mut conn = state.valkey.clone();
-        let _: () = conn.del(format!("jottiecp:totp_setup:{}", user_id)).await.unwrap_or(());
+        let _: () = conn.del(format!("jotticp:totp_setup:{}", user_id)).await.unwrap_or(());
     }
 
     let provisioning_uri = format!(
@@ -665,7 +665,7 @@ pub fn verify_backup_code(code: &str, hash: &str) -> bool {
 
 pub fn log_auth_failure(ip: &str, reason: &str, email: &str) {
     tracing::warn!(
-        target: "jottiecp_auth",
+        target: "jotticp_auth",
         "FAILED_LOGIN ip={} reason={} email={} ts={}",
         ip, reason, email, Utc::now().to_rfc3339()
     );
@@ -708,7 +708,7 @@ where
             use redis::AsyncCommands;
             let mut conn = app_state.valkey.clone();
             let blocked: Option<String> = conn
-                .get(format!("jottiecp:blocklist:{}", claims.jti))
+                .get(format!("jotticp:blocklist:{}", claims.jti))
                 .await
                 .unwrap_or(None);
             if blocked.is_some() {

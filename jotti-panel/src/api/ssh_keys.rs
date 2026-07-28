@@ -96,7 +96,7 @@ async fn compute_fingerprint(public_key: &str) -> ApiResult<String> {
     use tokio::process::Command;
 
     // Write key to a temp file then fingerprint it
-    let tmp = format!("/tmp/jottiecp-key-{}.pub", Uuid::new_v4());
+    let tmp = format!("/tmp/jotticp-key-{}.pub", Uuid::new_v4());
     tokio::fs::write(&tmp, public_key).await
         .map_err(|e| ApiError::Internal(anyhow::anyhow!("Temp key write: {}", e)))?;
 
@@ -387,7 +387,7 @@ async fn delete_key(
 }
 
 /// POST /api/v1/ssh-keys/{id}/disable-password
-/// Sets `PasswordAuthentication no` in /etc/ssh/sshd_config.d/jottiecp.conf and reloads sshd.
+/// Sets `PasswordAuthentication no` in /etc/ssh/sshd_config.d/jotticp.conf and reloads sshd.
 /// Requires the caller to have at least one active SSH key (to avoid lockout).
 async fn disable_password_auth(
     State(state): State<Arc<AppState>>,
@@ -415,7 +415,7 @@ async fn disable_password_auth(
         ));
     }
 
-    let sshd_conf = "/etc/ssh/sshd_config.d/jottiecp.conf";
+    let sshd_conf = "/etc/ssh/sshd_config.d/jotticp.conf";
     let conf_content = "# Managed by JottiCP — do not edit manually\nPasswordAuthentication no\nChallengeResponseAuthentication no\n";
 
     // Ensure directory exists

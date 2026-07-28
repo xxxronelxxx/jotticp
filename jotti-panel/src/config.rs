@@ -49,7 +49,7 @@ pub struct Config {
     pub acme_directory:          String,
     pub max_upload_mb:           u64,
     pub panel_domain:            String,
-    /// Base URL for the webmail UI (e.g. https://jottiecp.waytohosts.com/webmail).
+    /// Base URL for the webmail UI (e.g. https://jotticp.waytohosts.com/webmail).
     /// Used when generating SSO login links. Set via WEBMAIL_URL env var.
     pub webmail_url:             String,
     pub smtp_from:               String,
@@ -82,10 +82,10 @@ impl Config {
             .context("DATABASE_URL is required")?;
 
         let jwt_ec_private_key_path = std::env::var("JWT_EC_PRIVATE_KEY_PATH")
-            .unwrap_or_else(|_| "/etc/jottiecp/jwt_ec_key.pem".into());
+            .unwrap_or_else(|_| "/etc/jotticp/jwt_ec_key.pem".into());
 
         let jwt_ec_public_key_path = std::env::var("JWT_EC_PUBLIC_KEY_PATH")
-            .unwrap_or_else(|_| "/etc/jottiecp/jwt_ec_key.pub.pem".into());
+            .unwrap_or_else(|_| "/etc/jotticp/jwt_ec_key.pub.pem".into());
 
         let orbit_env = OrbitEnv::from_str(
             &std::env::var("ORBIT_ENV").unwrap_or_else(|_| "community".into()),

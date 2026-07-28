@@ -434,7 +434,7 @@
           <p>1. Upload your app files to <code class="bg-blue-500/20 px-1 rounded font-mono">/home/[unix_user]/public_html/</code></p>
           <p>2. Your app must listen on <code class="bg-blue-500/20 px-1 rounded font-mono">process.env.PORT</code> (= <strong>{runtimeInfo.port}</strong>)</p>
           <p>3. Entry point: <code class="bg-blue-500/20 px-1 rounded font-mono">server.js</code> — rename your main file to this</p>
-          <p>4. Managed by systemd: <code class="bg-blue-500/20 px-1 rounded font-mono">jottiecp-nodejs-{site.domain}</code> — auto-restarts on crash</p>
+          <p>4. Managed by systemd: <code class="bg-blue-500/20 px-1 rounded font-mono">jotticp-nodejs-{site.domain}</code> — auto-restarts on crash</p>
         </div>
       {:else if runtimeInfo.runtime === 'python'}
         <div class="bg-green-500/10 border border-green-500/20 rounded-xl p-4 text-xs text-green-200 space-y-1.5">
@@ -442,7 +442,7 @@
           <p>1. Upload your app files to <code class="bg-green-500/20 px-1 rounded font-mono">/home/[unix_user]/public_html/</code></p>
           <p>2. Install your deps: SSH in and run <code class="bg-green-500/20 px-1 rounded font-mono">/home/[unix_user]/venv/bin/pip install -r requirements.txt</code></p>
           <p>3. Your app must expose <code class="bg-green-500/20 px-1 rounded font-mono">{runtimeInfo.entry_point ?? 'main:app'}</code> on port <strong>{runtimeInfo.port}</strong></p>
-          <p>4. Systemd unit <code class="bg-green-500/20 px-1 rounded font-mono">jottiecp-python-{site.domain}</code> auto-restarts your app</p>
+          <p>4. Systemd unit <code class="bg-green-500/20 px-1 rounded font-mono">jotticp-python-{site.domain}</code> auto-restarts your app</p>
         </div>
       {/if}
     </div>
@@ -475,7 +475,7 @@
       </div>
 
       <div class="bg-muted/20 border border-border rounded-xl p-4 text-xs space-y-1 text-muted-foreground mb-4">
-        <p>Managed by systemd: <code class="text-foreground font-mono">jottiecp-nodejs-{site.domain}</code></p>
+        <p>Managed by systemd: <code class="text-foreground font-mono">jotticp-nodejs-{site.domain}</code></p>
         <p>Entry point: <code class="text-foreground font-mono">/home/{site.unix_user}/public_html/server.js</code></p>
         <p>Port: <code class="text-foreground font-mono">{runtimeInfo.port}</code></p>
       </div>
@@ -544,7 +544,7 @@
       </div>
 
       <div class="bg-muted/20 border border-border rounded-xl p-4 text-xs space-y-1 text-muted-foreground">
-        <p>Managed by systemd: <code class="text-foreground font-mono">jottiecp-python-{site.domain}</code></p>
+        <p>Managed by systemd: <code class="text-foreground font-mono">jotticp-python-{site.domain}</code></p>
         <p>Venv: <code class="text-foreground font-mono">/home/{site.unix_user}/venv/</code></p>
         <p>Port: <code class="text-foreground font-mono">{runtimeInfo.port}</code> · Entry: <code class="text-foreground font-mono">{runtimeInfo.entry_point}</code></p>
       </div>

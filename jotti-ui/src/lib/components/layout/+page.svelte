@@ -525,7 +525,7 @@
     <p class="text-center text-xs text-muted-foreground mt-6">
       JottiCP v{import.meta.env.VITE_JOTTICP_VERSION ?? '0.1.0'}
       &nbsp;·&nbsp;
-      <a href="https://docs.jottiecp.io" target="_blank" rel="noopener"
+      <a href="https://docs.jotticp.io" target="_blank" rel="noopener"
          class="hover:underline">Documentation</a>
     </p>
 
