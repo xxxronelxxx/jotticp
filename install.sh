@@ -20,11 +20,11 @@ LOG_DIR="/var/log/jotticp"
 
 banner() {
 cat << 'BANNER'
-  ___       _     _ _  ____  ____
- / _ \ _ __| |__ (_) |/ ___||  _ \
-| | | | '__| '_ \| | | |    | |_) |
-| |_| | |  | |_) | | | |___ |  __/
- \___/|_|  |_.__/|_|_|\____||_|
+     _       _   _   _  ____ ____
+    | | ___ | |_| |_(_)/ ___|  _ \
+ _  | |/ _ \| __| __| | |   | |_) |
+| |_| | (_) | |_| |_| | |___|  __/
+ \___/ \___/ \__|\__|_|\____|_|
 BANNER
 echo -e "${BLUE}JottiCP v${JOTTICP_VERSION} — Rust-Powered Web Hosting Panel${NC}"
 echo -e "${YELLOW}https://jotti.ru/products/jotticp${NC}"
