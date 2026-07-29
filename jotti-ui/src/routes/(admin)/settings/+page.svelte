@@ -154,8 +154,8 @@
   let confirmDeleteSshKeyId: string | null = null;
 
   // Toast
-  let toastMessage = '';
-  let toastType: 'success' | 'error' = 'success';
+  let toastMessage = $state('');
+  let toastType = $state<'success' | 'error'>('success');
   let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   function authHeaders(): Record<string, string> {
