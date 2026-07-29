@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { api } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let opcacheStats: any = null;
@@ -396,7 +397,7 @@
     : 0;
 </script>
 
-<svelte:head><title>Cache Management — JottiCP</title></svelte:head>
+<svelte:head><title>{$t('cache.title')} — JottiCP</title></svelte:head>
 
 <!-- ── Toast ──────────────────────────────────────────────────────────────── -->
 {#if toastMsg}
@@ -744,8 +745,8 @@
         </svg>
       </div>
       <div>
-        <h1 class="text-xl font-bold text-foreground">Cache Management</h1>
-        <p class="text-sm text-muted-foreground">OPcache, Valkey, and browser cache layers</p>
+        <h1 class="text-xl font-bold text-foreground">{$t('cache.title')}</h1>
+        <p class="text-sm text-muted-foreground">{$t('cache.subtitle')}</p>
       </div>
     </div>
     <button class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
@@ -753,7 +754,7 @@
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
       </svg>
-      Flush All Caches
+      {$t('cache.flush_all')}
     </button>
   </div>
 

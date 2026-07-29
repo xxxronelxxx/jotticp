@@ -20,7 +20,7 @@
     const tr = get(tStore);
     return [
       {
-        label: 'Overview',
+        label: tr('admin.overview'),
         color: 'text-blue-500',
         items: [
           { href: '/dashboard',   label: tr('nav.dashboard'), icon: 'home'      },
@@ -29,7 +29,7 @@
         ],
       },
       {
-        label: 'Hosting',
+        label: tr('admin.hosting'),
         color: 'text-emerald-500',
         items: [
           { href: '/databases',   label: tr('nav.databases'), icon: 'database'  },
@@ -40,7 +40,7 @@
         ],
       },
       {
-        label: 'Tools',
+        label: tr('admin.tools'),
         color: 'text-violet-500',
         items: [
           { href: '/backups',     label: tr('nav.backups'),   icon: 'cloud-up'  },
@@ -48,26 +48,26 @@
           { href: '/cron',        label: tr('nav.cron'),      icon: 'clock'     },
           { href: '/php',         label: tr('nav.php'),       icon: 'code'      },
           { href: '/cache',       label: tr('nav.cache'),     icon: 'zap'       },
-          { href: '/webhooks',    label: 'Webhooks',          icon: 'webhook'   },
-          { href: '/cloudflare',  label: 'Cloudflare',        icon: 'cloud'     },
-          { href: '/migration',   label: 'Migration',         icon: 'import'    },
-          { href: '/plugins',     label: 'Plugins',           icon: 'puzzle'    },
+          { href: '/webhooks',    label: tr('admin.webhooks'),  icon: 'webhook'   },
+          { href: '/cloudflare',  label: tr('admin.cloudflare'), icon: 'cloud'     },
+          { href: '/migration',   label: tr('admin.migration'),  icon: 'import'    },
+          { href: '/plugins',     label: tr('admin.plugins'),    icon: 'puzzle'    },
         ],
       },
       {
-        label: 'Security',
+        label: tr('admin.security'),
         color: 'text-rose-500',
         items: [
-          { href: '/security',    label: 'Security',          icon: 'shield'    },
+          { href: '/security',    label: tr('admin.security'),    icon: 'shield'    },
           { href: '/firewall',    label: tr('nav.firewall'),  icon: 'shield-lock'},
         ],
       },
       {
-        label: 'System',
+        label: tr('admin.system'),
         color: 'text-slate-400',
         items: [
-          { href: '/logs',        label: 'Logs',              icon: 'doc-text'  },
-          { href: '/audit-log',   label: 'Audit Log',         icon: 'audit'     },
+          { href: '/logs',        label: tr('nav.logs'),      icon: 'doc-text'  },
+          { href: '/audit-log',   label: tr('admin.audit_log'), icon: 'audit'     },
           { href: '/dbmanager',   label: tr('nav.dbmanager'), icon: 'table'     },
           { href: '/users',       label: tr('nav.users'),     icon: 'users'     },
           { href: '/reseller',    label: tr('nav.reseller'),  icon: 'briefcase' },
@@ -208,7 +208,7 @@
     class="fixed lg:static inset-y-0 left-0 z-50 flex flex-col w-60 bg-card border-r border-border
            transition-transform duration-300 ease-in-out
            {sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}"
-    aria-label="Sidebar navigation"
+    aria-label={$tStore('admin.sidebar_label')}
   >
 
     <!-- Logo -->
@@ -226,7 +226,7 @@
     <nav
       class="flex-1 overflow-y-auto py-3 px-2
              scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
-      aria-label="Main navigation"
+      aria-label={$tStore('admin.main_nav_label')}
     >
       {#each navGroups as group}
         <p class="px-3 py-1 text-[10px] font-semibold uppercase tracking-widest mt-4 mb-1 first:mt-0 flex items-center gap-1.5 {group.color}">
@@ -268,20 +268,20 @@
           on:click={toggleTheme}
           class="flex-1 flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs
                  text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
-          aria-label="Toggle theme"
+          aria-label={$tStore('admin.toggle_theme')}
         >
           {#if $theme === 'dark'}
             <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="1.75" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d={icon('sun')} />
             </svg>
-            <span>Light</span>
+            <span>{$tStore('admin.light')}</span>
           {:else}
             <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="1.75" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d={icon('moon')} />
             </svg>
-            <span>Dark</span>
+            <span>{$tStore('admin.dark')}</span>
           {/if}
         </button>
 
@@ -290,7 +290,7 @@
           value={$currentLang}
           class="text-xs bg-transparent border border-border rounded px-1.5 py-1
                  text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-          aria-label="Select language"
+          aria-label={$tStore('admin.select_language')}
         >
           <option value="en">EN</option>
           <option value="ar">AR</option>
@@ -318,8 +318,8 @@
           type="button"
           on:click={handleLogout}
           class="text-muted-foreground hover:text-foreground transition-colors p-1 rounded shrink-0"
-          title="Log out"
-          aria-label="Log out"
+          title={$tStore('admin.logout_title')}
+           aria-label={$tStore('admin.logout_title')}
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24"
                stroke="currentColor" stroke-width="1.75" aria-hidden="true">
@@ -336,14 +336,14 @@
     <!-- Impersonation banner -->
     {#if impersonationEmail}
       <div class="flex items-center justify-between px-4 py-2 bg-amber-400 text-amber-900 text-sm font-medium shrink-0">
-        <span>You are logged in as <strong>{impersonationEmail}</strong></span>
+        <span>{$tStore('admin.impersonation_banner')} <strong>{impersonationEmail}</strong></span>
         <button
           type="button"
           on:click={returnToAdmin}
           class="ml-4 px-3 py-1 rounded-md bg-amber-900/15 hover:bg-amber-900/25 text-amber-900
                  text-xs font-semibold transition-colors"
         >
-          Return to Admin
+          {$tStore('admin.return_to_admin')}
         </button>
       </div>
     {/if}
@@ -366,7 +366,7 @@
         on:click|stopPropagation={() => (sidebarOpen = !sidebarOpen)}
         class="lg:hidden w-9 h-9 inline-flex items-center justify-center rounded-lg
                text-muted-foreground hover:bg-muted/50 transition-colors"
-        aria-label="Toggle sidebar"
+        aria-label={$tStore('admin.toggle_sidebar')}
         aria-expanded={sidebarOpen}
       >
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -406,7 +406,7 @@
             on:click|stopPropagation={() => { notifOpen = !notifOpen; userMenuOpen = false; }}
             class="relative w-9 h-9 inline-flex items-center justify-center rounded-lg
                    text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
-            aria-label="Notifications{unreadCount > 0 ? ` (${unreadCount} unread)` : ''}"
+            aria-label="{$tStore('admin.notifications')}{unreadCount > 0 ? ` (${unreadCount} ${$tStore('admin.notif_unread')})` : ''}"
             aria-expanded={notifOpen}
           >
             <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
@@ -434,20 +434,20 @@
               aria-label="Notifications panel"
             >
               <div class="flex items-center justify-between px-4 py-3 border-b border-border">
-                <span class="text-sm font-semibold text-foreground">Notifications</span>
+                <span class="text-sm font-semibold text-foreground">{$tStore('admin.notifications')}</span>
                 {#if unreadCount > 0}
                   <button
                     type="button"
                     on:click={() => { api.notifications.markAllRead(); notifications = []; }}
                     class="text-xs text-primary hover:underline"
                   >
-                    Mark all read
+                    {$tStore('admin.mark_all_read')}
                   </button>
                 {/if}
               </div>
               <div class="max-h-80 overflow-y-auto divide-y divide-border">
                 {#if notifications.length === 0}
-                  <p class="text-sm text-muted-foreground text-center py-6">No unread notifications</p>
+                  <p class="text-sm text-muted-foreground text-center py-6">{$tStore('admin.no_unread_notifications')}</p>
                 {:else}
                   {#each notifications as n}
                     <div class="px-4 py-3 hover:bg-muted/30 {!n.read_at ? 'bg-primary/5' : ''}">
@@ -458,7 +458,7 @@
                 {/if}
               </div>
               <div class="px-4 py-2 border-t border-border">
-                <a href="/logs" class="text-xs text-primary hover:underline">View audit log</a>
+                <a href="/logs" class="text-xs text-primary hover:underline">{$tStore('admin.view_audit_log')}</a>
               </div>
             </div>
           {/if}
@@ -471,7 +471,7 @@
             on:click|stopPropagation={() => { userMenuOpen = !userMenuOpen; notifOpen = false; }}
             class="flex items-center gap-2 h-9 px-2 rounded-lg
                    text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
-            aria-label="User menu"
+            aria-label={$tStore('admin.user_menu')}
             aria-expanded={userMenuOpen}
           >
             <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold text-white shrink-0"
@@ -507,7 +507,7 @@
                        stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d={icon('user')} />
                   </svg>
-                  Profile
+                  {$tStore('admin.profile')}
                 </a>
 
                 <button
@@ -521,7 +521,7 @@
                        stroke="currentColor" stroke-width="1.75" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d={icon('log-out')} />
                   </svg>
-                  Logout
+                  {$tStore('admin.logout')}
                 </button>
               </div>
             </div>

@@ -4,6 +4,7 @@
   import type { Site } from '$api/client';
   import StatusBadge from '$components/ui/StatusBadge.svelte';
   import PageHeader from '$components/ui/PageHeader.svelte';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let sites: Site[] = [];
@@ -95,19 +96,19 @@
 </script>
 
 <svelte:head>
-  <title>My Sites — JottiCP</title>
+  <title>{$t('client.my_sites')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-4">
 
-  <PageHeader title="My Sites" subtitle="Manage your hosted websites">
+  <PageHeader title={$t('client.sites_title')} subtitle={$t('client.sites_subtitle')}>
     <button
       type="button"
       on:click={() => showAddModal = true}
       class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
              hover:bg-primary/90 transition-colors"
     >
-      + Add Site
+      {$t('client.add_site')}
     </button>
   </PageHeader>
 
@@ -116,7 +117,7 @@
     <input
       type="search"
       bind:value={search}
-      placeholder="Search domains..."
+      placeholder={$t('client.search_domains')}
       class="flex-1 h-9 px-3 rounded-lg border border-border bg-background text-sm
              text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
     />

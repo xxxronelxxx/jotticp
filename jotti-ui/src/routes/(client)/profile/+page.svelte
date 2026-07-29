@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { api } from '$api/client';
   import PageHeader from '$components/ui/PageHeader.svelte';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
   interface ClientProfile {
@@ -99,12 +100,12 @@
 </script>
 
 <svelte:head>
-  <title>Profile — JottiCP</title>
+  <title>{$t('client.profile')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-5">
 
-  <PageHeader title="My Profile" subtitle="Account settings and resource usage" />
+  <PageHeader title={$t('client.profile_title')} subtitle={$t('client.profile_subtitle')} />
 
   {#if loading}
     <div class="animate-pulse space-y-3">
@@ -117,7 +118,7 @@
 
     <!-- Account Info -->
     <div class="bg-card border border-border rounded-xl p-4 space-y-3">
-      <h2 class="text-sm font-semibold text-foreground">Account Information</h2>
+      <h2 class="text-sm font-semibold text-foreground">{$t('client.account_info')}</h2>
       <div class="divide-y divide-border">
         {#each [
           { label: 'Email',        value: profile.email },
@@ -132,7 +133,7 @@
       </div>
       <a href="/settings/totp"
          class="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-medium">
-        Manage Two-Factor Authentication
+        {$t('client.manage_2fa')}
         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
         </svg>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { api } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
   type PhpExtension = {
@@ -396,7 +397,7 @@
   .fade-up { animation: fadeUp 0.25s ease-out both; }
 </style>
 
-<svelte:head><title>PHP Configuration — JottiCP</title></svelte:head>
+<svelte:head><title>{$t('php.title')} — JottiCP</title></svelte:head>
 
 <!-- ── Toast ──────────────────────────────────────────────────────────────── -->
 {#if toast}
@@ -467,8 +468,8 @@
   <!-- ── Header ─────────────────────────────────────────────────────────── -->
   <div class="flex items-center justify-between gap-4 flex-wrap">
     <div>
-      <h1 class="text-2xl font-semibold text-foreground">PHP Configuration</h1>
-      <p class="text-sm text-muted-foreground mt-0.5">Manage extensions, settings, and PHP versions across all sites.</p>
+      <h1 class="text-2xl font-semibold text-foreground">{$t('php.title')}</h1>
+      <p class="text-sm text-muted-foreground mt-0.5">{$t('php.subtitle')}</p>
     </div>
     <button
       class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 disabled:opacity-40 transition-colors duration-200"
@@ -485,7 +486,7 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
         </svg>
-        Apply Changes
+        {$t('php.apply_changes')}
       {/if}
     </button>
   </div>
@@ -502,8 +503,8 @@
     <div class="bg-card border border-border rounded-xl p-6 fade-up">
       <div class="flex items-center justify-between mb-4">
         <div>
-          <h2 class="text-base font-semibold text-foreground">PHP Version Management</h2>
-          <p class="text-sm text-muted-foreground mt-0.5">Installed versions currently in use across your sites.</p>
+          <h2 class="text-base font-semibold text-foreground">{$t('php.version_mgmt')}</h2>
+          <p class="text-sm text-muted-foreground mt-0.5">{$t('php.version_mgmt_desc')}</p>
         </div>
       </div>
 
@@ -530,12 +531,12 @@
               {#if installed}
                 <span class="text-foreground font-medium">{count}</span> site{count !== 1 ? 's' : ''}
               {:else}
-                Not in use
+                {$t('php.not_in_use')}
               {/if}
             </p>
             <!-- Status badge -->
             <span class="text-xs font-medium {installed ? 'text-green-400' : 'text-muted-foreground'}">
-              {installed ? 'Active' : 'Available'}
+              {installed ? $t('php.active') : $t('php.available')}
             </span>
           </div>
         {/each}
@@ -550,7 +551,7 @@
           <svg class="w-4 h-4 transition-transform duration-200 {showVersionCompare ? 'rotate-180' : ''}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
           </svg>
-          {showVersionCompare ? 'Hide' : 'Show'} Version Feature Comparison
+          {(showVersionCompare ? $t('php.hide_compare') : $t('php.show_compare'))}
         </button>
 
         {#if showVersionCompare}
@@ -558,7 +559,7 @@
             <table class="w-full text-sm border border-border rounded-xl overflow-hidden">
               <thead class="bg-muted/50">
                 <tr>
-                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Feature</th>
+                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('php.feature_col')}</th>
                   {#each compareVersions as ver}
                     {@const meta = versionMeta[ver]}
                     <th class="px-3 py-2.5 text-center text-xs font-medium {meta?.textColor ?? 'text-muted-foreground'} uppercase tracking-wide">
@@ -592,7 +593,7 @@
     <!-- ── Site selector + flush ─────────────────────────────────────────── -->
     <div class="bg-card border border-border rounded-xl p-4 flex flex-wrap gap-3 items-center">
       <div class="flex-1 min-w-48">
-        <label class="block text-xs font-medium text-muted-foreground mb-1">Configuring site</label>
+          <label class="block text-xs font-medium text-muted-foreground mb-1">{$t('php.configuring_site')}</label>
         <div class="relative">
           <select
             class="w-full h-9 rounded-lg border border-border bg-background px-3 pr-8 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
@@ -612,7 +613,7 @@
       {#if selectedSite}
         <div class="flex items-end gap-2 mt-4 sm:mt-0">
           <div class="text-right hidden sm:block">
-            <p class="text-xs text-muted-foreground">Active version</p>
+            <p class="text-xs text-muted-foreground">{$t('php.active_version')}</p>
             <p class="text-lg font-bold text-foreground">{selectedSite.php_version}</p>
           </div>
           <button
@@ -622,7 +623,7 @@
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>
-            Flush OPcache
+            {$t('php.flush_opcache')}
           </button>
           <a
             href="/websites/{selectedSite.id}"

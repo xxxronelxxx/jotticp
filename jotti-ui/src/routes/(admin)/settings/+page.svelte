@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
   import { api } from '$api/client';
   import type { ApiKey } from '$api/client';
-  import { setLanguage } from '$lib/i18n';
+  import { t, setLanguage } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   type TabKey = 'general' | 'branding' | 'smtp' | 'smtp-limits' | 'security' | 'api-keys' | 'advanced';
@@ -239,9 +240,9 @@
         }),
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      showToast('SMTP limits saved', 'success');
+      showToast(get(t)('settings.smtp_limits_saved'), 'success');
     } catch {
-      showToast('Failed to save SMTP limits', 'error');
+      showToast(get(t)('settings.smtp_limits_save_failed'), 'error');
     } finally {
       smtpLimitsSaveLoading = false;
     }
@@ -259,7 +260,7 @@
       const data = await r.json() as { success: boolean; message: string };
       smtpLimitsTestResult = data;
     } catch {
-      smtpLimitsTestResult = { success: false, message: 'Test failed — check SMTP config.' };
+      smtpLimitsTestResult = { success: false, message: get(t)('settings.test_failed') };
     } finally {
       smtpLimitsTestLoading = false;
     }
@@ -291,9 +292,9 @@
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
       smtpQueueCount = 0;
       smtpQueueRows = [];
-      showToast('Queue flushed', 'success');
+      showToast(get(t)('settings.queue_flushed'), 'success');
     } catch {
-      showToast('Failed to flush queue', 'error');
+      showToast(get(t)('settings.queue_flush_failed'), 'error');
     } finally {
       smtpFlushLoading = false;
     }
@@ -350,9 +351,9 @@
         body: JSON.stringify({ maintenance_mode: maintenance.enabled }),
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      showToast('Maintenance settings saved', 'success');
+      showToast(get(t)('settings.maintenance_saved'), 'success');
     } catch {
-      showToast('Failed to save maintenance settings', 'error');
+      showToast(get(t)('settings.maintenance_save_failed'), 'error');
     } finally {
       maintenanceLoading = false;
     }
@@ -378,9 +379,9 @@
         }),
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      showToast('Settings saved', 'success');
+      showToast(get(t)('settings.saved_success'), 'success');
     } catch {
-      showToast('Failed to save settings', 'error');
+      showToast(get(t)('settings.save_failed'), 'error');
     } finally {
       generalLoading = false;
     }
@@ -398,9 +399,9 @@
         body: JSON.stringify({ smtp_from: smtpConfig.from }),
       });
       if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      showToast('SMTP from address saved — other SMTP fields require server environment variables', 'success');
+      showToast(get(t)('settings.smtp_from_saved'), 'success');
     } catch {
-      showToast('Failed to save SMTP settings', 'error');
+      showToast(get(t)('settings.smtp_save_failed'), 'error');
     } finally {
       smtpSaveLoading = false;
     }
@@ -420,10 +421,10 @@
       smtpTestResult = await r.json() as { success: boolean; message: string };
     } catch (err: unknown) {
       const e = err as { message?: string };
-      smtpTestResult = {
-        success: false,
-        message: e.message ?? 'SMTP connection failed — check your settings.',
-      };
+        smtpTestResult = {
+          success: false,
+          message: e.message ?? get(t)('settings.test_failed'),
+        };
     } finally {
       smtpTestLoading = false;
     }
@@ -433,7 +434,7 @@
 
   async function saveSecurity(e: SubmitEvent) {
     e.preventDefault();
-    showToast('Security policy settings are not yet configurable via API', 'error');
+    showToast(get(t)('settings.security_policy_not_configurable'), 'error');
   }
 
   // ── API Keys ───────────────────────────────────────────────────────────────
@@ -444,7 +445,7 @@
       apiKeys = await api.apiKeys.list();
       apiKeysLoaded = true;
     } catch {
-      showToast('Failed to load API keys', 'error');
+      showToast(get(t)('settings.api_keys_load_failed'), 'error');
     } finally {
       apiKeysLoading = false;
     }
@@ -464,7 +465,7 @@
       apiKeys = [...apiKeys, result];
     } catch (err: unknown) {
       const e = err as { message?: string };
-      newKeyError = e.message ?? 'Failed to create API key';
+      newKeyError = e.message ?? get(t)('settings.api_key_create_failed');
     } finally {
       newKeyLoading = false;
     }
@@ -475,9 +476,9 @@
     try {
       await api.apiKeys.revoke(key.id);
       apiKeys = apiKeys.filter((k) => k.id !== key.id);
-      showToast('API key revoked', 'success');
+      showToast(get(t)('settings.api_key_revoked'), 'success');
     } catch {
-      showToast('Failed to revoke API key', 'error');
+      showToast(get(t)('settings.api_key_revoke_failed'), 'error');
     }
   }
 
@@ -505,7 +506,7 @@
       sshKeys = await api.sshKeys.list();
       sshKeysLoaded = true;
     } catch {
-      showToast('Failed to load SSH keys', 'error');
+      showToast(get(t)('settings.ssh_key_load_failed'), 'error');
     } finally {
       sshKeysLoading = false;
     }
@@ -531,10 +532,10 @@
       ];
       newSshPubkey = '';
       newSshLabel = '';
-      showToast('SSH key added', 'success');
+      showToast(get(t)('settings.ssh_key_added'), 'success');
     } catch (err: unknown) {
       const e = err as { message?: string };
-      sshAddError = e.message ?? 'Failed to add key';
+      sshAddError = e.message ?? get(t)('settings.ssh_key_add_failed');
     } finally {
       sshAddLoading = false;
     }
@@ -545,9 +546,9 @@
     try {
       await api.sshKeys.delete(key.id);
       sshKeys = sshKeys.filter((k) => k.id !== key.id);
-      showToast('SSH key deleted', 'success');
+      showToast(get(t)('settings.ssh_key_deleted'), 'success');
     } catch {
-      showToast('Failed to delete key', 'error');
+      showToast(get(t)('settings.ssh_key_delete_failed'), 'error');
     }
   }
 
@@ -556,10 +557,10 @@
     try {
       await api.sshKeys.disablePasswordLogin();
       showDisablePasswordConfirm = false;
-      showToast('Password login disabled — SSH key required', 'success');
+      showToast(get(t)('settings.password_login_disabled'), 'success');
     } catch (err: unknown) {
       const e = err as { message?: string };
-      showToast(e.message ?? 'Failed to disable password login', 'error');
+      showToast(e.message ?? get(t)('settings.password_login_disable_failed'), 'error');
     } finally {
       disablePwdLoading = false;
     }
@@ -577,10 +578,10 @@
       license.domain = result.domain;
       license.expires_at = result.expires_at;
       licenseKey = '';
-      showToast('License activated successfully', 'success');
+      showToast(get(t)('settings.license_activated'), 'success');
     } catch (err: unknown) {
       const e = err as { message?: string };
-      showToast(e.message ?? 'Failed to activate license', 'error');
+      showToast(e.message ?? get(t)('settings.license_activate_failed'), 'error');
     } finally {
       licenseActivating = false;
     }
@@ -610,47 +611,22 @@
     return d.toLocaleDateString();
   }
 
-  const tabs: Array<{ key: TabKey; label: string; icon: string }> = [
-    {
-      key: 'general',
-      label: 'General',
-      icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z',
-    },
-    {
-      key: 'branding',
-      label: 'Branding',
-      icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
-    },
-    {
-      key: 'smtp',
-      label: 'Email (SMTP)',
-      icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
-    },
-    {
-      key: 'smtp-limits',
-      label: 'SMTP Limits',
-      icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z',
-    },
-    {
-      key: 'security',
-      label: 'Security',
-      icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z',
-    },
-    {
-      key: 'api-keys',
-      label: 'API Keys',
-      icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z',
-    },
-    {
-      key: 'advanced',
-      label: 'Advanced',
-      icon: 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4',
-    },
-  ];
+  let tabs = $derived.by(() => {
+    const tr = get(t);
+    return [
+      { key: 'general', label: tr('settings.general'), icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z' },
+      { key: 'branding', label: tr('settings.branding'), icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
+      { key: 'smtp', label: tr('settings.smtp'), icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
+      { key: 'smtp-limits', label: tr('settings.smtp_limits'), icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
+      { key: 'security', label: tr('settings.security'), icon: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z' },
+      { key: 'api-keys', label: tr('settings.api_keys'), icon: 'M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z' },
+      { key: 'advanced', label: tr('settings.advanced'), icon: 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4' },
+    ];
+  });
 
   // Reactive branding preview values
-  $: primaryColor = branding.primary_color;
-  $: panelName = branding.panel_name;
+  let primaryColor = $derived(branding.primary_color);
+  let panelName = $derived(branding.panel_name);
 
   const timezones = [
     'UTC',
@@ -677,13 +653,13 @@
 </script>
 
 <svelte:head>
-  <title>Settings — JottiCP</title>
+  <title>{$t('settings.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6">
   <div class="mb-5">
-    <h1 class="text-xl font-semibold text-foreground">Settings</h1>
-    <p class="text-sm text-muted-foreground mt-0.5">Panel configuration and system settings</p>
+    <h1 class="text-xl font-semibold text-foreground">{$t('settings.title')}</h1>
+    <p class="text-sm text-muted-foreground mt-0.5">{$t('settings.subtitle')}</p>
   </div>
 
   <div class="flex flex-col lg:flex-row gap-6">
@@ -737,21 +713,21 @@
         <form on:submit={saveGeneral} class="max-w-xl settings-section">
           <div class="bg-card border border-border rounded-xl overflow-hidden mb-4">
             <div class="px-4 py-3 border-b border-border bg-muted/30">
-              <h2 class="text-sm font-semibold text-foreground">Panel</h2>
+              <h2 class="text-sm font-semibold text-foreground">{$t('settings.panel')}</h2>
             </div>
 
             <div class="border-b border-border py-4 px-4 flex items-center justify-between last:border-0 transition-colors duration-150 hover:bg-muted/20">
               <div class="mr-4">
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" /></svg>
-                  <span class="text-sm font-medium text-foreground">Panel URL</span>
+                  <span class="text-sm font-medium text-foreground">{$t('settings.panel_domain')}</span>
                 </div>
-                <p class="text-xs text-muted-foreground mt-0.5">The domain where this panel is accessed</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.panel_domain_desc')}</p>
               </div>
               <input
                 type="text"
                 bind:value={settings.panel_domain}
-                placeholder="panel.example.com"
+                placeholder={$t('settings.panel_domain_placeholder')}
                 class="w-52 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors duration-150 focus:bg-background"
               />
             </div>
@@ -760,30 +736,30 @@
               <div class="mr-4">
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
-                  <span class="text-sm font-medium text-foreground">Admin Email</span>
+                  <span class="text-sm font-medium text-foreground">{$t('settings.admin_email')}</span>
                 </div>
-                <p class="text-xs text-muted-foreground mt-0.5">Used for system notifications</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.admin_email_desc')}</p>
               </div>
               <input
                 type="email"
                 bind:value={settings.panel_email}
-                placeholder="admin@example.com"
-                class="w-52 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors duration-150 focus:bg-background"
-              />
-            </div>
+                placeholder={$t('settings.admin_email_placeholder')}
+                 class="w-52 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors duration-150 focus:bg-background"
+               />
+             </div>
 
-            <div class="py-4 px-4 flex items-center justify-between last:border-0 transition-colors duration-150 hover:bg-muted/20">
-              <div class="mr-4">
-                <div class="flex items-center gap-2">
-                  <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                  <span class="text-sm font-medium text-foreground">Company Name</span>
-                </div>
-                <p class="text-xs text-muted-foreground mt-0.5">Displayed in panel header</p>
+             <div class="py-4 px-4 flex items-center justify-between last:border-0 transition-colors duration-150 hover:bg-muted/20">
+               <div class="mr-4">
+                 <div class="flex items-center gap-2">
+                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
+                   <span class="text-sm font-medium text-foreground">{$t('settings.company_name')}</span>
+                 </div>
+                 <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.company_name_desc')}</p>
               </div>
               <input
                 type="text"
                 bind:value={settings.company_name}
-                placeholder="My Hosting Co."
+                placeholder={$t('settings.company_name_placeholder')}
                 class="w-52 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-colors duration-150 focus:bg-background"
               />
             </div>
@@ -791,16 +767,16 @@
 
           <div class="bg-card border border-border rounded-xl overflow-hidden mb-4">
             <div class="px-4 py-3 border-b border-border bg-muted/30">
-              <h2 class="text-sm font-semibold text-foreground">Defaults</h2>
+              <h2 class="text-sm font-semibold text-foreground">{$t('settings.defaults')}</h2>
             </div>
 
             <div class="border-b border-border py-4 px-4 flex items-center justify-between last:border-0 transition-colors duration-150 hover:bg-muted/20">
               <div class="mr-4">
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>
-                  <span class="text-sm font-medium text-foreground">Default PHP Version</span>
+                  <span class="text-sm font-medium text-foreground">{$t('settings.default_php')}</span>
                 </div>
-                <p class="text-xs text-muted-foreground mt-0.5">Used when creating new sites</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.default_php_desc')}</p>
               </div>
               <select
                 bind:value={settings.default_php}
@@ -816,9 +792,9 @@
               <div class="mb-3">
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" /></svg>
-                  <span class="text-sm font-medium text-foreground">Default Web Server</span>
+                  <span class="text-sm font-medium text-foreground">{$t('settings.default_webserver')}</span>
                 </div>
-                <p class="text-xs text-muted-foreground mt-0.5">Applied to new sites</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.default_webserver_desc')}</p>
               </div>
               <div class="flex gap-2">
                 {#each [
@@ -850,9 +826,9 @@
               <div class="mr-4">
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  <span class="text-sm font-medium text-foreground">Timezone</span>
+                  <span class="text-sm font-medium text-foreground">{$t('settings.timezone')}</span>
                 </div>
-                <p class="text-xs text-muted-foreground mt-0.5">Used for log timestamps and scheduling</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.timezone_desc')}</p>
               </div>
               <select
                 bind:value={settings.timezone}
@@ -868,9 +844,9 @@
               <div class="mr-4">
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
-                  <span class="text-sm font-medium text-foreground">Language</span>
+                  <span class="text-sm font-medium text-foreground">{$t('settings.language')}</span>
                 </div>
-                <p class="text-xs text-muted-foreground mt-0.5">Panel interface language</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.language_desc')}</p>
               </div>
               <select
                 bind:value={settings.language}
@@ -890,9 +866,9 @@
               <div class="mr-4">
                 <div class="flex items-center gap-2">
                   <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                  <span class="text-sm font-medium text-foreground">Date Format</span>
+                  <span class="text-sm font-medium text-foreground">{$t('settings.date_format')}</span>
                 </div>
-                <p class="text-xs text-muted-foreground mt-0.5">How dates are displayed in the panel</p>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('settings.date_format_desc')}</p>
               </div>
               <select
                 bind:value={settings.date_format}
@@ -910,7 +886,7 @@
             disabled={generalLoading}
             class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95 disabled:opacity-50"
           >
-            {generalLoading ? 'Saving...' : 'Save Settings'}
+            {generalLoading ? get(t)('common.saving') : get(t)('settings.save_settings')}
           </button>
         </form>
 
@@ -921,13 +897,13 @@
           <div class="flex-1 min-w-0">
           <div class="bg-card border border-border rounded-xl overflow-hidden">
             <div class="px-4 py-3 border-b border-border bg-muted/30">
-              <h2 class="text-sm font-semibold text-foreground">Branding</h2>
+              <h2 class="text-sm font-semibold text-foreground">{$t('settings.branding')}</h2>
             </div>
 
             <div class="border-b border-border py-4 px-4 flex items-center justify-between last:border-0 transition-colors duration-150 hover:bg-muted/20">
               <div class="mr-4">
-                <p class="text-sm font-medium text-foreground">Panel Name</p>
-                <p class="text-xs text-muted-foreground">Replaces "JottiCP" in the interface</p>
+                <p class="text-sm font-medium text-foreground">{$t('settings.panel_name')}</p>
+                <p class="text-xs text-muted-foreground">{$t('settings.panel_name_desc')}</p>
               </div>
               <input
                 type="text"
@@ -938,8 +914,8 @@
 
             <div class="border-b border-border py-4 px-4 flex items-center justify-between last:border-0 transition-colors duration-150 hover:bg-muted/20">
               <div class="mr-4">
-                <p class="text-sm font-medium text-foreground">Primary Color</p>
-                <p class="text-xs text-muted-foreground">Accent color for buttons and highlights</p>
+                <p class="text-sm font-medium text-foreground">{$t('settings.primary_color')}</p>
+                <p class="text-xs text-muted-foreground">{$t('settings.primary_color_desc')}</p>
               </div>
               <div class="flex items-center gap-2">
                 <input
@@ -957,8 +933,8 @@
 
             <div class="border-b border-border py-4 px-4 flex items-start justify-between last:border-0">
               <div class="mr-4">
-                <p class="text-sm font-medium text-foreground">Logo</p>
-                <p class="text-xs text-muted-foreground">SVG or PNG, max 512KB, shown in sidebar</p>
+                <p class="text-sm font-medium text-foreground">{$t('settings.logo')}</p>
+                <p class="text-xs text-muted-foreground">{$t('settings.logo_desc')}</p>
               </div>
               <div class="shrink-0 text-right space-y-2">
                 {#if logoPreview}
@@ -979,7 +955,7 @@
                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
                     />
                   </svg>
-                  Upload
+                  {$t('common.upload')}
                   <input
                     type="file"
                     accept="image/*"
@@ -999,8 +975,8 @@
 
             <div class="py-4 px-4 flex items-start justify-between last:border-0">
               <div class="mr-4">
-                <p class="text-sm font-medium text-foreground">Favicon</p>
-                <p class="text-xs text-muted-foreground">ICO or PNG, 32×32px recommended</p>
+                <p class="text-sm font-medium text-foreground">{$t('settings.favicon')}</p>
+                <p class="text-xs text-muted-foreground">{$t('settings.favicon_desc')}</p>
               </div>
               <div class="shrink-0 text-right space-y-2">
                 {#if faviconPreview}
@@ -1021,7 +997,7 @@
                       d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
                     />
                   </svg>
-                  Upload
+                  {$t('common.upload')}
                   <input
                     type="file"
                     accept="image/*,.ico"
@@ -1054,29 +1030,29 @@
                   }),
                 });
                 if (!r.ok) throw new Error(`HTTP ${r.status}`);
-                showToast('Branding saved', 'success');
+                showToast(get(t)('settings.branding_saved'), 'success');
               } catch {
-                showToast('Failed to save branding', 'error');
+                showToast(get(t)('settings.branding_save_failed'), 'error');
               } finally {
                 brandingLoading = false;
               }
             }}
             class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95 disabled:opacity-50"
           >
-            {brandingLoading ? 'Saving...' : 'Save Branding'}
+            {brandingLoading ? get(t)('common.saving') : get(t)('settings.save_branding')}
           </button>
           </div><!-- end flex-1 -->
 
           <!-- Live preview -->
           <div class="lg:w-56 shrink-0">
-            <p class="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Live Preview</p>
+            <p class="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">{$t('settings.live_preview')}</p>
             <div class="rounded-xl border border-border overflow-hidden bg-background p-0 fade-up">
               <div class="h-1.5 w-full" style="background: {primaryColor}"></div>
               <div class="flex h-40">
                 <!-- Mini sidebar -->
                 <div class="w-24 bg-card border-r border-border p-2 flex flex-col gap-1">
                   <p class="text-[8px] font-bold truncate mb-1" style="color: {primaryColor}">{panelName || 'JottiCP'}</p>
-                  {#each ['Dashboard', 'Sites', 'Email'] as item}
+                  {#each [get(t)('nav.dashboard'), get(t)('nav.websites'), get(t)('nav.email')] as item}
                     <div class="h-4 rounded bg-muted/50 flex items-center px-1">
                       <span class="text-[7px] text-muted-foreground">{item}</span>
                     </div>
@@ -1091,7 +1067,7 @@
                 </div>
               </div>
             </div>
-            <p class="text-[10px] text-muted-foreground mt-1.5 text-center">Updates as you type</p>
+            <p class="text-[10px] text-muted-foreground mt-1.5 text-center">{$t('settings.updates_as_you_type')}</p>
           </div>
         </div><!-- end flex row -->
         </div>
@@ -1101,17 +1077,17 @@
         <form on:submit={saveSmtp} class="max-w-xl space-y-4">
           <div class="bg-card border border-border rounded-xl overflow-hidden">
             <div class="px-4 py-3 border-b border-border bg-muted/30">
-              <h2 class="text-sm font-semibold text-foreground">SMTP Configuration</h2>
+              <h2 class="text-sm font-semibold text-foreground">{$t('settings.smtp_config')}</h2>
             </div>
 
             <div class="p-4 space-y-3">
               <div class="grid grid-cols-2 gap-3">
                 <div class="col-span-2 sm:col-span-1">
-                  <label class="block text-sm font-medium text-foreground mb-1.5">SMTP Host</label>
+                  <label class="block text-sm font-medium text-foreground mb-1.5">{$t('settings.smtp_host')}</label>
                   <input
                     type="text"
                     bind:value={smtpConfig.host}
-                    placeholder="smtp.example.com"
+                    placeholder={$t('settings.smtp_host_placeholder')}
                     class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                   />
                 </div>

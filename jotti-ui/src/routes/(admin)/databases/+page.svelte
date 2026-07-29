@@ -5,6 +5,7 @@
   import PageHeader from '$components/ui/PageHeader.svelte';
   import { databasesHelp } from '$lib/help/sites';
   import { debounce } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -472,7 +473,7 @@
 </script>
 
 <svelte:head>
-  <title>Databases — JottiCP</title>
+  <title>{$t('databases.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-6">
@@ -494,8 +495,8 @@
 
   <!-- Header -->
   <PageHeader
-    title="Databases"
-    subtitle="Global database management across all sites"
+    title={$t('databases.title')}
+    subtitle={$t('databases.subtitle')}
     helpTitle={databasesHelp.title}
     helpContent={databasesHelp.content}
   >
@@ -506,7 +507,7 @@
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
       </svg>
-      Create Database
+      {$t('databases.create')}
       {#if !loading}
         <span class="text-primary-foreground/70 text-xs">({databases.length})</span>
       {/if}
@@ -519,7 +520,7 @@
       <!-- Total -->
       <div class="bg-card border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
         <div class="text-2xl font-bold text-foreground">{totalCount}</div>
-        <div class="text-xs text-muted-foreground mt-0.5">Total databases</div>
+        <div class="text-xs text-muted-foreground mt-0.5">{$t('databases.total_dbs')}</div>
       </div>
 
       <!-- MySQL/MariaDB -->
@@ -528,7 +529,7 @@
           <div class="text-2xl font-bold text-foreground">{mysqlCount}</div>
           <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">MySQL</span>
         </div>
-        <div class="text-xs text-muted-foreground">MySQL / MariaDB</div>
+        <div class="text-xs text-muted-foreground">{$t('databases.total_mysql')}</div>
       </div>
 
       <!-- PostgreSQL -->
@@ -537,13 +538,13 @@
           <div class="text-2xl font-bold text-foreground">{pgCount}</div>
           <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">PG</span>
         </div>
-        <div class="text-xs text-muted-foreground">PostgreSQL</div>
+        <div class="text-xs text-muted-foreground">{$t('databases.total_pg')}</div>
       </div>
 
       <!-- Other -->
       <div class="bg-card border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
         <div class="text-2xl font-bold text-foreground">{otherCount}</div>
-        <div class="text-xs text-muted-foreground mt-0.5">FerretDB / SurrealDB / Valkey</div>
+        <div class="text-xs text-muted-foreground mt-0.5">{$t('databases.total_other')}</div>
       </div>
     </div>
   {/if}
@@ -573,7 +574,7 @@
           bind:value={filterSite}
           class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
         >
-          <option value="">All sites</option>
+          <option value="">{$t('databases.all_sites')}</option>
           {#each sites as site}
             <option value={site.id}>{site.domain}</option>
           {/each}
@@ -588,7 +589,7 @@
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
-          Clear
+          {$t('databases.clear')}
         </button>
       {/if}
     </div>
@@ -596,10 +597,10 @@
     <!-- Type pill tabs -->
     <div class="flex items-center gap-1.5 flex-wrap">
       {#each [
-        { key: 'all',        label: 'All',        count: totalCount },
+        { key: 'all',        label: $t('databases.all'),        count: totalCount },
         { key: 'mysql',      label: 'MySQL',      count: mysqlCount },
         { key: 'postgresql', label: 'PostgreSQL', count: pgCount },
-        { key: 'other',      label: 'Other',      count: otherCount },
+        { key: 'other',      label: $t('databases.other'),      count: otherCount },
       ] as pill}
         <button
           on:click={() => filterTypePill = pill.key}
@@ -632,10 +633,10 @@
       </div>
       <div>
         <p class="text-foreground font-medium">
-          {databases.length === 0 ? 'No databases yet' : 'No databases match your filters'}
+          {databases.length === 0 ? $t('databases.no_databases') : $t('databases.no_match')}
         </p>
         <p class="text-muted-foreground text-sm mt-1">
-          {databases.length === 0 ? 'Create a database to get started.' : 'Try adjusting your search or filters.'}
+          {databases.length === 0 ? $t('databases.no_databases_desc') : $t('databases.no_match_desc')}
         </p>
       </div>
       {#if databases.length === 0}
@@ -643,7 +644,7 @@
           on:click={() => { showCreateModal = true; resetCreateForm(); }}
           class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
         >
-          Create Database
+          {$t('databases.create')}
         </button>
       {/if}
     </div>
@@ -655,13 +656,13 @@
             <th class="px-4 py-3 text-left w-8">
               <!-- bulk select header placeholder -->
             </th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">Database</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">Type</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden md:table-cell">Associated Site</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden lg:table-cell">Username</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden lg:table-cell">Size</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">Status</th>
-            <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase">Actions</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">{$t('databases.col_database')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">{$t('databases.col_type')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden md:table-cell">{$t('databases.col_site')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden lg:table-cell">{$t('databases.col_username')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden lg:table-cell">{$t('databases.col_size')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">{$t('databases.col_status')}</th>
+            <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase">{$t('databases.col_actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -722,7 +723,7 @@
                          fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
-                    <span class="hidden sm:inline">Stats</span>
+                    <span class="hidden sm:inline">{$t('databases.stats')}</span>
                   </button>
 
                   <!-- phpMyAdmin (MySQL/MariaDB only) -->
@@ -736,7 +737,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                     </svg>
-                    <span class="hidden md:inline">phpMyAdmin</span>
+                    <span class="hidden md:inline">{$t('databases.phpmyadmin')}</span>
                   </button>
                   {/if}
 
@@ -750,7 +751,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                     </svg>
-                    <span class="hidden sm:inline">Connect</span>
+                    <span class="hidden sm:inline">{$t('databases.connect')}</span>
                   </button>
 
                   <!-- Export -->
@@ -763,7 +764,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    <span class="hidden md:inline">Export</span>
+                    <span class="hidden md:inline">{$t('databases.export')}</span>
                   </button>
 
                   <!-- Import -->
@@ -776,7 +777,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l4-4m0 0l4 4m-4-4v12" />
                     </svg>
-                    <span class="hidden md:inline">Import</span>
+                    <span class="hidden md:inline">{$t('databases.import')}</span>
                   </button>
 
                   <!-- Delete -->
@@ -789,7 +790,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    <span class="hidden md:inline">Delete</span>
+                    <span class="hidden md:inline">{$t('databases.delete')}</span>
                   </button>
                 </div>
               </td>
@@ -819,7 +820,7 @@
                         </div>
                         <div>
                           <div class="text-sm font-semibold text-foreground">{stats?.table_count ?? '—'}</div>
-                          <div class="text-xs text-muted-foreground">Tables</div>
+                          <div class="text-xs text-muted-foreground">{$t('databases.tables')}</div>
                         </div>
                       </div>
                       <!-- Size -->
@@ -831,7 +832,7 @@
                         </div>
                         <div>
                           <div class="text-sm font-semibold text-foreground">{stats ? formatBytes(stats.size_bytes) : '—'}</div>
-                          <div class="text-xs text-muted-foreground">Total size</div>
+                          <div class="text-xs text-muted-foreground">{$t('databases.total_size')}</div>
                         </div>
                       </div>
                       <!-- Connections -->
@@ -843,7 +844,7 @@
                         </div>
                         <div>
                           <div class="text-sm font-semibold text-foreground">{stats?.connection_count ?? '—'}</div>
-                          <div class="text-xs text-muted-foreground">Active connections</div>
+                          <div class="text-xs text-muted-foreground">{$t('databases.active_connections')}</div>
                         </div>
                       </div>
                       <!-- Placeholder info when 501 -->
@@ -855,8 +856,8 @@
                             </svg>
                           </div>
                           <div>
-                            <div class="text-xs text-amber-400">Stats require DB access</div>
-                            <div class="text-xs text-muted-foreground">Use phpMyAdmin for details</div>
+        <div class="text-xs text-amber-400">{$t('databases.stats_require_db')}</div>
+        <div class="text-xs text-muted-foreground">{$t('databases.use_phpmyadmin')}</div>
                           </div>
                         </div>
                       {:else if stats}
@@ -868,7 +869,7 @@
                           </div>
                           <div>
                             <div class="text-sm font-semibold text-foreground">—</div>
-                            <div class="text-xs text-muted-foreground">Last backup</div>
+                            <div class="text-xs text-muted-foreground">{$t('databases.last_backup')}</div>
                           </div>
                         </div>
                       {/if}
@@ -897,7 +898,7 @@
       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
       </svg>
-      Export All
+      {$t('databases.export_all')}
     </button>
     <button
       on:click={bulkDelete}
@@ -906,7 +907,7 @@
       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
       </svg>
-      Delete Selected
+      {$t('databases.delete_selected')}
     </button>
     <button
       on:click={() => { /* bulk change password placeholder */ showToast('Select one database to change password', 'success'); }}
@@ -915,12 +916,12 @@
       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
       </svg>
-      Change Password
+      {$t('databases.change_password')}
     </button>
     <button
       on:click={clearSelection}
       class="text-muted-foreground hover:text-foreground transition-all duration-150"
-      title="Clear selection"
+      title={$t('databases.clear_selection')}
     >
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>

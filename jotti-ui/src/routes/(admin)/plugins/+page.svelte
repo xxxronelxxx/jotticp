@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { get } from 'svelte/store';
   import { auth } from '$lib/stores/auth';
+  import { t } from '$lib/i18n';
 
   // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -337,7 +338,7 @@
 </script>
 
 <svelte:head>
-  <title>Plugins — JottiCP</title>
+  <title>{$t('plugins.title')} — JottiCP</title>
 </svelte:head>
 
 <!-- ── Detail modal ───────────────────────────────────────────────────────────── -->
@@ -440,8 +441,8 @@
   <!-- Header ───────────────────────────────────────────────────────────────── -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <div>
-      <h1 class="text-2xl font-bold text-foreground tracking-tight">Plugins</h1>
-      <p class="text-sm text-muted-foreground mt-0.5">Extend JottiCP with community and official plugins</p>
+      <h1 class="text-2xl font-bold text-foreground tracking-tight">{$t('plugins.title')}</h1>
+      <p class="text-sm text-muted-foreground mt-0.5">{$t('plugins.subtitle')}</p>
     </div>
     {#if installedCount > 0}
       <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary/10 text-primary text-sm font-medium border border-primary/20">

@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { t } from '$lib/i18n';
   export let columns: Array<{ key: string; label: string; sortable?: boolean; class?: string }> = [];
   export let rows: Record<string, unknown>[] = [];
   export let loading: boolean = false;
-  export let emptyMessage: string = 'No data to display.';
+  export let emptyMessage: string = $t('common.no_results');
   export let selectable: boolean = false;
 
   let sortKey: string = '';
@@ -84,7 +85,7 @@
                 checked={allSelected}
                 indeterminate={someSelected}
                 on:change={toggleAll}
-                aria-label="Select all rows"
+                aria-label={$t('common.select_all')}
                 class="rounded border-border text-primary focus:ring-ring"
               />
             </th>

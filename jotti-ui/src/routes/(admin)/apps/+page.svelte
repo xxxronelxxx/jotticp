@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { api } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -326,7 +327,7 @@
   .fade-up { animation: fadeUp 0.25s ease-out both; }
 </style>
 
-<svelte:head><title>Application Installer — JottiCP</title></svelte:head>
+<svelte:head><title>{$t('apps.title')} — JottiCP</title></svelte:head>
 
 <!-- Toast -->
 {#if toastMessage}
@@ -350,8 +351,8 @@
   <!-- ── Header ──────────────────────────────────────────────────────────── -->
   <div class="flex items-center justify-between gap-4 flex-wrap">
     <div>
-      <h1 class="text-2xl font-semibold text-foreground">Application Installer</h1>
-      <p class="text-sm text-muted-foreground mt-0.5">Install popular apps with one click</p>
+      <h1 class="text-2xl font-semibold text-foreground">{$t('apps.title')}</h1>
+      <p class="text-sm text-muted-foreground mt-0.5">{$t('apps.subtitle')}</p>
     </div>
     <!-- Update All button -->
     {#if !loading && updatableInstalls.length > 0}

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from '$lib/i18n';
   import { api } from '$api/client';
   import type { EmailDomain, EmailAccount, SmtpLimitsResponse, SmtpLimitsRequest } from '$api/client';
 
@@ -425,7 +426,7 @@
 </script>
 
 <svelte:head>
-  <title>Email — JottiCP</title>
+  <title>{$t('email.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-5">
@@ -450,13 +451,13 @@
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
     <div class="flex items-center gap-3">
       <div>
-        <h1 class="text-xl font-semibold text-foreground">Email</h1>
-        <p class="text-sm text-muted-foreground mt-0.5">Manage mailboxes, forwarders and sending limits</p>
+        <h1 class="text-xl font-semibold text-foreground">{$t('email.title')}</h1>
+        <p class="text-sm text-muted-foreground mt-0.5">{$t('email.subtitle')}</p>
       </div>
       {#if !loading}
         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                      bg-primary/10 text-primary border border-primary/20">
-          {totalAccounts} accounts
+          {$t('email.total_accounts', { values: { count: totalAccounts } })}
         </span>
       {/if}
     </div>
@@ -470,7 +471,7 @@
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Create Email Account
+        {$t('email.create_account')}
       </button>
     {/if}
   </div>
@@ -478,10 +479,10 @@
   <!-- ── Sub-tabs ───────────────────────────────────────────────────────────── -->
   <div class="flex gap-1 border-b border-border">
     {#each [
-      { id: 'accounts',     label: 'Accounts' },
-      { id: 'forwarders',   label: 'Forwarders' },
-      { id: 'client-setup', label: 'Client Setup' },
-      { id: 'smtp-limits',  label: 'SMTP Limits' },
+      { id: 'accounts',     label: $t('email.accounts') },
+      { id: 'forwarders',   label: $t('email.forwarders') },
+      { id: 'client-setup', label: $t('email.client_setup') },
+      { id: 'smtp-limits',  label: $t('email.smtp_limits') },
     ] as tab}
       <button
         on:click={() => switchTab(tab.id as Tab)}
@@ -518,7 +519,7 @@
             </div>
             <div>
               <p class="text-2xl font-semibold text-foreground">{totalAccounts}</p>
-              <p class="text-xs text-muted-foreground">Total accounts</p>
+              <p class="text-xs text-muted-foreground">{$t('email.total_accounts')}</p>
             </div>
           </div>
 
@@ -532,7 +533,7 @@
             </div>
             <div>
               <p class="text-2xl font-semibold text-foreground">{formatMb(totalStorageMb)}</p>
-              <p class="text-xs text-muted-foreground">Total storage used</p>
+              <p class="text-xs text-muted-foreground">{$t('email.total_storage')}</p>
             </div>
           </div>
 
@@ -546,7 +547,7 @@
             </div>
             <div>
               <p class="text-2xl font-semibold text-foreground">{domainsWithEmail}</p>
-              <p class="text-xs text-muted-foreground">Domains with email</p>
+              <p class="text-xs text-muted-foreground">{$t('email.domains_with_email')}</p>
             </div>
           </div>
         </div>
@@ -560,7 +561,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
           </svg>
-          <input type="search" bind:value={searchQuery} placeholder="Search email addresses..."
+          <input type="search" bind:value={searchQuery} placeholder={$t('email.search_addresses')}
                  class="w-full h-9 pl-9 pr-3 rounded-lg border border-border bg-background text-sm
                         text-foreground placeholder:text-muted-foreground
                         focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"/>
@@ -569,7 +570,7 @@
         <select bind:value={domainFilter}
                 class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                        focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-          <option value="">All domains</option>
+          <option value="">{$t('email.all_domains')}</option>
           {#each accountDomainList as d}
             <option value={d}>@{d}</option>
           {/each}
@@ -583,7 +584,7 @@
                      {statusFilter === s
                        ? 'bg-primary text-primary-foreground font-medium'
                        : 'bg-background text-muted-foreground hover:bg-muted hover:text-foreground'}"
-            >{s === 'all' ? 'All' : s === 'active' ? 'Active' : 'Suspended'}</button>
+            >{s === 'all' ? $t('email.all') : s === 'active' ? $t('email.active_label') : $t('email.suspended_label')}</button>
           {/each}
         </div>
       </div>
@@ -634,11 +635,11 @@
           <table class="w-full text-sm">
             <thead class="bg-muted/50">
               <tr>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">Email Address</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden md:table-cell">Domain</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden sm:table-cell">Quota</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">Status</th>
-                <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase tracking-wider">Actions</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">{$t('email.email_address')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden md:table-cell">{$t('email.domain')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden sm:table-cell">{$t('email.quota')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">{$t('email.status')}</th>
+                <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase tracking-wider">{$t('email.actions')}</th>
               </tr>
             </thead>
             <tbody>

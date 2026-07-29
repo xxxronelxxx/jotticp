@@ -5,6 +5,7 @@
   import { auth, isAuthenticated, currentUser } from '$stores/auth';
   import { theme, toggleTheme } from '$stores/theme';
   import OrbitIcon from '$lib/components/ui/OrbitIcon.svelte';
+  import { t } from '$lib/i18n';
 
   // ── Nav items (client-only, no admin items) ───────────────────────────────
   const navItems = [
@@ -85,7 +86,7 @@
         <div class="leading-tight min-w-0">
           <span class="font-bold text-[var(--text-primary)] text-sm tracking-tight block">JottiCP</span>
           <span class="text-[10px] text-[var(--text-muted)] font-medium uppercase tracking-wider leading-none block truncate">
-            Client Portal
+            {$t('client.portal')}
           </span>
         </div>
       </div>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { api } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
   type CronJob = {
@@ -440,7 +441,7 @@
   .fade-up { animation: fadeUp 0.25s ease-out both; }
 </style>
 
-<svelte:head><title>Cron Jobs — JottiCP</title></svelte:head>
+<svelte:head><title>{$t('cron.title')} — JottiCP</title></svelte:head>
 
 <!-- ── Toast ──────────────────────────────────────────────────────────────── -->
 {#if toast}
@@ -481,9 +482,9 @@
   <!-- Header -->
   <div class="flex items-center justify-between gap-4 flex-wrap">
     <div>
-      <h1 class="text-2xl font-semibold text-foreground">Cron Jobs</h1>
+      <h1 class="text-2xl font-semibold text-foreground">{$t('cron.title')}</h1>
       <p class="text-sm text-muted-foreground mt-0.5">
-        {#if loading}Loading…{:else}{totalJobs} job{totalJobs !== 1 ? 's' : ''} across all sites{/if}
+        {#if loading}{$t('common.loading')}{:else}{$t('cron.job_count', {count: totalJobs})}{/if}
       </p>
     </div>
     <div class="flex items-center gap-2">
@@ -498,7 +499,7 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 6h18M3 14h18M3 18h18"/>
             </svg>
-            Table
+            {$t('cron.table_view')}
           </button>
           <button
             class="h-9 px-3 transition-colors duration-200 inline-flex items-center gap-1.5
@@ -508,7 +509,7 @@
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
             </svg>
-            Timeline
+            {$t('cron.timeline_view')}
           </button>
         </div>
       {/if}
@@ -519,7 +520,7 @@
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
         </svg>
-        Create Job
+        {$t('cron.create_job')}
       </button>
     </div>
   </div>
@@ -539,15 +540,15 @@
     <!-- Stats row -->
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 fade-up">
       <div class="bg-card border border-border rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Total Jobs</p>
+        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{$t('cron.total_jobs')}</p>
         <p class="text-3xl font-bold text-foreground">{totalJobs}</p>
       </div>
       <div class="bg-card border border-border rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Enabled</p>
+        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{$t('cron.enabled')}</p>
         <p class="text-3xl font-bold text-green-400">{enabledJobs}</p>
       </div>
       <div class="bg-card border border-border rounded-xl p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">Failed Last Run</p>
+        <p class="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">{$t('cron.failed_last_run')}</p>
         <p class="text-3xl font-bold {failedJobs > 0 ? 'text-red-400' : 'text-foreground'}">{failedJobs}</p>
       </div>
     </div>
@@ -560,7 +561,7 @@
           class="w-full h-9 rounded-lg border border-border bg-background px-3 pr-8 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
           bind:value={filterSite}
         >
-          <option value="">All sites</option>
+          <option value="">{$t('cron.all_sites')}</option>
           {#each sites as s}
             <option value={s.id}>{s.domain}</option>
           {/each}
@@ -572,7 +573,7 @@
 
       <!-- Status filter -->
       <div class="flex rounded-lg border border-border overflow-hidden text-sm">
-        {#each [['all','All'],['enabled','Enabled'],['disabled','Disabled']] as [v, label]}
+        {#each [['all',$t('cron.all')],['enabled',$t('cron.enabled_filter')],['disabled',$t('cron.disabled_filter')]] as [v, label]}
           <button
             class="h-9 px-3 transition-colors duration-200 {filterStatus === v ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:bg-muted hover:text-foreground'}"
             on:click={() => filterStatus = v}
@@ -601,8 +602,8 @@
             <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6l4 2"/>
           </svg>
         </div>
-        <p class="text-base font-medium text-foreground">No cron jobs yet</p>
-        <p class="text-sm text-muted-foreground">Schedule automated tasks for your sites.</p>
+        <p class="text-base font-medium text-foreground">{$t('cron.no_jobs')}</p>
+        <p class="text-sm text-muted-foreground">{$t('cron.no_jobs_desc')}</p>
         <button
           class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 mt-1"
           on:click={openCreateModal}
@@ -610,13 +611,13 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          Create First Job
+          {$t('cron.create_first')}
         </button>
       </div>
     {:else if filteredJobs.length === 0}
       <div class="bg-card border border-border rounded-xl py-12 flex flex-col items-center gap-2">
-        <p class="text-base font-medium text-foreground">No jobs match your filters</p>
-        <p class="text-sm text-muted-foreground">Try adjusting the site, status, or search filters.</p>
+        <p class="text-base font-medium text-foreground">{$t('cron.no_match')}</p>
+        <p class="text-sm text-muted-foreground">{$t('cron.no_match_desc')}</p>
       </div>
 
     <!-- ── TIMELINE VIEW ──────────────────────────────────────────────────── -->

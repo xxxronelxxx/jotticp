@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { api } from '$api/client';
   import type { Database, Site } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
   interface TableInfo {
@@ -479,7 +480,7 @@
 </script>
 
 <svelte:head>
-  <title>DB Manager — JottiCP</title>
+  <title>{$t('dbmanager.title')} — JottiCP</title>
 </svelte:head>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->

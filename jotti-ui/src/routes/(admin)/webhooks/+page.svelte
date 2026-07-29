@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { get } from 'svelte/store';
   import { auth } from '$lib/stores/auth';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -228,7 +229,7 @@
 </script>
 
 <svelte:head>
-  <title>Webhooks — JottiCP</title>
+  <title>{$t('webhooks.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-6">
@@ -236,8 +237,8 @@
   <!-- Page header -->
   <div class="flex items-start justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold text-foreground">Webhooks</h1>
-      <p class="text-muted-foreground text-sm mt-1">Receive HTTP notifications when events occur in your panel</p>
+      <h1 class="text-2xl font-bold text-foreground">{$t('webhooks.title')}</h1>
+      <p class="text-muted-foreground text-sm mt-1">{$t('webhooks.subtitle')}</p>
     </div>
     <button
       on:click={openModal}
@@ -555,7 +556,7 @@
             </svg>
             Adding…
           {:else}
-            Add Webhook
+      {$t('webhooks.add_webhook')}
           {/if}
         </button>
       </div>

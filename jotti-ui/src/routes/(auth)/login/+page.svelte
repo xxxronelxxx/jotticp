@@ -1,7 +1,9 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { auth } from '$stores/auth';
+  import { t } from '$lib/i18n';
   import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
   import { page } from '$app/stores';
   import OrbitIcon from '$lib/components/ui/OrbitIcon.svelte';
 
@@ -24,7 +26,7 @@
   onMount(() => {
     const reason = $page.url.searchParams.get('reason');
     if (reason === 'session_expired') {
-      sessionExpiredMsg = 'Your session has expired. Please sign in again.';
+      sessionExpiredMsg = get(t)('auth.session_expired');
     }
     // Initialize auth from storage to detect if already logged in
     auth.init();
@@ -65,11 +67,11 @@
           await goto('/onboarding');
         }
       } else {
-        errorMessage = 'Login failed. Please try again.';
+        errorMessage = get(t)('auth.login_failed');
       }
     } catch (err: unknown) {
       const e = err as { message?: string; error?: string };
-      errorMessage = e.message ?? 'Login failed. Please check your credentials.';
+      errorMessage = e.message ?? get(t)('auth.invalid_credentials');
     } finally {
       isLoading = false;
     }
@@ -91,8 +93,8 @@
     } catch (err: unknown) {
       const e = err as { message?: string; error?: string };
       errorMessage = e.error === 'invalid_totp'
-        ? 'Invalid code. Please check your authenticator app and try again.'
-        : e.message ?? 'Verification failed. Please try again.';
+        ? get(t)('auth.invalid_totp')
+        : e.message ?? get(t)('auth.verify_failed');
       totpCode = '';
       totpInput?.focus();
     } finally {
@@ -116,8 +118,8 @@
     } catch (err: unknown) {
       const e = err as { message?: string; error?: string };
       errorMessage = e.error === 'invalid_totp'
-        ? 'Invalid backup code. Please check and try again.'
-        : e.message ?? 'Verification failed.';
+        ? get(t)('auth.invalid_backup')
+        : e.message ?? get(t)('auth.verify_failed');
       backupCode = '';
       backupInput?.focus();
     } finally {
@@ -158,7 +160,7 @@
 </script>
 
 <svelte:head>
-  <title>Sign In — JottiCP</title>
+  <title>{$t('auth.login_title')} — JottiCP</title>
 </svelte:head>
 
 <!-- Light theme: white card on slate-50 background -->
@@ -172,7 +174,7 @@
         <OrbitIcon size={32} className="text-white" />
       </div>
       <h1 class="text-2xl font-bold text-foreground">JottiCP</h1>
-      <p class="text-muted-foreground text-sm mt-1">Server Control Panel</p>
+      <p class="text-muted-foreground text-sm mt-1">{$t('auth.subtitle')}</p>
     </div>
 
     <!-- Session expired warning -->
@@ -194,9 +196,9 @@
       {#if step === 'credentials'}
         <!-- ── Step 1: Email + Password ────────────────────────────────── -->
         <div class="mb-6">
-          <h2 class="text-lg font-semibold text-foreground">Sign in</h2>
+          <h2 class="text-lg font-semibold text-foreground">{$t('auth.login')}</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            Enter your credentials to continue.
+            {$t('auth.credentials_hint')}
           </p>
         </div>
 
@@ -206,7 +208,7 @@
             <!-- Email -->
             <div>
               <label for="email" class="block text-sm font-medium text-foreground mb-1.5">
-                Email address
+                {$t('auth.email')}
               </label>
               <input
                 bind:this={emailInput}
@@ -216,7 +218,7 @@
                 autocomplete="email"
                 autocapitalize="none"
                 spellcheck="false"
-                placeholder="admin@example.com"
+                placeholder={$t('auth.email_placeholder')}
                 required
                 disabled={isLoading}
                 class="w-full h-10 rounded-lg border border-border
@@ -232,11 +234,11 @@
             <div>
               <div class="flex items-center justify-between mb-1.5">
                 <label for="password" class="text-sm font-medium text-foreground">
-                  Password
+                   {$t('auth.password')}
                 </label>
                 <a href="/forgot-password"
                    class="text-xs text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
-                  Forgot password?
+                  {$t('auth.forgot_password')}
                 </a>
               </div>
               <div class="relative">
@@ -256,7 +258,7 @@
                 <button
                   type="button"
                   on:click={() => showPassword = !showPassword}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? $t('auth.hide_password') : $t('auth.show_password')}
                   class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground
                          hover:text-foreground transition-colors"
                 >
@@ -314,10 +316,10 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Signing in...
+                  {$t('auth.signing_in')}
                 </span>
               {:else}
-                Continue
+                {$t('auth.continue')}
               {/if}
             </button>
 
@@ -327,9 +329,9 @@
       {:else if step === 'totp'}
         <!-- ── Step 2: TOTP ────────────────────────────────────────────── -->
         <div class="mb-6">
-          <h2 class="text-lg font-semibold text-foreground">Two-factor verification</h2>
+          <h2 class="text-lg font-semibold text-foreground">{$t('auth.totp_title')}</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            Open your authenticator app and enter the 6-digit code for JottiCP.
+            {$t('auth.totp_hint')}
           </p>
         </div>
 
@@ -339,7 +341,7 @@
             <!-- TOTP input -->
             <div>
               <label for="totp-code" class="block text-sm font-medium text-foreground mb-1.5">
-                Authentication code
+                {$t('auth.totp_code')}
               </label>
               <input
                 bind:this={totpInput}
@@ -349,7 +351,7 @@
                 autocomplete="one-time-code"
                 pattern="[0-9]{6}"
                 maxlength="6"
-                placeholder="000000"
+                placeholder={$t('auth.totp_placeholder')}
                 disabled={isLoading}
                 on:input={handleTotpInput}
                 class="w-full h-16 rounded-lg border border-border
@@ -361,7 +363,7 @@
                 aria-describedby="totp-help"
               />
               <p id="totp-help" class="text-xs text-muted-foreground mt-1.5">
-                The code changes every 30 seconds.
+                {$t('auth.totp_changes')}
               </p>
             </div>
 
@@ -395,10 +397,10 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Verifying...
+                  {$t('auth.verifying')}
                 </span>
               {:else}
-                Verify &amp; Sign In
+                {$t('auth.verify_signin')}
               {/if}
             </button>
 
@@ -409,14 +411,14 @@
                 on:click={goBackToCredentials}
                 class="text-muted-foreground hover:text-foreground transition-colors"
               >
-                ← Back
+                {$t('common.back')}
               </button>
               <button
                 type="button"
                 on:click={goToBackupCode}
                 class="text-muted-foreground hover:text-foreground transition-colors text-xs"
               >
-                Lost your authenticator?
+                {$t('auth.forgot_totp')}
               </button>
             </div>
 
@@ -426,9 +428,9 @@
       {:else}
         <!-- ── Step 3: Backup code ─────────────────────────────────────── -->
         <div class="mb-6">
-          <h2 class="text-lg font-semibold text-foreground">Use a backup code</h2>
+          <h2 class="text-lg font-semibold text-foreground">{$t('auth.backup_title')}</h2>
           <p class="text-sm text-muted-foreground mt-1">
-            Enter one of your 12-character backup codes to sign in.
+            {$t('auth.backup_hint')}
           </p>
         </div>
 
@@ -437,7 +439,7 @@
 
             <div>
               <label for="backup-code" class="block text-sm font-medium text-foreground mb-1.5">
-                Backup code
+                {$t('auth.backup_code')}
               </label>
               <input
                 bind:this={backupInput}
@@ -447,7 +449,7 @@
                 autocomplete="off"
                 autocapitalize="characters"
                 spellcheck="false"
-                placeholder="XXXX-XXXX-XXXX"
+                placeholder={$t('auth.backup_placeholder')}
                 maxlength="14"
                 disabled={isLoading}
                 class="w-full h-12 rounded-lg border border-border
@@ -458,7 +460,7 @@
                        disabled:opacity-50 disabled:cursor-not-allowed transition-colors uppercase"
               />
               <p class="text-xs text-muted-foreground mt-1.5">
-                Each backup code can only be used once.
+                {$t('auth.backup_once')}
               </p>
             </div>
 
@@ -491,10 +493,10 @@
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Verifying...
+                  {$t('auth.verifying')}
                 </span>
               {:else}
-                Sign In with Backup Code
+                {$t('auth.backup_signin')}
               {/if}
             </button>
 
@@ -504,14 +506,14 @@
                 on:click={goBackToCredentials}
                 class="text-muted-foreground hover:text-foreground transition-colors"
               >
-                ← Back
+                {$t('common.back')}
               </button>
               <button
                 type="button"
                 on:click={goToTotp}
                 class="text-muted-foreground hover:text-foreground transition-colors text-xs"
               >
-                Use authenticator instead
+                {$t('auth.use_totp')}
               </button>
             </div>
 
@@ -526,7 +528,7 @@
       JottiCP v{import.meta.env.VITE_JOTTICP_VERSION ?? '0.1.0'}
       &nbsp;·&nbsp;
       <a href="https://docs.jotticp.io" target="_blank" rel="noopener"
-         class="hover:underline">Documentation</a>
+         class="hover:underline">{$t('common.documentation')}</a>
     </p>
 
   </div>

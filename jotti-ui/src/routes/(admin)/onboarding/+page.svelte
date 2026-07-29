@@ -3,6 +3,7 @@
   import { api } from '$api/client';
   import { auth } from '$stores/auth';
   import OrbitIcon from '$lib/components/ui/OrbitIcon.svelte';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let currentStep = 1;
@@ -136,7 +137,7 @@
 </script>
 
 <svelte:head>
-  <title>Setup — JottiCP</title>
+  <title>{$t('onboarding.title')} — JottiCP</title>
 </svelte:head>
 
 <!-- Full-page wizard (no sidebar) -->
@@ -148,14 +149,14 @@
       <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary mb-4 shadow-xl shadow-indigo-500/25">
         <OrbitIcon size={32} className="text-white" />
       </div>
-      <h1 class="text-2xl font-bold text-foreground">JottiCP Setup</h1>
+      <h1 class="text-2xl font-bold text-foreground">{$t('onboarding.title')}</h1>
     </div>
 
     <!-- Progress bar -->
     <div class="mb-6">
       <div class="flex justify-between text-xs text-muted-foreground mb-1.5">
-        <span>Step {currentStep} of {totalSteps}</span>
-        <span>{Math.round((currentStep / totalSteps) * 100)}% complete</span>
+        <span>{$t('onboarding.step_of', { n: currentStep, total: totalSteps })}</span>
+        <span>{$t('onboarding.percent_complete', { pct: Math.round((currentStep / totalSteps) * 100) })}</span>
       </div>
       <div class="h-1.5 bg-muted rounded-full overflow-hidden">
         <div class="h-full bg-[var(--accent)] rounded-full transition-all duration-500"
@@ -170,16 +171,16 @@
       {#if currentStep === 1}
         <div class="text-center space-y-4">
           <div class="text-5xl">🚀</div>
-          <h2 class="text-xl font-bold text-foreground">Welcome to JottiCP!</h2>
+          <h2 class="text-xl font-bold text-foreground">{$t('onboarding.welcome_title')}</h2>
           <p class="text-muted-foreground text-sm leading-relaxed">
-            Let's get your panel ready in 3 minutes. We'll help you:
+            {$t('onboarding.welcome_desc')}
           </p>
           <ul class="text-sm text-muted-foreground space-y-2 text-left">
             {#each [
-              'Set a secure admin password',
-              'Configure your panel domain',
-              'Set up nameserver records',
-              'Add your first website',
+              $t('onboarding.step1_set_password'),
+              $t('onboarding.step2_panel_domain'),
+              $t('onboarding.step3_ns_records'),
+              $t('onboarding.step4_first_site'),
             ] as item}
               <li class="flex items-center gap-2">
                 <svg class="w-4 h-4 text-green-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -192,7 +193,7 @@
           <button on:click={() => goToStep(2)}
                   class="w-full h-10 rounded-lg bg-[var(--accent)] text-white font-medium text-sm
                          hover:bg-[var(--accent-hover)] transition-colors">
-            Let's Get Started →
+            {$t('onboarding.get_started')}
           </button>
         </div>
 
@@ -200,9 +201,9 @@
       {:else if currentStep === 2}
         <div class="space-y-4">
           <div>
-            <h2 class="text-lg font-semibold text-foreground">Change Admin Password</h2>
+            <h2 class="text-lg font-semibold text-foreground">{$t('onboarding.change_password_title')}</h2>
             <p class="text-sm text-muted-foreground mt-1">
-              Set a strong password for your admin account before continuing.
+              {$t('onboarding.change_password_desc')}
             </p>
           </div>
 

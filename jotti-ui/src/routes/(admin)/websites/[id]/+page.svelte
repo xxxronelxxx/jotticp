@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from '$lib/i18n';
   import { page } from '$app/stores';
   import { browser } from '$app/environment';
   import { api } from '$api/client';
@@ -41,60 +42,60 @@
   const groups = [
     {
       key:   'overview',
-      label: 'Overview',
+      label: t('site_detail.group_overview'),
       icon:  'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
       tabs: [
-        { key: 'overview', label: 'Overview' },
+        { key: 'overview', label: t('site_detail.tab_overview') },
       ],
     },
     {
       key:   'files',
-      label: 'Files',
+      label: t('site_detail.group_files'),
       icon:  'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z',
       tabs: [
-        { key: 'files',  label: 'File Manager' },
-        { key: 'access', label: 'Access'       },
+        { key: 'files',  label: t('site_detail.tab_file_manager') },
+        { key: 'access', label: t('site_detail.tab_access')       },
       ],
     },
     {
       key:   'hosting',
-      label: 'Hosting',
+      label: t('site_detail.group_hosting'),
       icon:  'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2',
       tabs: [
-        { key: 'databases', label: 'Databases' },
-        { key: 'email',     label: 'Email'     },
-        { key: 'dns',       label: 'DNS'       },
-        { key: 'ssl',       label: 'SSL'       },
+        { key: 'databases', label: t('site_detail.tab_databases') },
+        { key: 'email',     label: t('site_detail.tab_email')     },
+        { key: 'dns',       label: t('site_detail.tab_dns')       },
+        { key: 'ssl',       label: t('site_detail.tab_ssl')       },
       ],
     },
     {
       key:   'config',
-      label: 'Config',
+      label: t('site_detail.group_config'),
       icon:  'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4',
       tabs: [
-        { key: 'php',   label: 'PHP'   },
-        { key: 'cache', label: 'Cache' },
-        { key: 'cron',  label: 'Cron'  },
+        { key: 'php',   label: t('site_detail.tab_php')   },
+        { key: 'cache', label: t('site_detail.tab_cache') },
+        { key: 'cron',  label: t('site_detail.tab_cron')  },
       ],
     },
     {
       key:   'ops',
-      label: 'Ops',
+      label: t('site_detail.group_ops'),
       icon:  'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z',
       tabs: [
-        { key: 'backups', label: 'Backups' },
-        { key: 'logs',    label: 'Logs'    },
-        { key: 'apps',    label: 'Apps'    },
+        { key: 'backups', label: t('site_detail.tab_backups') },
+        { key: 'logs',    label: t('site_detail.tab_logs')    },
+        { key: 'apps',    label: t('site_detail.tab_apps')    },
       ],
     },
     {
       key:   'dev',
-      label: 'Dev',
+      label: t('site_detail.group_dev'),
       icon:  'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
       tabs: [
-        { key: 'git-deploy', label: 'Git'     },
-        { key: 'staging',    label: 'Staging' },
-        { key: 'runtime',    label: 'Runtime' },
+        { key: 'git-deploy', label: t('site_detail.tab_git')     },
+        { key: 'staging',    label: t('site_detail.tab_staging') },
+        { key: 'runtime',    label: t('site_detail.tab_runtime') },
       ],
     },
   ] as const;
@@ -154,7 +155,7 @@
 </script>
 
 <svelte:head>
-  <title>{site ? `${site.domain} — JottiCP` : 'Site — JottiCP'}</title>
+  <title>{site ? `${site.domain} — JottiCP` : `${$t('site_detail.title')} — JottiCP`}</title>
 </svelte:head>
 
 {#if loading}
@@ -166,8 +167,8 @@
 
 {:else if !site}
   <div class="text-center py-20">
-    <p class="text-muted-foreground">Site not found.</p>
-    <a href="/websites" class="mt-4 inline-block text-sm text-primary hover:underline">← Back to websites</a>
+    <p class="text-muted-foreground">{$t('site_detail.not_found')}</p>
+    <a href="/websites" class="mt-4 inline-block text-sm text-primary hover:underline">{$t('site_detail.back_to_websites')}</a>
   </div>
 
 {:else}
@@ -177,7 +178,7 @@
     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
       <div>
         <div class="flex items-center gap-1.5 text-sm text-muted-foreground mb-1">
-          <a href="/websites" class="hover:text-foreground transition-colors">Websites</a>
+          <a href="/websites" class="hover:text-foreground transition-colors">{$t('site_detail.websites')}</a>
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
           </svg>
@@ -191,7 +192,7 @@
               <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
               </svg>
-              HTTPS
+              {$t('site_detail.https')}
             </span>
           {/if}
         </div>
@@ -213,7 +214,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
             </svg>
-            Preview
+            {$t('site_detail.preview')}
           </a>
         {:else}
           <button
@@ -225,7 +226,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
             </svg>
-            Preview
+            {$t('site_detail.preview')}
           </button>
         {/if}
         <a
@@ -235,7 +236,7 @@
           class="h-8 px-3 rounded-lg border border-border text-xs font-medium text-muted-foreground
                  hover:bg-muted hover:text-foreground transition-colors inline-flex items-center gap-1.5"
         >
-          Visit
+          {$t('site_detail.visit')}
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
           </svg>

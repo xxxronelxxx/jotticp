@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { get } from 'svelte/store';
   import { auth } from '$lib/stores/auth';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -207,7 +208,7 @@
 </script>
 
 <svelte:head>
-  <title>Cloudflare DNS — JottiCP</title>
+  <title>{$t('cloudflare.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-6">
@@ -215,8 +216,8 @@
   <!-- Page header -->
   <div class="flex items-start justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold text-foreground">Cloudflare DNS</h1>
-      <p class="text-muted-foreground text-sm mt-1">Automatically sync DNS records to Cloudflare zones</p>
+      <h1 class="text-2xl font-bold text-foreground">{$t('cloudflare.title')}</h1>
+      <p class="text-muted-foreground text-sm mt-1">{$t('cloudflare.subtitle')}</p>
     </div>
     <button
       on:click={openModal}
@@ -238,7 +239,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
         </svg>
       </div>
-      <h3 class="text-sm font-semibold text-foreground">API Tokens</h3>
+      <h3 class="text-sm font-semibold text-foreground">{$t('cloudflare.api_tokens')}</h3>
     </div>
 
     {#if loading}
@@ -264,8 +265,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
           </svg>
         </div>
-        <p class="text-sm font-medium text-foreground mb-1">No Cloudflare tokens configured</p>
-        <p class="text-xs text-muted-foreground mb-4">Add a token to start syncing DNS records to your zones</p>
+        <p class="text-sm font-medium text-foreground mb-1">{$t('cloudflare.no_tokens')}</p>
+        <p class="text-xs text-muted-foreground mb-4">{$t('cloudflare.no_tokens_desc')}</p>
         <button
           on:click={openModal}
           class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
@@ -581,7 +582,7 @@
             </svg>
             Adding…
           {:else}
-            Add Token
+      {$t('cloudflare.add_token')}
           {/if}
         </button>
       </div>

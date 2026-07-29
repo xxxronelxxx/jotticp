@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { get } from 'svelte/store';
   import { auth } from '$lib/stores/auth';
+  import { t } from '$lib/i18n';
 
   // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -187,15 +188,15 @@
 </script>
 
 <svelte:head>
-  <title>Migration — JottiCP</title>
+  <title>{$t('migration.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="space-y-6 page-content">
 
   <!-- Header ───────────────────────────────────────────────────────────────── -->
   <div>
-    <h1 class="text-2xl font-bold text-foreground tracking-tight">Migration Import</h1>
-    <p class="text-sm text-muted-foreground mt-0.5">Import websites, databases, email accounts, and DNS from cPanel or Plesk</p>
+    <h1 class="text-2xl font-bold text-foreground tracking-tight">{$t('migration.title')}</h1>
+    <p class="text-sm text-muted-foreground mt-0.5">{$t('migration.subtitle')}</p>
   </div>
 
   <!-- Source selector ──────────────────────────────────────────────────────── -->

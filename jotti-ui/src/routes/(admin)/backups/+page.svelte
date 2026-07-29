@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { api } from '$api/client';
   import type { Backup, BackupSettings, Site } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
 
@@ -396,7 +397,7 @@
 </script>
 
 <svelte:head>
-  <title>Backups — JottiCP</title>
+  <title>{$t('backups.title')} — JottiCP</title>
 </svelte:head>
 
 <style>
@@ -433,8 +434,8 @@
   <!-- ── Header ──────────────────────────────────────────────────────────── -->
   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 fade-up">
     <div>
-      <h1 class="text-xl font-bold text-foreground">Backups</h1>
-      <p class="text-sm text-muted-foreground mt-0.5">Manage backup schedules and restore points</p>
+      <h1 class="text-xl font-bold text-foreground">{$t('backups.title')}</h1>
+      <p class="text-sm text-muted-foreground mt-0.5">{$t('backups.subtitle')}</p>
     </div>
     <div class="flex items-center gap-2">
       <button
@@ -451,7 +452,7 @@
                2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
         </svg>
-        Configure Storage
+        {$t('backups.configure_storage')}
       </button>
       <button
         class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 disabled:opacity-50"
@@ -485,22 +486,22 @@
   {:else}
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
       <div class="bg-card border border-border rounded-xl p-4 fade-up" style="animation-delay:0.05s">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Last Backup</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">{$t('backups.last_backup')}</p>
         <p class="text-lg font-bold {lastBackupColor}">{timeAgo(lastBackup?.created_at ?? null)}</p>
         <p class="text-xs text-muted-foreground mt-0.5">{lastBackup ? formatDateTime(lastBackup.created_at) : 'No backups yet'}</p>
       </div>
       <div class="bg-card border border-border rounded-xl p-4 fade-up" style="animation-delay:0.08s">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Total Size</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">{$t('backups.total_size')}</p>
         <p class="text-lg font-bold text-foreground">{formatBytes(totalSizeBytes)}</p>
         <p class="text-xs text-muted-foreground mt-0.5">{backups.length} backup{backups.length !== 1 ? 's' : ''} stored</p>
       </div>
       <div class="bg-card border border-border rounded-xl p-4 fade-up" style="animation-delay:0.11s">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Backup Jobs</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">{$t('backups.backup_jobs')}</p>
         <p class="text-lg font-bold text-foreground">{schedules.filter(s => s.settings).length}</p>
         <p class="text-xs text-muted-foreground mt-0.5">of {sites.length} sites configured</p>
       </div>
       <div class="bg-card border border-border rounded-xl p-4 fade-up" style="animation-delay:0.14s">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">Success Rate</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">{$t('backups.success_rate')}</p>
         <p class="text-lg font-bold {successRate >= 90 ? 'text-green-400' : successRate >= 70 ? 'text-amber-400' : 'text-red-400'}">{successRate}%</p>
         <p class="text-xs text-muted-foreground mt-0.5">Last 30 days</p>
         <div class="bg-muted rounded-full h-1.5 mt-2">
@@ -673,7 +674,7 @@
     <!-- LEFT: Backup Jobs / Schedules -->
     <div class="space-y-4 fade-up" style="animation-delay:0.1s">
       <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold text-foreground">Backup Schedules</h2>
+        <h2 class="text-sm font-semibold text-foreground">{$t('backups.backup_schedules')}</h2>
         <button
           class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2"
           on:click={() => { showAddSchedule = true; }}
@@ -681,7 +682,7 @@
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
           </svg>
-          Add Schedule
+          {$t('backups.add_schedule')}
         </button>
       </div>
 
@@ -763,7 +764,7 @@
     <!-- RIGHT: Backup History -->
     <div class="space-y-4 fade-up" style="animation-delay:0.15s">
       <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold text-foreground">Backup History</h2>
+        <h2 class="text-sm font-semibold text-foreground">{$t('backups.backup_history')}</h2>
         <!-- View toggle -->
         {#if recentHistory.length > 0}
           <div class="flex items-center gap-1 bg-muted rounded-lg p-1">
@@ -775,7 +776,7 @@
               <svg class="w-3.5 h-3.5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18M10 3v18M14 3v18"/>
               </svg>
-              Table
+              {$t('backups.table_view')}
             </button>
             <button
               on:click={() => historyView = 'timeline'}
@@ -785,7 +786,7 @@
               <svg class="w-3.5 h-3.5 inline mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
               </svg>
-              Timeline
+              {$t('backups.timeline_view')}
             </button>
           </div>
         {/if}
@@ -837,7 +838,7 @@
             class="mt-4 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2"
             on:click={runBackupNow}
           >
-            Run Backup Now
+          {$t('backups.run_now')}
           </button>
         </div>
 

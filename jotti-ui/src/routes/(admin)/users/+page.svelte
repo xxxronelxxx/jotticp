@@ -4,6 +4,7 @@
   import { api } from '$api/client';
   import type { User } from '$api/client';
   import { auth, currentUser } from '$stores/auth';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let users: User[] = [];
@@ -519,7 +520,7 @@
 </style>
 
 <svelte:head>
-  <title>Users — JottiCP</title>
+  <title>{$t('users.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-5">
@@ -542,9 +543,9 @@
   <!-- Header -->
   <div class="flex items-center justify-between gap-3 flex-wrap">
     <div>
-      <h1 class="text-xl font-semibold text-foreground">Users</h1>
+      <h1 class="text-xl font-semibold text-foreground">{$t('users.title')}</h1>
       <p class="text-sm text-muted-foreground mt-0.5">
-        {#if loading}Loading...{:else}{totalUsers} total user{totalUsers !== 1 ? 's' : ''}{/if}
+        {#if loading}{$t('users.loading')}{:else}{totalUsers} {$t('users.total_users')}{/if}
       </p>
     </div>
     <div class="flex items-center gap-2 flex-wrap">

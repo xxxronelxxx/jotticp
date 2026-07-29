@@ -4,6 +4,7 @@
   import { api } from '$api/client';
   import type { Site, Server, Database, EmailAccount, Notification } from '$api/client';
   import { auth, isAdmin, currentUser } from '$stores/auth';
+  import { t } from '$lib/i18n';
   import { get } from 'svelte/store';
 
   // ── Auth helper ──────────────────────────────────────────────────────────────
@@ -173,7 +174,7 @@
   $: totalEmails   = emailAccounts.length;
 
   $: offlineCount  = servers.filter(s => s.status !== 'active').length;
-  $: healthLabel   = offlineCount === 0 ? 'All Healthy' : `${offlineCount} Issue${offlineCount > 1 ? 's' : ''}`;
+  $: healthLabel   = offlineCount === 0 ? get(t)('dashboard.all_healthy') : `${offlineCount} ${get(t)('dashboard.issues')}`;
   $: healthColor   = offlineCount === 0 ? 'text-green-400' : 'text-red-400';
 
   $: recentSites   = [...sites].sort((a, b) =>
@@ -210,10 +211,11 @@
   // ── Greeting ─────────────────────────────────────────────────────────────────
 
   function greeting(): string {
+    const tr = get(t);
     const h = new Date().getHours();
-    if (h < 12) return 'Good morning';
-    if (h < 18) return 'Good afternoon';
-    return 'Good evening';
+    if (h < 12) return tr('dashboard.greeting_morning');
+    if (h < 18) return tr('dashboard.greeting_afternoon');
+    return tr('dashboard.greeting_evening');
   }
 
   $: greetName = $currentUser?.email?.split('@')[0] ?? 'there';
@@ -286,7 +288,7 @@
         }),
       ]);
     } catch (err) {
-      loadError = (err as { message?: string })?.message ?? 'Failed to load dashboard data.';
+      loadError = (err as { message?: string })?.message ?? get(t)('dashboard.load_error');
     } finally {
       loading = false;
     }
@@ -438,7 +440,7 @@
 </script>
 
 <svelte:head>
-  <title>Dashboard — JottiCP</title>
+  <title>{$t('dashboard.title')} — JottiCP</title>
 </svelte:head>
 
 <!-- ── Global keyboard shortcut: Ctrl/Cmd+K opens palette ───────────────────── -->
@@ -466,7 +468,7 @@
           bind:value={paletteQuery}
           on:keydown={paletteKeydown}
           type="text"
-          placeholder="Search commands…"
+          placeholder={$t('dashboard.search_commands')}
           class="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
         />
         <kbd class="text-xs text-muted-foreground bg-muted px-1.5 py-0.5 rounded border border-border font-mono">Esc</kbd>
@@ -474,7 +476,7 @@
 
       <!-- Commands list -->
       {#if filteredCommands.length === 0}
-        <div class="px-4 py-8 text-center text-sm text-muted-foreground">No commands found.</div>
+        <div class="px-4 py-8 text-center text-sm text-muted-foreground">{$t('dashboard.no_commands_found')}</div>
       {:else}
         <ul class="max-h-80 overflow-y-auto py-1.5">
           {#each filteredCommands as cmd, i (cmd.href)}
@@ -529,9 +531,9 @@
 
       <!-- Footer -->
       <div class="flex items-center gap-3 px-4 py-2 border-t border-border text-xs text-muted-foreground">
-        <span class="flex items-center gap-1"><kbd class="bg-muted px-1 rounded border border-border font-mono">↑↓</kbd> navigate</span>
-        <span class="flex items-center gap-1"><kbd class="bg-muted px-1 rounded border border-border font-mono">↵</kbd> open</span>
-        <span class="flex items-center gap-1"><kbd class="bg-muted px-1 rounded border border-border font-mono">Esc</kbd> close</span>
+        <span class="flex items-center gap-1"><kbd class="bg-muted px-1 rounded border border-border font-mono">↑↓</kbd> {$t('dashboard.navigate')}</span>
+        <span class="flex items-center gap-1"><kbd class="bg-muted px-1 rounded border border-border font-mono">↵</kbd> {$t('dashboard.open')}</span>
+        <span class="flex items-center gap-1"><kbd class="bg-muted px-1 rounded border border-border font-mono">Esc</kbd> {$t('dashboard.close')}</span>
       </div>
     </div>
   </div>
@@ -542,7 +544,7 @@
   <!-- ── Page header ──────────────────────────────────────────────────────── -->
   <div class="fade-up flex flex-col sm:flex-row sm:items-center justify-between gap-3">
     <div>
-      <h1 class="text-2xl font-bold text-foreground">Dashboard</h1>
+      <h1 class="text-2xl font-bold text-foreground">{$t('dashboard.title')}</h1>
       <p class="text-sm text-muted-foreground mt-0.5">
         {greeting()}, <span class="text-foreground font-medium">{greetName}</span>
       </p>
@@ -556,7 +558,7 @@
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
-        <span class="hidden sm:inline">Search commands</span>
+        <span class="hidden sm:inline">{$t('dashboard.search_commands')}</span>
         <kbd class="hidden sm:inline-flex items-center gap-0.5 text-xs bg-card border border-border px-1.5 py-0.5 rounded font-mono">
           <span class="text-[10px]">⌘</span>K
         </kbd>
@@ -568,7 +570,7 @@
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
           </svg>
-          Add Server
+          {$t('dashboard.add_server')}
         </a>
       {/if}
     </div>
@@ -585,7 +587,7 @@
       <span>{loadError}</span>
       <button on:click={() => void loadAll()}
               class="ml-auto text-xs font-semibold underline underline-offset-2 hover:no-underline">
-        Retry
+        {$t('common.retry')}
       </button>
     </div>
   {/if}
@@ -620,7 +622,7 @@
         </div>
         <!-- Label row -->
         <div class="flex items-center justify-between mb-3">
-          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Sites</p>
+          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{$t('dashboard.sites')}</p>
           <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
             <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9"/>
@@ -637,7 +639,7 @@
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18"/></svg>
             {activeSites}
           </span>
-          <span class="text-xs text-muted-foreground">active</span>
+          <span class="text-xs text-muted-foreground">{$t('dashboard.active')}</span>
         </div>
       </a>
 
@@ -653,7 +655,7 @@
           </svg>
         </div>
         <div class="flex items-center justify-between mb-3">
-          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Databases</p>
+          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{$t('dashboard.databases')}</p>
           <div class="w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
             <svg class="w-4 h-4 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/>
@@ -665,7 +667,7 @@
         </p>
         <div class="flex items-center gap-1.5 mt-2">
           <span class="text-xs text-muted-foreground">
-            {dbTypes.length > 0 ? dbTypes.join(', ') : 'none yet'}
+            {dbTypes.length > 0 ? dbTypes.join(', ') : $t('dashboard.none_yet')}
           </span>
         </div>
       </a>
@@ -682,7 +684,7 @@
           </svg>
         </div>
         <div class="flex items-center justify-between mb-3">
-          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Email Accounts</p>
+          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{$t('dashboard.email_accounts')}</p>
           <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
             <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
@@ -693,7 +695,7 @@
           <span use:countUp={totalEmails}>{totalEmails}</span>
         </p>
         <div class="flex items-center gap-1.5 mt-2">
-          <span class="text-xs text-muted-foreground">across all domains</span>
+          <span class="text-xs text-muted-foreground">{$t('dashboard.across_all_domains')}</span>
         </div>
       </a>
 
@@ -711,7 +713,7 @@
           </svg>
         </div>
         <div class="flex items-center justify-between mb-3">
-          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">Server Health</p>
+          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-widest">{$t('dashboard.server_health')}</p>
           <div class="w-8 h-8 rounded-lg {offlineCount > 0 ? 'bg-red-500/10' : 'bg-green-500/10'} flex items-center justify-center">
             <svg class="w-4 h-4 {offlineCount > 0 ? 'text-red-400' : 'text-green-400'}" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
@@ -721,7 +723,7 @@
         <p class="text-3xl font-bold tabular-nums leading-none {healthColor}">{healthLabel}</p>
         <div class="flex items-center gap-1.5 mt-2">
           <span class="text-xs text-muted-foreground">
-            {servers.length} server{servers.length !== 1 ? 's' : ''} managed
+            {servers.length} {$t('dashboard.servers_managed')}
           </span>
         </div>
       </a>
@@ -742,12 +744,12 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-sm font-semibold text-foreground">Panel Host</h2>
-            <p class="text-xs text-muted-foreground">Live CPU · RAM · Disk · Load</p>
+            <h2 class="text-sm font-semibold text-foreground">{$t('dashboard.panel_host')}</h2>
+            <p class="text-xs text-muted-foreground">{$t('dashboard.live_cpu_ram_disk_load')}</p>
           </div>
           {#if hostStats}
             <span class="ml-auto text-xs text-muted-foreground">
-              up {uptimeLabel(hostStats.uptime_secs)}
+              {$t('dashboard.up')} {uptimeLabel(hostStats.uptime_secs)}
             </span>
           {/if}
         </div>
@@ -758,7 +760,7 @@
             <!-- CPU -->
             <div>
               <div class="flex justify-between text-xs mb-1.5">
-                <span class="text-muted-foreground font-medium">CPU</span>
+                <span class="text-muted-foreground font-medium">{$t('dashboard.cpu')}</span>
                 <span class="{hostStats.cpu_pct >= 90 ? 'text-red-400' : hostStats.cpu_pct >= 70 ? 'text-amber-400' : 'text-foreground'} font-semibold tabular-nums">
                   {hostStats.cpu_pct.toFixed(1)}%
                 </span>
@@ -768,19 +770,19 @@
                      style="width: {Math.min(hostStats.cpu_pct, 100)}%"></div>
               </div>
               <p class="text-xs text-muted-foreground mt-1">
-                Load: <span class="text-foreground font-mono">{hostStats.load_1m.toFixed(2)}</span>
+                {$t('dashboard.load')}: <span class="text-foreground font-mono">{hostStats.load_1m.toFixed(2)}</span>
                 <span class="text-muted-foreground/60 mx-1">·</span>
                 <span class="font-mono">{hostStats.load_5m.toFixed(2)}</span>
                 <span class="text-muted-foreground/60 mx-1">·</span>
                 <span class="font-mono">{hostStats.load_15m.toFixed(2)}</span>
-                <span class="ml-2">{hostStats.process_count} processes</span>
+                <span class="ml-2">{hostStats.process_count} {$t('dashboard.processes')}</span>
               </p>
             </div>
 
             <!-- RAM -->
             <div>
               <div class="flex justify-between text-xs mb-1.5">
-                <span class="text-muted-foreground font-medium">RAM</span>
+                <span class="text-muted-foreground font-medium">{$t('dashboard.ram')}</span>
                 <span class="text-foreground font-semibold tabular-nums">
                   {fmtMb(hostStats.ram_used_mb)} / {fmtMb(hostStats.ram_total_mb)}
                 </span>
@@ -790,14 +792,14 @@
                      style="width: {hostStats.ram_total_mb > 0 ? Math.round(hostStats.ram_used_mb / hostStats.ram_total_mb * 100) : 0}%"></div>
               </div>
               <p class="text-xs text-muted-foreground mt-1">
-                {hostStats.ram_total_mb > 0 ? Math.round(hostStats.ram_used_mb / hostStats.ram_total_mb * 100) : 0}% used · <span class="text-foreground font-mono">{fmtMb(hostStats.ram_free_mb)}</span> free
+                {hostStats.ram_total_mb > 0 ? Math.round(hostStats.ram_used_mb / hostStats.ram_total_mb * 100) : 0}% {$t('dashboard.used')} · <span class="text-foreground font-mono">{fmtMb(hostStats.ram_free_mb)}</span> {$t('dashboard.free')}
               </p>
             </div>
 
             <!-- Disk -->
             <div>
               <div class="flex justify-between text-xs mb-1.5">
-                <span class="text-muted-foreground font-medium">Disk</span>
+                <span class="text-muted-foreground font-medium">{$t('dashboard.disk')}</span>
                 <span class="text-foreground font-semibold tabular-nums">
                   {hostStats.disk_used_gb.toFixed(1)} GB / {hostStats.disk_total_gb.toFixed(1)} GB
                 </span>
@@ -807,7 +809,7 @@
                      style="width: {Math.min(hostStats.disk_pct, 100)}%"></div>
               </div>
               <p class="text-xs text-muted-foreground mt-1">
-                {hostStats.disk_pct.toFixed(1)}% used · <span class="text-foreground font-mono">{hostStats.disk_free_gb.toFixed(1)} GB</span> free
+                {hostStats.disk_pct.toFixed(1)}% {$t('dashboard.used')} · <span class="text-foreground font-mono">{hostStats.disk_free_gb.toFixed(1)} GB</span> {$t('dashboard.free')}
               </p>
             </div>
 
@@ -832,8 +834,8 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-sm font-semibold text-foreground">Performance</h2>
-            <p class="text-xs text-muted-foreground">nginx · PHP · cache</p>
+            <h2 class="text-sm font-semibold text-foreground">{$t('dashboard.performance')}</h2>
+            <p class="text-xs text-muted-foreground">{$t('dashboard.nginx_php_cache')}</p>
           </div>
         </div>
 
@@ -843,8 +845,8 @@
             <!-- TTFB -->
             <div class="flex items-center justify-between px-5 py-3">
               <div>
-                <p class="text-sm font-medium text-foreground">Time to First Byte</p>
-                <p class="text-xs text-muted-foreground">Measured against local nginx</p>
+                <p class="text-sm font-medium text-foreground">{$t('dashboard.time_to_first_byte')}</p>
+                <p class="text-xs text-muted-foreground">{$t('dashboard.ttfb_desc')}</p>
               </div>
               <span class="text-lg font-bold tabular-nums {perfData.ttfb_ms < 100 ? 'text-green-400' : perfData.ttfb_ms < 300 ? 'text-amber-400' : 'text-red-400'}">
                 {perfData.ttfb_ms.toFixed(0)}<span class="text-xs font-normal text-muted-foreground ml-0.5">ms</span>
@@ -854,7 +856,7 @@
             <!-- nginx version + HTTP/3 -->
             <div class="flex items-center justify-between px-5 py-3">
               <div>
-                <p class="text-sm font-medium text-foreground">nginx</p>
+                <p class="text-sm font-medium text-foreground">{$t('dashboard.performance_nginx')}</p>
                 <p class="text-xs text-muted-foreground font-mono">{perfData.nginx_version}</p>
               </div>
               <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium
@@ -868,8 +870,8 @@
             <!-- Cache hit rate -->
             <div class="flex items-center justify-between px-5 py-3">
               <div>
-                <p class="text-sm font-medium text-foreground">Cache Hit Rate</p>
-                <p class="text-xs text-muted-foreground">Valkey / OPcache</p>
+                <p class="text-sm font-medium text-foreground">{$t('dashboard.cache_hit_rate')}</p>
+                <p class="text-xs text-muted-foreground">{$t('dashboard.cache_hit_desc')}</p>
               </div>
               <span class="text-lg font-bold tabular-nums {perfData.cache_hit_rate >= 70 ? 'text-green-400' : perfData.cache_hit_rate >= 30 ? 'text-amber-400' : 'text-muted-foreground'}">
                 {(perfData.cache_hit_rate).toFixed(1)}<span class="text-xs font-normal text-muted-foreground ml-0.5">%</span>
@@ -879,7 +881,7 @@
             <!-- Recommendations -->
             {#if perfData.recommendations.length > 0}
               <div class="px-5 py-3">
-                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Recommendations</p>
+                <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{$t('dashboard.recommendations')}</p>
                 <ul class="space-y-1.5">
                   {#each perfData.recommendations.slice(0, 3) as rec}
                     <li class="flex items-start gap-2 text-xs text-muted-foreground">
@@ -944,11 +946,11 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-sm font-semibold text-foreground">Recent Sites</h2>
-              <p class="text-xs text-muted-foreground">Latest created domains</p>
+              <h2 class="text-sm font-semibold text-foreground">{$t('dashboard.recent_sites')}</h2>
+              <p class="text-xs text-muted-foreground">{$t('dashboard.recent_sites_desc')}</p>
             </div>
           </div>
-          <a href="/websites" class="text-xs text-primary hover:underline">View all →</a>
+          <a href="/websites" class="text-xs text-primary hover:underline">{$t('dashboard.view_all')}</a>
         </div>
 
         {#if recentSites.length === 0}
@@ -958,20 +960,20 @@
                 d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657
                    0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9" />
             </svg>
-            <p class="text-sm text-muted-foreground">No sites yet.</p>
+            <p class="text-sm text-muted-foreground">{$t('dashboard.no_sites_yet')}</p>
             <a href="/websites?new=1"
                class="mt-3 inline-flex h-8 px-3 rounded-lg bg-primary text-primary-foreground
                       text-xs font-medium hover:bg-primary/90 items-center gap-1.5">
-              Create your first site
+              {$t('dashboard.create_first_site')}
             </a>
           </div>
         {:else}
           <table class="w-full">
             <thead>
               <tr class="bg-muted/50 border-b border-border">
-                <th class="text-left px-4 py-2.5 text-xs text-muted-foreground uppercase tracking-wide font-medium">Domain</th>
-                <th class="text-left px-4 py-2.5 text-xs text-muted-foreground uppercase tracking-wide font-medium">Status</th>
-                <th class="text-left px-4 py-2.5 text-xs text-muted-foreground uppercase tracking-wide font-medium hidden sm:table-cell">PHP</th>
+                <th class="text-left px-4 py-2.5 text-xs text-muted-foreground uppercase tracking-wide font-medium">{$t('sites.domain')}</th>
+                <th class="text-left px-4 py-2.5 text-xs text-muted-foreground uppercase tracking-wide font-medium">{$t('common.status')}</th>
+                <th class="text-left px-4 py-2.5 text-xs text-muted-foreground uppercase tracking-wide font-medium hidden sm:table-cell">{$t('dashboard.php')}</th>
                 <th class="px-4 py-2.5"></th>
               </tr>
             </thead>
@@ -998,7 +1000,7 @@
                   <td class="px-4 py-3 text-right">
                     <a href="/websites/{site.id}"
                        class="text-xs text-primary hover:underline whitespace-nowrap">
-                      Manage →
+                      {$t('dashboard.manage')}
                     </a>
                   </td>
                 </tr>
@@ -1017,8 +1019,8 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-sm font-semibold text-foreground">Quick Actions</h2>
-            <p class="text-xs text-muted-foreground">Common tasks at a glance</p>
+            <h2 class="text-sm font-semibold text-foreground">{$t('dashboard.quick_actions')}</h2>
+            <p class="text-xs text-muted-foreground">{$t('dashboard.quick_actions_desc')}</p>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3 p-4">
@@ -1029,8 +1031,8 @@
             <svg class="w-5 h-5 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
             </svg>
-            <span class="text-sm font-medium text-foreground">Create Site</span>
-            <span class="text-xs text-muted-foreground">New web hosting</span>
+            <span class="text-sm font-medium text-foreground">{$t('dashboard.create_site')}</span>
+            <span class="text-xs text-muted-foreground">{$t('dashboard.new_web_hosting')}</span>
           </a>
 
           <a href="/databases?new=1"
@@ -1040,8 +1042,8 @@
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4" />
             </svg>
-            <span class="text-sm font-medium text-foreground">Add Database</span>
-            <span class="text-xs text-muted-foreground">MySQL / PG / more</span>
+            <span class="text-sm font-medium text-foreground">{$t('dashboard.add_database')}</span>
+            <span class="text-xs text-muted-foreground">{$t('dashboard.mysql_pg_more')}</span>
           </a>
 
           <a href="/email?new=1"
@@ -1051,8 +1053,8 @@
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            <span class="text-sm font-medium text-foreground">Create Email</span>
-            <span class="text-xs text-muted-foreground">Add mailbox</span>
+            <span class="text-sm font-medium text-foreground">{$t('dashboard.create_email')}</span>
+            <span class="text-xs text-muted-foreground">{$t('dashboard.add_mailbox')}</span>
           </a>
 
           <a href="/logs"
@@ -1063,8 +1065,8 @@
                 d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414
                    5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span class="text-sm font-medium text-foreground">View Logs</span>
-            <span class="text-xs text-muted-foreground">Access &amp; error logs</span>
+            <span class="text-sm font-medium text-foreground">{$t('dashboard.view_logs')}</span>
+            <span class="text-xs text-muted-foreground">{$t('dashboard.access_error_logs')}</span>
           </a>
 
           <a href="/ssl"
@@ -1074,8 +1076,8 @@
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            <span class="text-sm font-medium text-foreground">Manage SSL</span>
-            <span class="text-xs text-muted-foreground">Certs &amp; renewals</span>
+            <span class="text-sm font-medium text-foreground">{$t('dashboard.manage_ssl')}</span>
+            <span class="text-xs text-muted-foreground">{$t('dashboard.certs_renewals')}</span>
           </a>
 
           <a href="/backups"
@@ -1085,8 +1087,8 @@
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
             </svg>
-            <span class="text-sm font-medium text-foreground">Backup Now</span>
-            <span class="text-xs text-muted-foreground">Run a manual backup</span>
+            <span class="text-sm font-medium text-foreground">{$t('dashboard.backup_now')}</span>
+            <span class="text-xs text-muted-foreground">{$t('dashboard.run_manual_backup')}</span>
           </a>
 
         </div>
@@ -1106,11 +1108,11 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-sm font-semibold text-foreground">System Status</h2>
-            <p class="text-xs text-muted-foreground">Live resource usage per server</p>
+            <h2 class="text-sm font-semibold text-foreground">{$t('dashboard.system_status')}</h2>
+            <p class="text-xs text-muted-foreground">{$t('dashboard.system_status_desc')}</p>
           </div>
         </div>
-        <a href="/servers" class="text-xs text-primary hover:underline">All servers →</a>
+        <a href="/servers" class="text-xs text-primary hover:underline">{$t('dashboard.all_servers')}</a>
       </div>
 
       <div class="divide-y divide-border">
@@ -1136,7 +1138,7 @@
                 <!-- CPU with sparkline -->
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-muted-foreground">CPU</span>
+                    <span class="text-muted-foreground">{$t('dashboard.cpu')}</span>
                     <span class="text-foreground font-medium">{m.cpu_pct.toFixed(0)}%</span>
                   </div>
                   <!-- Sparkline bars -->
@@ -1158,7 +1160,7 @@
                 <!-- RAM with sparkline -->
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-muted-foreground">RAM</span>
+                    <span class="text-muted-foreground">{$t('dashboard.ram')}</span>
                     <span class="text-foreground font-medium">{ramPct(m)}%</span>
                   </div>
                   <div class="flex items-end gap-0.5 h-8 mb-1">
@@ -1178,7 +1180,7 @@
                 <!-- Disk (progress bar only — disk doesn't fluctuate as visually) -->
                 <div>
                   <div class="flex justify-between text-xs mb-1">
-                    <span class="text-muted-foreground">Disk</span>
+                    <span class="text-muted-foreground">{$t('dashboard.disk')}</span>
                     <span class="text-foreground font-medium">
                       {m.disk_used_gb.toFixed(1)}<span class="text-muted-foreground"> GB</span>
                     </span>
@@ -1200,7 +1202,7 @@
                 <div class="h-2 bg-muted rounded-full w-24"></div>
                 <div class="h-2 bg-muted rounded-full w-24"></div>
                 <div class="h-2 bg-muted rounded-full w-24"></div>
-                <span class="text-xs text-muted-foreground ml-2 whitespace-nowrap">metrics loading…</span>
+                <span class="text-xs text-muted-foreground ml-2 whitespace-nowrap">{$t('dashboard.metrics_loading')}</span>
               </div>
             {/if}
 
@@ -1224,15 +1226,15 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-sm font-semibold text-foreground">Top Sites</h2>
-              <p class="text-xs text-muted-foreground">By disk usage · switch web server inline</p>
+              <h2 class="text-sm font-semibold text-foreground">{$t('dashboard.top_sites')}</h2>
+              <p class="text-xs text-muted-foreground">{$t('dashboard.top_sites_desc')}</p>
             </div>
           </div>
-          <a href="/websites" class="text-xs text-primary hover:underline">All sites →</a>
+          <a href="/websites" class="text-xs text-primary hover:underline">{$t('dashboard.all_sites')}</a>
         </div>
 
         {#if topSites.length === 0}
-          <div class="px-5 py-8 text-center text-sm text-muted-foreground">No sites found.</div>
+          <div class="px-5 py-8 text-center text-sm text-muted-foreground">{$t('dashboard.no_sites_found')}</div>
         {:else}
           <div class="divide-y divide-border">
             {#each topSites as site (site.id)}
@@ -1270,7 +1272,7 @@
 
                 <!-- Manage link -->
                 <a href="/websites/{site.id}"
-                   class="text-xs text-primary hover:underline shrink-0">Manage</a>
+                   class="text-xs text-primary hover:underline shrink-0">{$t('common.manage')}</a>
               </div>
             {/each}
           </div>
@@ -1289,14 +1291,14 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-sm font-semibold text-foreground">Services</h2>
-              <p class="text-xs text-muted-foreground">Panel host — restart any service</p>
+              <h2 class="text-sm font-semibold text-foreground">{$t('dashboard.services')}</h2>
+              <p class="text-xs text-muted-foreground">{$t('dashboard.services_desc')}</p>
             </div>
           </div>
         </div>
 
         {#if serviceList.length === 0}
-          <div class="px-5 py-8 text-center text-sm text-muted-foreground animate-pulse">Loading services…</div>
+          <div class="px-5 py-8 text-center text-sm text-muted-foreground animate-pulse">{$t('dashboard.loading_services')}</div>
         {:else}
           <div class="grid grid-cols-1 divide-y divide-border">
             {#each serviceList as svc (svc.name)}
@@ -1319,7 +1321,7 @@
                              {svc.active
                                ? 'bg-green-500/10 text-green-400 border-green-500/20'
                                : 'bg-red-500/10 text-red-400 border-red-500/20'}">
-                  {svc.active ? 'running' : 'stopped'}
+                  {svc.active ? $t('dashboard.running') : $t('dashboard.stopped')}
                 </span>
 
                 <!-- Restart button -->
@@ -1337,7 +1339,7 @@
                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                     </svg>
                   {:else}
-                    ↺ Restart
+                    {$t('dashboard.restart')}
                   {/if}
                 </button>
               </div>
@@ -1364,7 +1366,7 @@
           </div>
           <div>
             <h2 class="text-sm font-semibold text-foreground">
-              Recent Activity
+              {$t('dashboard.recent_activity')}
               {#if unreadCount > 0}
                 <span class="ml-1.5 inline-flex items-center justify-center w-5 h-5 rounded-full
                              bg-primary text-primary-foreground text-[10px] font-bold">
@@ -1372,7 +1374,7 @@
                 </span>
               {/if}
             </h2>
-            <p class="text-xs text-muted-foreground">System events &amp; notifications</p>
+            <p class="text-xs text-muted-foreground">{$t('dashboard.recent_activity_desc')}</p>
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -1380,10 +1382,10 @@
             <button
               on:click={markAllRead}
               class="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Mark all read
+              {$t('dashboard.mark_all_read')}
             </button>
           {/if}
-          <a href="/audit-log" class="text-xs text-primary hover:underline">View all</a>
+          <a href="/audit-log" class="text-xs text-primary hover:underline">{$t('dashboard.view_all_activity')}</a>
         </div>
       </div>
 
@@ -1395,7 +1397,7 @@
                  0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6
                  0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
-          <p class="text-sm text-muted-foreground">Activity log coming soon.</p>
+          <p class="text-sm text-muted-foreground">{$t('dashboard.activity_log_coming_soon')}</p>
         </div>
       {:else}
         <!-- Grouped notification list -->
@@ -1460,7 +1462,7 @@
                         on:click={() => markOneRead(notif.id)}
                         class="text-[10px] text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100
                                transition-opacity whitespace-nowrap">
-                        Mark read
+                        {$t('dashboard.mark_read')}
                       </button>
                       <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
                     {/if}

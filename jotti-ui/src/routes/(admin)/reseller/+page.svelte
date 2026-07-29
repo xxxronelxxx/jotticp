@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { api } from '$api/client';
   import { auth } from '$stores/auth';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
   interface ResellerClient {
@@ -414,7 +415,7 @@
 </style>
 
 <svelte:head>
-  <title>Reseller — JottiCP</title>
+  <title>{$t('reseller.title')} — JottiCP</title>
 </svelte:head>
 
 <!-- ── Impersonation Banner ───────────────────────────────────────────────── -->
@@ -458,8 +459,8 @@
   <!-- Header -->
   <div class="flex items-center justify-between gap-3 flex-wrap">
     <div>
-      <h1 class="text-xl font-semibold text-foreground">Reseller Accounts</h1>
-      <p class="text-sm text-muted-foreground mt-0.5">Manage clients, packages, and resources</p>
+      <h1 class="text-xl font-semibold text-foreground">{$t('reseller.title')}</h1>
+      <p class="text-sm text-muted-foreground mt-0.5">{$t('reseller.subtitle')}</p>
     </div>
     <div class="flex gap-2">
       {#if activeTab === 'packages'}

@@ -5,6 +5,7 @@
   import type { Site, EmailAccount } from '$api/client';
   import { currentUser } from '$stores/auth';
   import StatusBadge from '$components/ui/StatusBadge.svelte';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let sites: Site[] = [];
@@ -45,7 +46,7 @@
 </script>
 
 <svelte:head>
-  <title>My Dashboard — JottiCP</title>
+  <title>{$t('client.dashboard')} — JottiCP</title>
 </svelte:head>
 
 <!-- Client portal layout (simpler than admin) -->
@@ -87,9 +88,9 @@
       <!-- Welcome header -->
       <div>
         <h1 class="text-2xl font-semibold text-[var(--text-primary)]">
-          Welcome back, {$currentUser?.email?.split('@')[0] ?? 'User'}
+          {$t('client.welcome_back', { name: $currentUser?.email?.split('@')[0] ?? 'User' })}
         </h1>
-        <p class="text-sm text-[var(--text-muted)] mt-0.5">Here's an overview of your hosting account.</p>
+        <p class="text-sm text-[var(--text-muted)] mt-0.5">{$t('client.overview')}</p>
       </div>
 
       <!-- Summary cards -->
@@ -102,16 +103,16 @@
       {:else}
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
           <a href="/websites" class="bg-card border border-border rounded-xl p-4 hover:shadow-sm transition-shadow">
-            <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Websites</p>
+            <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('client.websites')}</p>
             <p class="text-3xl font-bold text-foreground">{sites.length}</p>
           </a>
           <a href="/email" class="bg-card border border-border rounded-xl p-4 hover:shadow-sm transition-shadow">
-            <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Email Accounts</p>
+            <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('client.email_accounts')}</p>
             <p class="text-3xl font-bold text-foreground">{emailAccounts.length}</p>
           </a>
           <a href="/websites?filter=ssl_expiring"
              class="bg-card border border-border rounded-xl p-4 hover:shadow-sm transition-shadow">
-            <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">SSL Expiring</p>
+            <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('client.ssl_expiring')}</p>
             <p class="text-3xl font-bold {sites.filter(s => {
               const days = s.ssl_expires_at ? Math.ceil((new Date(s.ssl_expires_at).getTime() - Date.now()) / 86400000) : null;
               return days !== null && days < 30;
@@ -128,8 +129,8 @@
       <!-- My Sites -->
       <div>
         <div class="flex items-center justify-between mb-3">
-          <h2 class="text-base font-semibold text-[var(--text-primary)]">My Websites</h2>
-          <a href="/websites" class="text-xs text-[var(--accent)] hover:underline">View all</a>
+          <h2 class="text-base font-semibold text-[var(--text-primary)]">{$t('client.my_websites')}</h2>
+          <a href="/websites" class="text-xs text-[var(--accent)] hover:underline">{$t('client.view_all')}</a>
         </div>
 
         {#if loading}
@@ -140,11 +141,11 @@
           </div>
         {:else if sites.length === 0}
           <div class="bg-card border border-border rounded-xl p-8 text-center">
-            <p class="text-sm text-muted-foreground mb-3">You don't have any websites yet.</p>
+            <p class="text-sm text-muted-foreground mb-3">{$t('client.no_sites_yet')}</p>
             <a href="/websites/add"
                class="inline-flex h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                       hover:bg-primary/90 transition-colors items-center">
-              Add Your First Site
+              {$t('client.add_first_site')}
             </a>
           </div>
         {:else}
@@ -175,13 +176,13 @@
       <div class="bg-primary/5 border border-primary/20 rounded-xl p-4">
         <div class="flex items-center justify-between">
           <div>
-            <p class="text-sm font-semibold text-foreground">Need help?</p>
-            <p class="text-xs text-muted-foreground mt-0.5">Our support team is here to assist you.</p>
+            <p class="text-sm font-semibold text-foreground">{$t('client.need_help')}</p>
+            <p class="text-xs text-muted-foreground mt-0.5">{$t('client.need_help_desc')}</p>
           </div>
           <a href="mailto:support@jotticp.io"
              class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                     hover:bg-primary/90 transition-colors inline-flex items-center">
-            Contact Support
+            {$t('client.contact_support')}
           </a>
         </div>
       </div>

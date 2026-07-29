@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { t } from '$lib/i18n';
   import { api } from '$api/client';
   import PageHeader from '$components/ui/PageHeader.svelte';
   import { sslHelp } from '$lib/help/sites';
@@ -342,7 +343,7 @@
 </script>
 
 <svelte:head>
-  <title>SSL Certificates — JottiCP</title>
+  <title>{$t('ssl.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-6">
@@ -365,8 +366,8 @@
   <!-- Header -->
   <div class="fade-up">
     <PageHeader
-      title="SSL Certificates"
-      subtitle="Global certificate management across all sites"
+      title={$t('ssl.title')}
+      subtitle={$t('ssl.subtitle')}
       helpTitle={sslHelp.title}
       helpContent={sslHelp.content}
     >
@@ -388,7 +389,7 @@
             ></span>
           </button>
           <span class="text-sm text-muted-foreground">
-            {globalAutoRenew ? 'Auto-renew on' : 'Auto-renew off'}
+            {globalAutoRenew ? $t('ssl.auto_renew_on') : $t('ssl.auto_renew_off')}
           </span>
         </label>
 
@@ -403,7 +404,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
           </svg>
-          Issue Wildcard
+          {$t('ssl.issue_wildcard')}
         </button>
 
         <button
@@ -413,9 +414,9 @@
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
-          Issue Certificate
+          {$t('ssl.issue')}
           {#if !loading}
-            <span class="ml-1 text-primary-foreground/70 text-xs">({certs.length})</span>
+            <span class="ml-1 text-primary-foreground/70 text-xs">{$t('ssl.cert_count', { values: { count: certs.length } })}</span>
           {/if}
         </button>
       </div>
@@ -436,7 +437,7 @@
         </div>
         <div>
           <div class="text-2xl font-bold text-foreground">{validCount}</div>
-          <div class="text-xs text-muted-foreground">Valid certificates</div>
+          <div class="text-xs text-muted-foreground">{$t('ssl.valid_certs')}</div>
         </div>
       </div>
 
@@ -451,7 +452,7 @@
         </div>
         <div>
           <div class="text-2xl font-bold text-foreground">{expiringCount}</div>
-          <div class="text-xs text-muted-foreground">Expiring within 30 days</div>
+          <div class="text-xs text-muted-foreground">{$t('ssl.expiring_soon')}</div>
         </div>
       </div>
 
@@ -466,7 +467,7 @@
         </div>
         <div>
           <div class="text-2xl font-bold text-foreground">{issuesCount}</div>
-          <div class="text-xs text-muted-foreground">Expired / issues</div>
+          <div class="text-xs text-muted-foreground">{$t('ssl.expired')}</div>
         </div>
       </div>
     </div>
@@ -488,14 +489,14 @@
         </svg>
       </div>
       <div>
-        <p class="text-foreground font-medium">No SSL certificates yet</p>
-        <p class="text-muted-foreground text-sm mt-1">Issue a certificate for one of your sites to get started.</p>
+        <p class="text-foreground font-medium">{$t('ssl.no_certs')}</p>
+        <p class="text-muted-foreground text-sm mt-1">{$t('ssl.no_certs_desc')}</p>
       </div>
       <button
         on:click={() => { showIssueModal = true; issueError = ''; issueDomain = ''; }}
         class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
       >
-        Issue Certificate
+        {$t('ssl.issue')}
       </button>
     </div>
   {:else}
@@ -503,12 +504,12 @@
       <table class="w-full">
         <thead class="bg-muted/50">
           <tr>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">Domain</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">Type</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden md:table-cell">Issued</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">Expires</th>
-            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">Status</th>
-            <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase">Actions</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">{$t('ssl.domain')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">{$t('ssl.type')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden md:table-cell">{$t('ssl.issued')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">{$t('ssl.expires')}</th>
+            <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">{$t('ssl.status')}</th>
+            <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase">{$t('ssl.actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -565,7 +566,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                       </svg>
                     {/if}
-                    <span class="hidden sm:inline">{renewingIds.has(cert.id) ? 'Renewing…' : 'Renew'}</span>
+                    <span class="hidden sm:inline">{renewingIds.has(cert.id) ? $t('ssl.renewing') : $t('ssl.renew')}</span>
                   </button>
 
                   <!-- View Details toggle -->
@@ -578,7 +579,7 @@
                     <svg class="w-3.5 h-3.5 transition-transform {isExpanded ? 'rotate-180' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
-                    <span class="hidden sm:inline">Details</span>
+                    <span class="hidden sm:inline">{$t('ssl.details')}</span>
                   </button>
 
                   <!-- Revoke -->
@@ -592,7 +593,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
-                    <span class="hidden md:inline">Revoke</span>
+                    <span class="hidden md:inline">{$t('ssl.revoke')}</span>
                   </button>
                 </div>
               </td>
@@ -604,45 +605,45 @@
                 <td colspan="6" class="px-6 py-4">
                   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm mb-4">
                     <div>
-                      <div class="text-xs text-muted-foreground uppercase mb-1">Issuer</div>
+                      <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.issuer')}</div>
                       <div class="text-foreground font-medium">
                         {cert.issuer === 'letsencrypt' ? "Let's Encrypt Authority X3" : cert.issuer ?? '—'}
                       </div>
                     </div>
                     <div>
-                      <div class="text-xs text-muted-foreground uppercase mb-1">Key Type</div>
+                      <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.key_type')}</div>
                       <div class="text-foreground font-medium">RSA 2048</div>
                     </div>
                     <div>
-                      <div class="text-xs text-muted-foreground uppercase mb-1">Auto-Renew</div>
+                      <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.auto_renew')}</div>
                       <div class="flex items-center gap-1.5">
                         <span class="w-1.5 h-1.5 rounded-full {cert.auto_renew ? 'bg-green-400' : 'bg-muted-foreground'}"></span>
-                        <span class="text-foreground font-medium">{cert.auto_renew ? 'Enabled' : 'Disabled'}</span>
+                        <span class="text-foreground font-medium">{cert.auto_renew ? $t('ssl.enabled') : $t('ssl.disabled')}</span>
                       </div>
                     </div>
                     <div>
-                      <div class="text-xs text-muted-foreground uppercase mb-1">Created</div>
+                      <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.created')}</div>
                       <div class="text-foreground font-medium">
                         {cert.created_at ? new Date(cert.created_at).toLocaleString() : '—'}
                       </div>
                     </div>
                     <div>
-                      <div class="text-xs text-muted-foreground uppercase mb-1">Next Scheduled Renewal</div>
+                      <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.next_renewal')}</div>
                       <div class="text-foreground font-medium">{nextRenewalDate(cert.expires_at)}</div>
                     </div>
                     <div>
-                      <div class="text-xs text-muted-foreground uppercase mb-1">Serial Number</div>
-                      <div class="text-foreground font-mono text-xs">Auto-generated by CA</div>
+                      <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.serial_number')}</div>
+                      <div class="text-foreground font-mono text-xs">{$t('ssl.serial_desc')}</div>
                     </div>
                     {#if cert.cert_path}
                       <div class="sm:col-span-3">
-                        <div class="text-xs text-muted-foreground uppercase mb-1">Certificate Path</div>
+                        <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.cert_path')}</div>
                         <div class="font-mono text-xs text-foreground bg-background border border-border rounded-lg px-3 py-2 break-all">{cert.cert_path}</div>
                       </div>
                     {/if}
                     {#if cert.key_path}
                       <div class="sm:col-span-3">
-                        <div class="text-xs text-muted-foreground uppercase mb-1">Key Path</div>
+                        <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.key_path')}</div>
                         <div class="font-mono text-xs text-foreground bg-background border border-border rounded-lg px-3 py-2 break-all">{cert.key_path}</div>
                       </div>
                     {/if}
@@ -650,7 +651,7 @@
 
                   <!-- SANs list placeholder -->
                   <div>
-                    <div class="text-xs text-muted-foreground uppercase mb-2">Subject Alternative Names (SANs)</div>
+                    <div class="text-xs text-muted-foreground uppercase mb-2">{$t('ssl.sans')}</div>
                     <div class="flex flex-wrap gap-1.5">
                       <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-medium
                                    bg-blue-500/10 text-blue-400 border border-blue-500/20">{cert.domain}</span>
@@ -674,8 +675,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
         </svg>
-        <h3 class="text-sm font-semibold text-foreground">Expiry Timeline</h3>
-        <span class="text-xs text-muted-foreground">365-day scale — shorter bar = expires sooner</span>
+        <h3 class="text-sm font-semibold text-foreground">{$t('ssl.expiry_timeline')}</h3>
+        <span class="text-xs text-muted-foreground">{$t('ssl.expiry_timeline_desc')}</span>
       </div>
       <div class="space-y-1.5 mt-4">
         {#each certs.sort((a,b) => new Date(a.expires_at ?? 0).getTime() - new Date(b.expires_at ?? 0).getTime()) as cert}
@@ -700,7 +701,7 @@
 {#if showWildcardModal}
   <div
     class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-    role="dialog" aria-modal="true" aria-label="Issue Wildcard Certificate"
+    role="dialog" aria-modal="true" aria-label={$t('ssl.wildcard_title')}
   >
     <!-- svelte-ignore a11y-click-events-have-key-events a11y-no-static-element-interactions -->
     <div class="fixed inset-0" on:click={() => { if (!wildcardIssuing && !wildcardVerifying) closeWildcard(); }}></div>
@@ -733,9 +734,9 @@
 
       {#if wildcardStep === 1}
         <div>
-          <h2 class="text-base font-semibold text-foreground mb-1">Issue Wildcard Certificate</h2>
-          <p class="text-sm text-muted-foreground mb-4">Enter the base domain. A certificate for <code class="text-primary">*.{wildcardDomain || 'domain.com'}</code> will be issued via DNS challenge.</p>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="wc-domain">Base Domain</label>
+          <h2 class="text-base font-semibold text-foreground mb-1">{$t('ssl.wildcard_title')}</h2>
+          <p class="text-sm text-muted-foreground mb-4">{@html $t('ssl.wildcard_desc', { values: { wildcard: `*.${wildcardDomain || 'domain.com'}` } })}</p>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="wc-domain">{$t('ssl.wildcard_base_domain')}</label>
           <input
             id="wc-domain"
             type="text"
@@ -856,7 +857,7 @@
     <div class="fixed inset-0" on:click={() => { if (!issueLoading) { showIssueModal = false; } }}></div>
     <div class="relative bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl fade-up">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-base font-semibold text-foreground">Issue SSL Certificate</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('ssl.issue_modal_title')}</h2>
         <button
           on:click={() => showIssueModal = false}
           disabled={issueLoading}
@@ -935,7 +936,7 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-foreground">Revoke Certificate?</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('ssl.revoke_modal_title')}</h2>
           <p class="text-sm text-muted-foreground mt-1">
             This will permanently revoke the SSL certificate for <strong class="text-foreground">{target.domain}</strong>.
             HTTPS will stop working immediately. This cannot be undone.

@@ -3,6 +3,7 @@
   import { page } from '$app/stores';
   import { api } from '$api/client';
   import FileManager from '$lib/components/ui/FileManager.svelte';
+  import { t } from '$lib/i18n';
 
   interface SiteOption {
     id: string;
@@ -105,7 +106,7 @@
   $: isRecentSite = (id: string) => recentSiteIds.includes(id);
 </script>
 
-<svelte:head><title>File Manager — JottiCP</title></svelte:head>
+<svelte:head><title>{$t('filemanager.title')} — JottiCP</title></svelte:head>
 
 <svelte:window on:keydown={handleKeydown} />
 

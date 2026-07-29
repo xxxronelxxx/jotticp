@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import { api } from '$api/client';
   import type { Site } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -525,7 +526,7 @@
 </script>
 
 <svelte:head>
-  <title>Firewall — JottiCP</title>
+  <title>{$t('firewall.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-6">
@@ -533,7 +534,7 @@
   <!-- ── Header ───────────────────────────────────────────────────────────── -->
   <div class="flex items-center justify-between flex-wrap gap-3">
     <div class="flex items-center gap-3">
-      <h1 class="text-xl font-semibold text-foreground">Firewall</h1>
+      <h1 class="text-xl font-semibold text-foreground">{$t('firewall.title')}</h1>
       {#if ufwLoading}
         <span class="h-5 w-20 bg-muted animate-pulse rounded-full inline-block"></span>
       {:else}

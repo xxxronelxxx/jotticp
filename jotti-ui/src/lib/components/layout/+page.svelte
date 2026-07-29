@@ -158,7 +158,7 @@
 </script>
 
 <svelte:head>
-  <title>Sign In — JottiCP</title>
+  <title>{$t('auth.login_title')} — JottiCP</title>
 </svelte:head>
 
 <!-- Light theme: white card on slate-50 background -->

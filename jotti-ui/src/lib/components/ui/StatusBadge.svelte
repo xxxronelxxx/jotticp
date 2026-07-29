@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from '$lib/i18n';
   export let status: 'active' | 'suspended' | 'provisioning' | 'error' | 'pending' | 'expired';
 
   const config: Record<string, { label: string; classes: string }> = {

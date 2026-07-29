@@ -3,6 +3,7 @@
   import { goto } from '$app/navigation';
   import { api } from '$api/client';
   import type { Server } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let servers: Server[] = [];
@@ -202,7 +203,7 @@
 </script>
 
 <svelte:head>
-  <title>Servers — JottiCP</title>
+  <title>{$t('servers.title')} — JottiCP</title>
 </svelte:head>
 
 <!-- Click-away to close menus -->
@@ -229,8 +230,8 @@
   <!-- ── Header ──────────────────────────────────────────────────────────── -->
   <div class="flex items-start justify-between gap-4 fade-up">
     <div>
-      <h1 class="text-2xl font-bold text-foreground">Servers</h1>
-      <p class="text-muted-foreground text-sm mt-1">Manage your infrastructure</p>
+      <h1 class="text-2xl font-bold text-foreground">{$t('servers.title')}</h1>
+      <p class="text-muted-foreground text-sm mt-1">{$t('servers.subtitle')}</p>
     </div>
     <a
       href="/servers/add"

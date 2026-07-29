@@ -4,6 +4,7 @@
   import { api } from '$api/client';
   import type { Site, CreateSitePayload } from '$api/client';
   import { debounce } from '$lib/utils';
+  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let sites:        Site[]   = [];
@@ -86,7 +87,7 @@
       sites = await api.sites.list();
       applyFilters();
     } catch (err: unknown) {
-      loadError = (err as { message?: string })?.message ?? 'Failed to load websites';
+      loadError = (err as { message?: string })?.message ?? t('sites.failed_to_load');
     } finally {
       isLoading = false;
     }
@@ -158,7 +159,7 @@
       showToast(`${created.domain} created`, 'success');
     } catch (err: unknown) {
       const e = err as { message?: string };
-      createError = e.message ?? 'Failed to create website';
+      createError = e.message ?? t('sites.failed_to_create');
     } finally {
       createLoading = false;
     }
@@ -173,7 +174,7 @@
       showToast(`${site.domain} suspended`, 'success');
     } catch {
       updateSiteInList(site.id, { status: 'active', suspended_at: null });
-      showToast('Failed to suspend site', 'error');
+      showToast(t('sites.failed_to_suspend'), 'error');
     }
   }
 
@@ -185,7 +186,7 @@
       showToast(`${site.domain} resumed`, 'success');
     } catch {
       updateSiteInList(site.id, { status: 'suspended', suspended_at: site.suspended_at });
-      showToast('Failed to resume site', 'error');
+      showToast(t('sites.failed_to_resume'), 'error');
     }
   }
 
@@ -211,7 +212,7 @@
       showToast(`${domain} deleted`, 'success');
     } catch {
       await loadSites();
-      showToast('Failed to delete site', 'error');
+      showToast(t('sites.failed_to_delete'), 'error');
     }
   }
 
@@ -356,7 +357,7 @@
       updateSiteInList(site.id, { web_server: ws });
       showToast(`${site.domain} → ${ws.toUpperCase()} switched`, 'success');
     } catch (e: unknown) {
-      showToast((e as Error).message ?? 'Switch failed', 'error');
+      showToast((e as Error).message ?? t('sites.switch_failed'), 'error');
     } finally {
       switchingWebserverId = '';
     }
@@ -372,7 +373,7 @@
 </style>
 
 <svelte:head>
-  <title>Websites — JottiCP</title>
+  <title>{$t('sites.title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 space-y-6">
@@ -387,7 +388,7 @@
       <span>{loadError}</span>
       <button on:click={() => void loadSites()}
               class="ml-auto text-xs font-semibold underline underline-offset-2 hover:no-underline">
-        Retry
+        {$t('sites.retry')}
       </button>
     </div>
   {/if}
@@ -397,8 +398,8 @@
   <!-- ── Page header ──────────────────────────────────────────────────────── -->
   <div class="flex items-start justify-between gap-4">
     <div>
-      <h1 class="text-2xl font-bold text-foreground">Websites</h1>
-      <p class="text-muted-foreground text-sm mt-1">Manage all your hosted sites</p>
+      <h1 class="text-2xl font-bold text-foreground">{$t('sites.title')}</h1>
+      <p class="text-muted-foreground text-sm mt-1">{$t('sites.subtitle')}</p>
     </div>
     <div class="flex items-center gap-3 shrink-0">
       <!-- Search -->
@@ -412,7 +413,7 @@
           type="search"
           value={searchInput}
           on:input={(e) => { searchInput = (e.target as HTMLInputElement).value; onSearchInput(e); }}
-          placeholder="Search domains…"
+          placeholder={$t('sites.search')}
           class="h-9 pl-9 pr-3 rounded-lg border border-border bg-background text-sm text-foreground
                  placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                  focus:border-primary w-56"
@@ -424,7 +425,7 @@
           on:click={() => viewMode = 'list'}
           class="h-9 w-9 flex items-center justify-center transition-colors
                  {viewMode === 'list' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50'}"
-          title="List view"
+          title={$t('sites.list_view')}
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
@@ -434,7 +435,7 @@
           on:click={() => viewMode = 'grid'}
           class="h-9 w-9 flex items-center justify-center transition-colors
                  {viewMode === 'grid' ? 'bg-muted text-foreground' : 'text-muted-foreground hover:bg-muted/50'}"
-          title="Grid view"
+          title={$t('sites.grid_view')}
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7" rx="1" /><rect x="14" y="3" width="7" height="7" rx="1" />
@@ -452,7 +453,7 @@
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
         </svg>
-        Create Website
+        {$t('sites.add')}
       </button>
     </div>
   </div>
@@ -465,21 +466,21 @@
         on:click={() => filterStatus = ''}
         class="hover:text-foreground transition-colors {filterStatus === '' ? 'text-foreground font-semibold' : ''}"
       >
-        {totalSites} total
+        {$t('sites.total_sites', { values: { count: totalSites } })}
       </button>
       <span class="opacity-30">·</span>
       <button
         on:click={() => filterStatus = 'active'}
         class="hover:text-green-400 transition-colors {filterStatus === 'active' ? 'text-green-400 font-semibold' : ''}"
       >
-        {activeSites} active
+        {$t('sites.total_active', { values: { count: activeSites } })}
       </button>
       <span class="opacity-30">·</span>
       <button
         on:click={() => filterStatus = 'suspended'}
         class="hover:text-amber-400 transition-colors {filterStatus === 'suspended' ? 'text-amber-400 font-semibold' : ''}"
       >
-        {suspendedSites} suspended
+        {$t('sites.total_suspended', { values: { count: suspendedSites } })}
       </button>
     </div>
   {/if}
@@ -489,10 +490,10 @@
     <!-- Status pills -->
     <div class="flex items-center gap-1.5 flex-wrap">
       {#each [
-        { value: '',            label: 'All' },
-        { value: 'active',      label: 'Active' },
-        { value: 'suspended',   label: 'Suspended' },
-        { value: 'provisioning', label: 'Installing' },
+        { value: '',            label: $t('sites.all') },
+        { value: 'active',      label: $t('sites.active') },
+        { value: 'suspended',   label: $t('sites.suspended') },
+        { value: 'provisioning', label: $t('sites.installing') },
       ] as pill}
         <button
           on:click={() => filterStatus = pill.value}
@@ -518,19 +519,19 @@
         <input type="search"
           value={searchInput}
           on:input={(e) => { searchInput = (e.target as HTMLInputElement).value; onSearchInput(e); }}
-          placeholder="Search…"
+          placeholder={$t('sites.search_mobile')}
           class="h-9 pl-9 pr-3 rounded-lg border border-border bg-background text-sm text-foreground
                  placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                  focus:border-primary w-40" />
       </div>
 
-      <span class="text-xs text-muted-foreground whitespace-nowrap hidden sm:block">Sort by</span>
+      <span class="text-xs text-muted-foreground whitespace-nowrap hidden sm:block">{$t('sites.sort_by')}</span>
       <select bind:value={sortBy}
         class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-        <option value="domain">Domain</option>
-        <option value="created">Created</option>
-        <option value="php">PHP version</option>
+        <option value="domain">{$t('sites.sort_domain')}</option>
+        <option value="created">{$t('sites.sort_created')}</option>
+        <option value="php">{$t('sites.sort_php')}</option>
       </select>
     </div>
   </div>
@@ -564,23 +565,23 @@
              3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
       </svg>
       {#if sites.length === 0}
-        <h3 class="text-foreground font-medium">No websites yet</h3>
-        <p class="text-muted-foreground text-sm mt-1">Create your first site to get started</p>
+        <h3 class="text-foreground font-medium">{$t('sites.no_sites')}</h3>
+        <p class="text-muted-foreground text-sm mt-1">{$t('sites.no_sites_desc')}</p>
         <button on:click={openCreateModal}
           class="mt-4 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                  hover:bg-primary/90 inline-flex items-center gap-2 mx-auto">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
-          Create your first site
+          {$t('sites.add_first')}
         </button>
       {:else}
-        <h3 class="text-foreground font-medium">No results</h3>
-        <p class="text-muted-foreground text-sm mt-1">No websites match your filters</p>
+        <h3 class="text-foreground font-medium">{$t('sites.no_results')}</h3>
+        <p class="text-muted-foreground text-sm mt-1">{$t('sites.no_results_desc')}</p>
         <button on:click={() => { searchQuery = ''; searchInput = ''; filterStatus = ''; }}
           class="mt-4 h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground
                  hover:bg-muted hover:text-foreground inline-flex items-center gap-2 mx-auto">
-          Clear filters
+          {$t('sites.clear_filters')}
         </button>
       {/if}
     </div>
@@ -607,15 +608,15 @@
               </div>
               {#if site.status === 'active'}
                 <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>Active
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>{$t('sites.active')}
                 </span>
               {:else if site.status === 'suspended'}
                 <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Suspended
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>{$t('sites.suspended')}
                 </span>
               {:else if site.status === 'provisioning'}
                 <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1">
-                  <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>Installing
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>{$t('sites.installing')}
                 </span>
               {:else}
                 <span class="bg-muted text-muted-foreground px-2 py-0.5 rounded-full text-xs font-medium">{site.status}</span>
@@ -650,10 +651,10 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
-                        Visit Site
+                        {$t('sites.visit_site')}
                       </a>
                       <div class="border-t border-border my-1"></div>
-                      <p class="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Switch Web Server</p>
+                      <p class="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">{$t('sites.switch_webserver')}</p>
                       {#each [{ v: 'nginx', l: 'Nginx' }, { v: 'apache', l: 'Apache' }, { v: 'ols', l: 'LiteSpeed' }] as ws}
                         <button
                           on:click={() => switchWebserver(site, ws.v)}
@@ -678,7 +679,7 @@
                           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          Suspend
+                          {$t('sites.suspend')}
                         </button>
                       {:else if site.status === 'suspended'}
                         <button on:click={() => handleUnsuspend(site)}
@@ -686,7 +687,7 @@
                           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
-                          Resume
+                          {$t('sites.resume')}
                         </button>
                       {/if}
                       <div class="border-t border-border my-1"></div>
@@ -697,7 +698,7 @@
                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5
                                7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                        Delete
+                        {$t('sites.delete')}
                       </button>
                     </div>
                   {/if}
@@ -717,13 +718,13 @@
         <thead class="bg-muted/50">
           <tr>
             <th class="px-4 py-3 w-10"></th>
-            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">Domain</th>
-            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">Status</th>
-            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">PHP</th>
-            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">Web Server</th>
-            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">Server</th>
-            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">Created</th>
-            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-right">Actions</th>
+            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">{$t('sites.domain')}</th>
+            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">{$t('sites.status')}</th>
+            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">{$t('sites.php_version')}</th>
+            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">{$t('sites.web_server')}</th>
+            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">{$t('sites.server')}</th>
+            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-left">{$t('sites.created_at')}</th>
+            <th class="px-4 py-3 text-xs text-muted-foreground uppercase tracking-wider font-medium text-right">{$t('sites.actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -755,7 +756,7 @@
                     rel="noopener noreferrer"
                     on:click|stopPropagation
                     class="text-muted-foreground hover:text-foreground"
-                    title="Visit site"
+                    title={$t('sites.visit_site')}
                   >
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -769,19 +770,19 @@
               <td class="px-4 py-3 text-sm">
                 {#if site.status === 'active'}
                   <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>Active
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>{$t('sites.active')}
                   </span>
                 {:else if site.status === 'suspended'}
                   <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Suspended
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>{$t('sites.suspended')}
                   </span>
                 {:else if site.status === 'provisioning'}
                   <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>Installing
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>{$t('sites.installing')}
                   </span>
                 {:else if site.status === 'error'}
                   <span class="bg-red-500/10 text-red-400 border border-red-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>Error
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span>{$t('sites.error')}
                   </span>
                 {:else}
                   <span class="bg-muted text-muted-foreground px-2 py-0.5 rounded-full text-xs font-medium">{site.status}</span>
@@ -816,7 +817,7 @@
                     class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground
                            hover:bg-muted hover:text-foreground inline-flex items-center gap-2"
                   >
-                    Manage
+                    {$t('sites.manage')}
                   </a>
 
                   <!-- Kebab menu -->
@@ -839,10 +840,10 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
-                          Visit Site
+                          {$t('sites.visit_site')}
                         </a>
                         <div class="border-t border-border my-1"></div>
-                        <p class="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Switch Web Server</p>
+                        <p class="px-3 py-1 text-[10px] text-muted-foreground uppercase tracking-wider font-medium">{$t('sites.switch_webserver')}</p>
                         {#each [{ v: 'nginx', l: 'Nginx' }, { v: 'apache', l: 'Apache' }, { v: 'ols', l: 'LiteSpeed' }] as ws}
                           <button
                             on:click={() => switchWebserver(site, ws.v)}
@@ -926,46 +927,46 @@
             </div>
             {#if site.status === 'active'}
               <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1 shrink-0">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>Active
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span>{$t('sites.active')}
               </span>
             {:else if site.status === 'suspended'}
               <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1 shrink-0">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Suspended
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>{$t('sites.suspended')}
               </span>
             {:else if site.status === 'provisioning'}
               <span class="bg-blue-500/10 text-blue-400 border border-blue-500/20 px-2 py-0.5 rounded-full text-xs font-medium inline-flex items-center gap-1 shrink-0">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>Installing
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>{$t('sites.installing')}
               </span>
             {/if}
           </div>
           <div class="grid grid-cols-3 gap-3 px-4 py-3 text-xs text-muted-foreground">
-            <div><span class="block text-muted-foreground/60 mb-0.5">PHP</span>{site.php_version}</div>
-            <div><span class="block text-muted-foreground/60 mb-0.5">Server</span><span class="uppercase">{site.web_server}</span></div>
-            <div><span class="block text-muted-foreground/60 mb-0.5">Host</span>{site.server_label ?? 'Local'}</div>
+            <div><span class="block text-muted-foreground/60 mb-0.5">{$t('sites.php_label')}</span>{site.php_version}</div>
+            <div><span class="block text-muted-foreground/60 mb-0.5">{$t('sites.server')}</span><span class="uppercase">{site.web_server}</span></div>
+            <div><span class="block text-muted-foreground/60 mb-0.5">{$t('sites.host_label')}</span>{site.server_label ?? 'Local'}</div>
           </div>
           <div class="flex gap-2 px-4 py-3 border-t border-border" on:click|stopPropagation>
             <a href="/websites/{site.id}"
                class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground
                       hover:bg-muted hover:text-foreground inline-flex items-center gap-2">
-              Manage
+               {$t('sites.manage')}
             </a>
             {#if site.status === 'active'}
               <button on:click={() => handleSuspend(site)}
                 class="h-9 px-4 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20
                        text-sm font-medium hover:bg-amber-500/20 inline-flex items-center gap-2">
-                Suspend
+                {$t('sites.suspend')}
               </button>
             {:else if site.status === 'suspended'}
               <button on:click={() => handleUnsuspend(site)}
                 class="h-9 px-4 rounded-lg bg-green-500/10 text-green-400 border border-green-500/20
                        text-sm font-medium hover:bg-green-500/20 inline-flex items-center gap-2">
-                Resume
+                {$t('sites.resume')}
               </button>
             {/if}
             <button on:click={() => openDeleteModal(site)}
               class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm
                      font-medium hover:bg-red-500/20 inline-flex items-center gap-2 ml-auto">
-              Delete
+              {$t('sites.delete')}
             </button>
           </div>
         </div>
@@ -982,7 +983,7 @@
   <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 fade-up">
     <div class="bg-card border border-border rounded-2xl shadow-2xl shadow-black/30 px-4 py-3
                 flex items-center gap-3">
-      <span class="text-sm font-medium text-foreground">{selectedIds.size} selected</span>
+      <span class="text-sm font-medium text-foreground">{$t('sites.selected', { values: { count: selectedIds.size } })}</span>
       <div class="w-px h-4 bg-border"></div>
       <button
         on:click={bulkSuspend}
@@ -993,7 +994,7 @@
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        Suspend all
+        {$t('sites.suspend_all')}
       </button>
       <button
         on:click={bulkResume}
@@ -1004,7 +1005,7 @@
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        Resume all
+        {$t('sites.resume_all')}
       </button>
       <button
         on:click={openBulkDeleteModal}
@@ -1016,13 +1017,13 @@
           <path stroke-linecap="round" stroke-linejoin="round"
             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
         </svg>
-        Delete all
+        {$t('sites.delete_all')}
       </button>
       <button
         on:click={() => { selectedIds = new Set(); }}
         class="h-8 w-8 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground
                transition-colors inline-flex items-center justify-center"
-        title="Clear selection"
+        title={$t('sites.clear_selection')}
       >
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -1043,7 +1044,7 @@
   >
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl">
       <div class="flex items-center justify-between mb-5">
-        <h2 id="create-modal-title" class="text-lg font-semibold text-foreground flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="8" ry="3.2" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-30 12 12)"/><circle cx="18.9" cy="8.0" r="1.4" fill="currentColor"/></svg>Create Website</h2>
+        <h2 id="create-modal-title" class="text-lg font-semibold text-foreground flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="8" ry="3.2" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-30 12 12)"/><circle cx="18.9" cy="8.0" r="1.4" fill="currentColor"/></svg>{$t('sites.create_title')}</h2>
         <button
           on:click={() => showCreateModal = false}
           disabled={createLoading}
@@ -1059,9 +1060,9 @@
       <!-- Quick Setup toggle -->
       <div class="flex items-center gap-3 mb-5 p-3 rounded-xl bg-muted/30 border border-border">
         <div class="flex-1">
-          <p class="text-sm font-medium text-foreground">Quick Setup</p>
+          <p class="text-sm font-medium text-foreground">{$t('sites.quick_setup')}</p>
           <p class="text-xs text-muted-foreground mt-0.5">
-            {quickSetup ? 'Domain + PHP only' : 'Full configuration options'}
+            {quickSetup ? $t('sites.quick_setup_on') : $t('sites.quick_setup_off')}
           </p>
         </div>
         <button
@@ -1078,13 +1079,13 @@
       <div class="space-y-4">
         <!-- Domain -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="new-domain">Domain name</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="new-domain">{$t('sites.domain_label')}</label>
           <input
             id="new-domain"
             type="text"
             bind:value={newSite.domain}
             on:blur={() => { newSite.domain = normalizeDomain(newSite.domain); }}
-            placeholder="example.com"
+            placeholder={$t('sites.domain_placeholder')}
             autocomplete="off"
             class="h-9 rounded-lg border {createError && createError.toLowerCase().includes('domain') ? 'border-red-500' : 'border-border'} bg-background px-3 text-sm text-foreground
                    placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
@@ -1097,7 +1098,7 @@
 
         <!-- PHP version -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-2">PHP version</label>
+          <label class="block text-sm font-medium text-foreground mb-2">{$t('sites.php_version_label')}</label>
           <div class="grid grid-cols-5 gap-2">
             {#each ['8.3', '8.2', '8.1', '8.0', '7.4'] as ver}
               <button
@@ -1117,7 +1118,7 @@
         {#if !quickSetup}
           <!-- Web server -->
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">Web server</label>
+            <label class="block text-sm font-medium text-foreground mb-2">{$t('sites.web_server_label')}</label>
             <div class="grid grid-cols-3 gap-2">
               {#each [{ value: 'nginx', label: 'Nginx' }, { value: 'apache', label: 'Apache' }, { value: 'ols', label: 'LiteSpeed' }] as ws}
                 <button
@@ -1136,7 +1137,7 @@
 
           <!-- Site type -->
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">Site type</label>
+            <label class="block text-sm font-medium text-foreground mb-2">{$t('sites.site_type_label')}</label>
             <div class="grid grid-cols-3 gap-2">
               {#each [
                 { value: 'static',    label: 'Static' },
@@ -1160,13 +1161,13 @@
           <!-- Disk quota -->
           <div>
             <label class="block text-sm font-medium text-foreground mb-1.5" for="disk-quota">
-              Disk quota <span class="text-muted-foreground font-normal">(optional, e.g. 5G)</span>
+              {$t('sites.disk_quota_label')} <span class="text-muted-foreground font-normal">{$t('sites.disk_quota_optional')}</span>
             </label>
             <input
               id="disk-quota"
               type="text"
               bind:value={diskQuota}
-              placeholder="Unlimited"
+              placeholder={$t('sites.disk_quota_placeholder')}
               class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                      placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                      focus:border-primary w-full"
@@ -1175,14 +1176,14 @@
 
           <!-- PHP extensions preset -->
           <div>
-            <label class="block text-sm font-medium text-foreground mb-2">PHP extensions preset</label>
+            <label class="block text-sm font-medium text-foreground mb-2">{$t('sites.php_presets_label')}</label>
             <select bind:value={phpPreset}
               class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                      focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary w-full">
-              <option value="none">None (bare PHP)</option>
-              <option value="wordpress">WordPress (gd, mbstring, xml, zip, curl)</option>
-              <option value="laravel">Laravel (pdo, mbstring, openssl, tokenizer)</option>
-              <option value="full">Full stack (all common extensions)</option>
+              <option value="none">{$t('sites.php_presets_none')}</option>
+              <option value="wordpress">{$t('sites.php_presets_wordpress')}</option>
+              <option value="laravel">{$t('sites.php_presets_laravel')}</option>
+              <option value="full">{$t('sites.php_presets_full')}</option>
             </select>
           </div>
         {/if}
@@ -1201,7 +1202,7 @@
             class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground
                    hover:bg-muted hover:text-foreground inline-flex items-center gap-2 flex-1 justify-center"
           >
-            Cancel
+            {$t('sites.cancel')}
           </button>
           <button
             type="button"
@@ -1216,9 +1217,9 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
               </svg>
-              Creating…
+              {$t('sites.creating')}
             {:else}
-              Create Website
+              {$t('sites.create_title')}
             {/if}
           </button>
         </div>
@@ -1236,14 +1237,13 @@
     aria-labelledby="delete-modal-title"
   >
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl">
-      <h2 id="delete-modal-title" class="text-lg font-semibold text-foreground mb-2 flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="8" ry="3.2" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-30 12 12)"/><circle cx="18.9" cy="8.0" r="1.4" fill="currentColor"/></svg>Delete website</h2>
+      <h2 id="delete-modal-title" class="text-lg font-semibold text-foreground mb-2 flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="8" ry="3.2" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-30 12 12)"/><circle cx="18.9" cy="8.0" r="1.4" fill="currentColor"/></svg>{$t('sites.delete_confirm_title')}</h2>
       <p class="text-sm text-muted-foreground mb-4">
-        This will permanently delete <strong class="text-foreground">{siteToDelete.domain}</strong>
-        and all its files, databases, and email accounts.
-        <strong class="text-red-400">This cannot be undone.</strong>
+        {$t('sites.delete_confirm_desc', { values: { domain: siteToDelete.domain } })}
+        <strong class="text-red-400">{$t('sites.delete_confirm_irreversible')}</strong>
       </p>
       <p class="text-sm text-foreground mb-2">
-        Type <code class="font-mono bg-muted px-1.5 py-0.5 rounded text-xs">{siteToDelete.domain}</code> to confirm:
+        {$t('sites.delete_confirm_type', { values: { domain: siteToDelete.domain } })}
       </p>
       <input
         type="text"
@@ -1259,7 +1259,7 @@
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground
                  hover:bg-muted hover:text-foreground inline-flex items-center gap-2 flex-1 justify-center"
         >
-          Cancel
+          {$t('sites.cancel')}
         </button>
         <button
           on:click={handleDelete}
@@ -1268,7 +1268,7 @@
                  font-medium hover:bg-red-500/20 inline-flex items-center gap-2 flex-1 justify-center
                  disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Delete website
+          {$t('sites.delete_confirm_title')}
         </button>
       </div>
     </div>
@@ -1283,14 +1283,13 @@
     aria-modal="true"
   >
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-md shadow-2xl">
-      <h2 class="text-lg font-semibold text-foreground mb-2">Delete {selectedIds.size} websites</h2>
+      <h2 class="text-lg font-semibold text-foreground mb-2">{$t('sites.delete_bulk_title', { values: { count: selectedIds.size } })}</h2>
       <p class="text-sm text-muted-foreground mb-4">
-        This will permanently delete <strong class="text-foreground">{selectedIds.size} sites</strong>
-        and all their files, databases, and email accounts.
-        <strong class="text-red-400">This cannot be undone.</strong>
+        {$t('sites.delete_bulk_desc', { values: { count: selectedIds.size } })}
+        <strong class="text-red-400">{$t('sites.delete_confirm_irreversible')}</strong>
       </p>
       <p class="text-sm text-foreground mb-2">
-        Type <code class="font-mono bg-muted px-1.5 py-0.5 rounded text-xs">DELETE</code> to confirm:
+        {$t('sites.delete_bulk_type')}
       </p>
       <input
         type="text"
@@ -1306,7 +1305,7 @@
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground
                  hover:bg-muted hover:text-foreground inline-flex items-center gap-2 flex-1 justify-center"
         >
-          Cancel
+          {$t('sites.cancel')}
         </button>
         <button
           on:click={handleBulkDelete}
@@ -1315,7 +1314,7 @@
                  font-medium hover:bg-red-500/20 inline-flex items-center gap-2 flex-1 justify-center
                  disabled:opacity-40 disabled:cursor-not-allowed"
         >
-          Delete {selectedIds.size} sites
+          {$t('sites.delete_bulk_confirm_label', { values: { count: selectedIds.size } })}
         </button>
       </div>
     </div>
