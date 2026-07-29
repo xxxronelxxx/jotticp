@@ -623,7 +623,7 @@
     <!-- ── TIMELINE VIEW ──────────────────────────────────────────────────── -->
     {:else if viewMode === 'timeline'}
       <div class="bg-card border border-border rounded-xl p-5 fade-up">
-        <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-4">24-Hour Schedule Timeline</p>
+        <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-4">{$t('cron.schedule_timeline')}</p>
         <div class="relative overflow-x-auto">
           <!-- Hour labels -->
           <div class="flex text-[9px] text-muted-foreground mb-1 min-w-[640px]">
@@ -648,9 +648,7 @@
                     {streak}x fail
                   </span>
                 {:else if failures >= 3}
-                  <span class="shrink-0 text-[9px] px-1 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
-                    warn
-                  </span>
+                  <span class="shrink-0 text-[9px] px-1 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">{$t('cron.warn_label')}</span>
                 {/if}
               </div>
               <div class="relative flex-1 h-6 bg-muted/20 rounded border border-border/30">
@@ -669,7 +667,7 @@
                   ></div>
                 {/each}
                 {#if times.length === 0}
-                  <span class="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground/60">complex expression</span>
+                  <span class="absolute inset-0 flex items-center justify-center text-[10px] text-muted-foreground/60">{$t('cron.complex_expr')}</span>
                 {/if}
               </div>
             </div>
@@ -684,14 +682,14 @@
           <table class="w-full text-sm">
             <thead class="bg-muted/50">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Schedule</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Command</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Site</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Health</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Last Run</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Next Run</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Status</th>
-                <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wide">Actions</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('common.schedule')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('cron.command_col')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('site_detail.title')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('cron.health_col')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('cron.last_run_col')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('cron.next_run_col')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('common.status')}</th>
+                <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -742,9 +740,7 @@
                         Failed {streak}x in a row
                       </span>
                     {:else if failures >= 3}
-                      <span class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
-                        Recent failures
-                      </span>
+                      <span class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">{$t('cron.recent_failures')}</span>
                     {/if}
                   </td>
 
@@ -825,9 +821,7 @@
                       >
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6M5 6h14M5 10h14"/>
-                        </svg>
-                        Log
-                      </button>
+                        </svg>{$t('cron.view_log')}</button>
 
                       <!-- Edit -->
                       <button
@@ -837,9 +831,7 @@
                       >
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536M9 13l-4 1 1-4L17.5 3.5a2.121 2.121 0 013 3L9 13z"/>
-                        </svg>
-                        Edit
-                      </button>
+                        </svg>{$t('common.edit')}</button>
 
                       <!-- Delete -->
                       <button
@@ -849,9 +841,7 @@
                       >
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4m-4 0a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1m-4 0h4"/>
-                        </svg>
-                        Delete
-                      </button>
+                        </svg>{$t('common.delete')}</button>
                     </div>
                   </td>
                 </tr>
@@ -860,7 +850,7 @@
                 {#if expandedLogs.has(job.id)}
                   <tr class="border-t border-border bg-muted/20">
                     <td colspan="8" class="px-4 py-3">
-                      <p class="text-xs font-medium text-muted-foreground mb-1.5">Last output</p>
+                      <p class="text-xs font-medium text-muted-foreground mb-1.5">{$t('cron.last_output')}</p>
                       <pre class="font-mono text-xs bg-muted px-3 py-2 rounded-lg text-foreground whitespace-pre-wrap break-all max-h-48 overflow-y-auto">{runOutputs[job.id] ?? '(no output recorded — run the job to see output)'}</pre>
                     </td>
                   </tr>
@@ -914,7 +904,7 @@
         <!-- Schedule fields based on tab -->
         {#if modalTab === 'visual'}
           <div>
-            <p class="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">Schedule</p>
+            <p class="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">{$t('common.schedule')}</p>
             <div class="grid grid-cols-5 gap-2 mb-2">
               {#each [
                 { label: 'Minute', bind: 'v_minute', placeholder: '0-59' },
@@ -958,7 +948,7 @@
           </div>
         {:else}
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Cron Expression</label>
+            <label class="block text-sm font-medium text-foreground mb-1.5">{$t('cron.cron_expr')}</label>
             <input
               class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
               placeholder="* * * * *  (min hr dom mon dow)"
@@ -967,14 +957,14 @@
             {#if form.schedule.trim().split(/\s+/).length === 5}
               <p class="text-xs text-muted-foreground mt-1">{humanReadable(form.schedule)}</p>
             {:else}
-              <p class="text-xs text-red-400 mt-1">Must be 5 fields: minute hour day month weekday</p>
+              <p class="text-xs text-red-400 mt-1">{$t('cron.expr_info')}</p>
             {/if}
           </div>
         {/if}
 
         <!-- Site -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5">Site</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5">{$t('site_detail.title')}</label>
           <div class="relative">
             <select
               class="w-full h-9 rounded-lg border border-border bg-background px-3 pr-8 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 appearance-none"
@@ -993,7 +983,7 @@
 
         <!-- Label -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5">Label <span class="text-muted-foreground font-normal">(optional)</span></label>
+          <label class="block text-sm font-medium text-foreground mb-1.5">{$t('settings.label')}<span class="text-muted-foreground font-normal">{$t('cron.label_optional')}</span></label>
           <input
             class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
             placeholder="e.g. WordPress cron, daily backup…"
@@ -1003,7 +993,7 @@
 
         <!-- Command -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5">Command</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5">{$t('cron.command_col')}</label>
           <textarea
             class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
             rows="3"
@@ -1058,15 +1048,15 @@
           </svg>
         </div>
         <div>
-          <h3 class="text-base font-semibold text-foreground">Delete cron job?</h3>
-          <p class="text-sm text-muted-foreground mt-0.5">This will permanently remove the job and its crontab entry. This action cannot be undone.</p>
+          <h3 class="text-base font-semibold text-foreground">{$t('cron.delete_title')}</h3>
+          <p class="text-sm text-muted-foreground mt-0.5">{$t('cron.this_will_permanently_remove_the_job_and')}</p>
         </div>
       </div>
       <div class="flex gap-3">
         <button
           class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2 transition-colors duration-200"
           on:click={confirmDelete}
-        >Delete</button>
+        >{$t('common.delete')}</button>
         <button
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2 transition-colors duration-200"
           on:click={() => { showDeleteConfirm = false; deletingJobId = null; }}

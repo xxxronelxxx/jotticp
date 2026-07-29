@@ -359,7 +359,7 @@
             <h3 class="text-base font-semibold text-foreground">{detailPlugin.name}</h3>
             <span class="text-xs text-muted-foreground font-mono">v{detailPlugin.version}</span>
             {#if detailPlugin.requires_plan === 'pro'}
-              <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">Pro</span>
+              <span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-yellow-500/10 text-yellow-400 border border-yellow-500/20">{$t('plugins.pro')}</span>
             {/if}
           </div>
           <p class="text-xs text-muted-foreground mt-0.5">By {detailPlugin.author}</p>
@@ -414,9 +414,9 @@
           </button>
           {#if confirmUninstallSlug === detailPlugin.slug}
             <div class="flex items-center gap-1.5">
-              <span class="text-xs text-destructive">Uninstall?</span>
-              <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => { uninstallPlugin(detailPlugin!.slug); detailPlugin = null; }}>Yes</button>
-              <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmUninstallSlug = null}>No</button>
+              <span class="text-xs text-destructive">{$t('plugins.uninstall')}</span>
+              <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => { uninstallPlugin(detailPlugin!.slug); detailPlugin = null; }}>{$t("common.yes")}</button>
+              <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmUninstallSlug = null}>{$t("common.no")}</button>
             </div>
           {:else}
             <button
@@ -577,7 +577,7 @@
                   <span class="text-sm font-semibold text-foreground truncate">{plugin.name}</span>
                   <span class="text-xs text-muted-foreground font-mono shrink-0">v{plugin.version}</span>
                   {#if plugin.requires_plan === 'pro'}
-                    <span class="inline-flex items-center px-1 py-0.5 rounded text-[10px] font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shrink-0">PRO</span>
+                    <span class="inline-flex items-center px-1 py-0.5 rounded text-[10px] font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 shrink-0">{$t('plugins.pro')}</span>
                   {/if}
                 </div>
                 <p class="text-xs text-muted-foreground mt-0.5 truncate">{plugin.author}</p>
@@ -654,9 +654,9 @@
                 </button>
                 {#if confirmUninstallSlug === plugin.slug}
                   <div class="flex items-center gap-1.5">
-                    <span class="text-xs text-destructive">Remove?</span>
-                    <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => uninstallPlugin(plugin.slug)}>Yes</button>
-                    <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmUninstallSlug = null}>No</button>
+                    <span class="text-xs text-destructive">{$t('servers.remove')}</span>
+                    <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => uninstallPlugin(plugin.slug)}>{$t("common.yes")}</button>
+                    <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmUninstallSlug = null}>{$t("common.no")}</button>
                   </div>
                 {:else}
                   <button
@@ -693,8 +693,8 @@
             </svg>
           </div>
           <div>
-            <h2 class="text-base font-semibold text-foreground">Upload Plugin</h2>
-            <p class="text-xs text-muted-foreground">Upload a community or custom JottiCP plugin archive</p>
+            <h2 class="text-base font-semibold text-foreground">{$t('plugins.upload_plugin')}</h2>
+            <p class="text-xs text-muted-foreground">{$t('plugins.upload_desc')}</p>
           </div>
         </div>
 
@@ -733,8 +733,8 @@
               <svg class="w-10 h-10 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
               </svg>
-              <p class="text-sm font-medium text-foreground">Drop plugin archive here or click to browse</p>
-              <p class="text-xs text-muted-foreground">.tar.gz · Must include orbit-plugin.toml manifest</p>
+              <p class="text-sm font-medium text-foreground">{$t('plugins.drop_zone')}</p>
+              <p class="text-xs text-muted-foreground">{$t('plugins.drop_zone_hint')}</p>
             </div>
           {/if}
         </div>
@@ -767,24 +767,9 @@
       <!-- Plugin manifest docs -->
       <div class="lg:col-span-2 space-y-4">
         <div class="bg-card border border-border rounded-xl p-5">
-          <h3 class="text-sm font-semibold text-foreground mb-3">Plugin Manifest Format</h3>
-          <p class="text-xs text-muted-foreground mb-3">
-            Every plugin must include an <code class="font-mono bg-muted px-1 rounded">orbit-plugin.toml</code> file in its root:
-          </p>
-          <pre class="text-xs font-mono bg-muted rounded-lg p-3 overflow-x-auto text-foreground leading-relaxed">[plugin]
-slug    = "my-plugin"
-name    = "My Plugin"
-version = "1.0.0"
-author  = "Your Name"
-description = "What it does"
-
-[events]
-on_site_created   = "handlers::site_created"
-on_backup_complete = "handlers::backup_done"
-
-[permissions]
-network = false
-exec    = false</pre>
+          <h3 class="text-sm font-semibold text-foreground mb-3">{$t('plugins.plugin_manifest')}</h3>
+          <p class="text-xs text-muted-foreground mb-3">{$t('plugins.every_plugin_must_include_an')}<code class="font-mono bg-muted px-1 rounded">{$t('plugins.orbit_plugintoml')}</code>{$t('plugins.file_in_its_root')}</p>
+          <pre class="text-xs font-mono bg-muted rounded-lg p-3 overflow-x-auto text-foreground leading-relaxed">{$t('plugins.pluginslug_my_pluginname_my_pluginversio')}</pre>
         </div>
 
         <div class="bg-amber-500/10 border border-amber-500/20 rounded-xl p-4">
@@ -793,10 +778,8 @@ exec    = false</pre>
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
             </svg>
             <div>
-              <p class="text-xs font-semibold text-amber-400 mb-1">Security note</p>
-              <p class="text-xs text-amber-300/80 leading-relaxed">
-                Only install plugins from trusted sources. Plugins run in a sandboxed environment but still have access to your server. JottiCP signed plugins are verified before install.
-              </p>
+              <p class="text-xs font-semibold text-amber-400 mb-1">{$t('plugins.security_note_title')}</p>
+              <p class="text-xs text-amber-300/80 leading-relaxed">{$t('plugins.security_note_desc')}</p>
             </div>
           </div>
         </div>

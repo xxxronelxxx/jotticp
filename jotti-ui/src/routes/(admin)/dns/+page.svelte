@@ -654,9 +654,7 @@
         <svg class="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        Loading DNS zones…
-      </div>
+        </svg>{$t('dns.loading_zones')}</div>
     </div>
   {:else}
     <!-- On mobile: flex-col (zones on top, records below). On md+: flex-row. -->
@@ -694,9 +692,7 @@
                 >
                   <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                  </svg>
-                  Add First Zone
-                </button>
+                  </svg>{$t('dns.add_first_zone')}</button>
               {/if}
             </div>
           {:else}
@@ -748,7 +744,7 @@
               <span class="text-amber-400 font-medium">{zonesWithIssues.length} zone{zonesWithIssues.length !== 1 ? 's' : ''} need attention</span>
               — missing MX / SPF / DMARC
             {:else}
-              <span class="text-green-400 font-medium">All zones healthy</span>
+              <span class="text-green-400 font-medium">{$t('dns.all_zones_healthy')}</span>
             {/if}
           </div>
         {/if}
@@ -757,23 +753,18 @@
       <!-- ══ RIGHT PANEL — Records ════════════════════════════════════════════════ -->
       <div class="flex-1 flex flex-col min-h-0 min-w-0 bg-background overflow-hidden">
         {#if !selectedZone}
-          <div class="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-            Select a zone to view its records
-          </div>
+          <div class="flex-1 flex items-center justify-center text-sm text-muted-foreground">{$t('dns.select_a_zone_to_view_its_records')}</div>
         {:else}
           <!-- Records panel header -->
           <div class="flex flex-col sm:flex-row sm:items-center gap-2 px-4 py-3 border-b border-border bg-card shrink-0">
             <!-- Left: zone title + actions -->
             <div class="flex items-center gap-3 flex-1 min-w-0">
               <div class="min-w-0">
-                <p class="text-sm font-semibold text-foreground truncate">
-                  Records for: <span class="text-primary">{selectedZone.zone}</span>
+                <p class="text-sm font-semibold text-foreground truncate">{$t('dns.records_for')}<span class="text-primary">{selectedZone.zone}</span>
                 </p>
                 {#if propCheckResults[selectedZone.id]}
                   {@const p = propCheckResults[selectedZone.id]}
-                  <p class="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-2">
-                    DNS Propagation:
-                    <span class="{p.google     ? 'text-green-400' : 'text-red-400'}">
+                  <p class="text-[10px] text-muted-foreground mt-0.5 flex items-center gap-2">{$t('dns.dns_propagation')}<span class="{p.google     ? 'text-green-400' : 'text-red-400'}">
                       {p.google ? '✓' : '✗'} Google
                     </span>
                     <span class="{p.cloudflare ? 'text-green-400' : 'text-red-400'}">
@@ -795,7 +786,7 @@
                 class="h-8 rounded-md border border-border bg-background px-2 text-xs text-foreground
                        focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               >
-                <option value="">All types</option>
+                <option value="">{$t('dns.all_types')}</option>
                 {#each uniqueTypes as t}
                   <option value={t}>{t}</option>
                 {/each}
@@ -828,7 +819,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                 </svg>
-                <span class="hidden sm:inline">Check Prop.</span>
+                <span class="hidden sm:inline">{$t('dns.check_prop')}</span>
               </button>
 
               <!-- Delete zone -->
@@ -843,7 +834,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
-                <span class="hidden sm:inline">Delete Zone</span>
+                <span class="hidden sm:inline">{$t('dns.delete_zone')}</span>
               </button>
 
               <!-- Add record -->
@@ -855,9 +846,7 @@
               >
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                </svg>
-                Add Record
-              </button>
+                </svg>{$t('dns.add_record')}</button>
             </div>
           </div>
 
@@ -874,11 +863,11 @@
               <!-- ── Inline Add Record form (slide-down) ──────────────────────── -->
               {#if showAddRecordForm}
                 <div class="border-b border-border bg-primary/5 px-4 py-3 fade-up">
-                  <p class="text-xs font-semibold text-foreground mb-2">New Record</p>
+                  <p class="text-xs font-semibold text-foreground mb-2">{$t('dns.new_record')}</p>
                   <div class="flex flex-wrap items-end gap-2">
                     <!-- Type -->
                     <div class="flex flex-col gap-1">
-                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">Type</label>
+                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">{$t('common.type')}</label>
                       <select bind:value={newRecType}
                               class="h-8 rounded-md border border-border bg-background px-2 text-xs text-foreground
                                      focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
@@ -889,21 +878,21 @@
                     </div>
                     <!-- Name -->
                     <div class="flex flex-col gap-1 flex-1 min-w-[80px]">
-                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">Name</label>
+                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">{$t('common.name')}</label>
                       <input bind:value={newRecName} placeholder="@ or subdomain"
                              class="h-8 rounded-md border border-border bg-background px-2 text-xs font-mono text-foreground
                                     placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"/>
                     </div>
                     <!-- Content -->
                     <div class="flex flex-col gap-1 flex-[3] min-w-[140px]">
-                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">Content</label>
+                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">{$t('dns.content')}</label>
                       <input bind:value={newRecContent} placeholder="IP, hostname, or value"
                              class="h-8 rounded-md border border-border bg-background px-2 text-xs font-mono text-foreground
                                     placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"/>
                     </div>
                     <!-- TTL -->
                     <div class="flex flex-col gap-1 w-20">
-                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">TTL</label>
+                      <label class="text-[10px] text-muted-foreground uppercase tracking-wide">{$t('dns.ttl')}</label>
                       <input type="number" bind:value={newRecTtl} min="60"
                              class="h-8 rounded-md border border-border bg-background px-2 text-xs text-foreground
                                     focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"/>
@@ -911,7 +900,7 @@
                     <!-- Priority (MX/SRV) -->
                     {#if newRecType === 'MX' || newRecType === 'SRV'}
                       <div class="flex flex-col gap-1 w-16">
-                        <label class="text-[10px] text-muted-foreground uppercase tracking-wide">Prio</label>
+                        <label class="text-[10px] text-muted-foreground uppercase tracking-wide">{$t('dns.prio')}</label>
                         <input type="number" bind:value={newRecPriority} placeholder="10" min="0"
                                class="h-8 rounded-md border border-border bg-background px-2 text-xs text-foreground
                                       focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"/>
@@ -950,13 +939,13 @@
                       d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
                   {#if recordSearch || recordTypeFilter}
-                    <p>No records match your filter</p>
+                    <p>{$t('dns.no_records_filter')}</p>
                     <button
                       on:click={() => { recordSearch = ''; recordTypeFilter = ''; }}
                       class="mt-2 text-xs text-primary hover:underline"
-                    >Clear filters</button>
+                    >{$t("dns.clear_filters")}</button>
                   {:else}
-                    <p>No records in this zone</p>
+                    <p>{$t('dns.no_records_zone')}</p>
                     <button
                       on:click={() => { showAddRecordForm = true; }}
                       class="mt-3 h-8 px-3 rounded-md bg-primary text-primary-foreground text-xs font-medium
@@ -964,9 +953,7 @@
                     >
                       <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                      </svg>
-                      Add First Record
-                    </button>
+                      </svg>{$t('dns.add_first_record')}</button>
                   {/if}
                 </div>
               {:else}
@@ -974,11 +961,11 @@
                 <table class="w-full text-sm border-collapse">
                   <thead class="sticky top-0 z-10 bg-muted/80 backdrop-blur-sm">
                     <tr>
-                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-20">Type</th>
-                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-32">Name</th>
-                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Content</th>
-                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-20 hidden sm:table-cell">TTL</th>
-                      <th class="px-4 py-2.5 text-right text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-24">Actions</th>
+                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-20">{$t('common.type')}</th>
+                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-32">{$t('common.name')}</th>
+                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{$t('dns.content')}</th>
+                      <th class="px-4 py-2.5 text-left text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-20 hidden sm:table-cell">{$t('dns.ttl')}</th>
+                      <th class="px-4 py-2.5 text-right text-[10px] font-semibold text-muted-foreground uppercase tracking-wider w-24">{$t('common.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -1097,11 +1084,11 @@
               {#if selectedZoneId && zonesWithIssues.some(z => z.id === selectedZoneId)}
                 {@const recs = recordsCache[selectedZoneId] ?? []}
                 <div class="mx-4 my-3 rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3">
-                  <p class="text-xs font-semibold text-amber-400 mb-2">DNS Health Issues Detected</p>
+                  <p class="text-xs font-semibold text-amber-400 mb-2">{$t('dns.health_issues')}</p>
                   <div class="space-y-1 text-xs text-amber-400/80">
-                    {#if !hasMx(recs)}<p>Missing MX record — email cannot be received</p>{/if}
-                    {#if !hasSpf(recs)}<p>Missing SPF record — outbound email may be marked as spam</p>{/if}
-                    {#if !hasDmarc(recs)}<p>Missing DMARC record — no email authentication policy set</p>{/if}
+                    {#if !hasMx(recs)}<p>{$t('dns.missing_mx')}</p>{/if}
+                    {#if !hasSpf(recs)}<p>{$t('dns.missing_spf')}</p>{/if}
+                    {#if !hasDmarc(recs)}<p>{$t('dns.missing_dmarc')}</p>{/if}
                   </div>
                   <button
                     on:click={async () => {
@@ -1125,9 +1112,7 @@
                   >
                     <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                    </svg>
-                    Auto-fix (create SPF, DMARC, DKIM)
-                  </button>
+                    </svg>{$t('dns.autofix')}</button>
                 </div>
               {/if}
             {/if}
@@ -1161,11 +1146,8 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-sm font-semibold text-foreground">Delete Record</h2>
-          <p class="text-xs text-muted-foreground mt-1">
-            Delete <span class="font-mono text-foreground">{deleteRecordTarget.type} {deleteRecordTarget.name}</span>?
-            This action cannot be undone.
-          </p>
+          <h2 class="text-sm font-semibold text-foreground">{$t('dns.delete_record_title')}</h2>
+          <p class="text-xs text-muted-foreground mt-1">{$t('common.delete')}<span class="font-mono text-foreground">{deleteRecordTarget.type} {deleteRecordTarget.name}</span>{$t('dns.this_action_cannot_be_undone')}</p>
         </div>
       </div>
       <div class="flex gap-2">
@@ -1183,7 +1165,7 @@
           disabled={deleteRecordLoading}
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground
                  hover:bg-muted hover:text-foreground transition-colors disabled:opacity-50"
-        >Cancel</button>
+        >{$t("common.cancel")}</button>
       </div>
     </div>
   </div>
@@ -1201,8 +1183,8 @@
          role="dialog" aria-modal="true" aria-label="Quick Setup Template">
       <div class="flex items-center justify-between mb-5">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Quick Setup Template</h2>
-          <p class="text-xs text-muted-foreground mt-0.5">Apply a record bundle to any zone instantly</p>
+          <h2 class="text-base font-semibold text-foreground">{$t('dns.template_title')}</h2>
+          <p class="text-xs text-muted-foreground mt-0.5">{$t('dns.template_desc')}</p>
         </div>
         <button on:click={() => showTemplateModal = false} disabled={templateLoading}
                 class="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
@@ -1229,11 +1211,11 @@
 
         <!-- Domain -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="tpl-domain">Target Domain</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="tpl-domain">{$t('dns.target_domain')}</label>
           <select id="tpl-domain" bind:value={templateDomain}
                   class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                          focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <option value="">Select zone…</option>
+            <option value="">{$t('dns.select_zone')}</option>
             {#each zones as z}
               <option value={z.zone}>{z.zone}</option>
             {/each}
@@ -1242,7 +1224,7 @@
 
         {#if templateType === 'wordpress' || templateType === 'redirect'}
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5" for="tpl-ip">Server IP</label>
+            <label class="block text-sm font-medium text-foreground mb-1.5" for="tpl-ip">{$t('dns.server_ip')}</label>
             <input id="tpl-ip" type="text" bind:value={templateIp} placeholder="203.0.113.1"
                    class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground font-mono
                           focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"/>
@@ -1250,7 +1232,7 @@
         {/if}
         {#if templateType === 'subdomain'}
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5" for="tpl-sub">Subdomain</label>
+            <label class="block text-sm font-medium text-foreground mb-1.5" for="tpl-sub">{$t('dns.subdomain')}</label>
             <input id="tpl-sub" type="text" bind:value={templateSubdomain} placeholder="app"
                    class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground font-mono
                           focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"/>
@@ -1301,8 +1283,8 @@
          role="dialog" aria-modal="true" aria-label="Import Zone File">
       <div class="flex items-center justify-between mb-5">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Import Zone File</h2>
-          <p class="text-xs text-muted-foreground mt-0.5">Paste a BIND-format zone file to preview and import records</p>
+          <h2 class="text-base font-semibold text-foreground">{$t('dns.import_title')}</h2>
+          <p class="text-xs text-muted-foreground mt-0.5">{$t('dns.import_desc')}</p>
         </div>
         <button on:click={() => showImportModal = false} disabled={importLoading}
                 class="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
@@ -1314,11 +1296,11 @@
 
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="imp-zone">Target Zone</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="imp-zone">{$t('dns.target_zone')}</label>
           <select id="imp-zone" bind:value={importTargetZone}
                   class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                          focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <option value="">Select zone…</option>
+            <option value="">{$t('dns.select_zone')}</option>
             {#each zones as z}
               <option value={z.id}>{z.zone}</option>
             {/each}
@@ -1326,7 +1308,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="imp-file">Zone File Content</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="imp-file">{$t('dns.zone_file_content')}</label>
           <textarea id="imp-file" bind:value={importZoneFile} rows="8"
                     placeholder="; BIND zone file&#10;example.com.  3600  IN  A  203.0.113.1&#10;www           3600  IN  CNAME  @"
                     class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground font-mono
@@ -1341,9 +1323,7 @@
           <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-          </svg>
-          Preview Records
-        </button>
+          </svg>{$t('dns.preview_records')}</button>
 
         {#if importParseError}
           <div role="alert" class="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2.5">
@@ -1360,10 +1340,10 @@
               <table class="w-full text-xs">
                 <thead class="bg-muted/30 sticky top-0">
                   <tr>
-                    <th class="px-3 py-1.5 text-left text-muted-foreground">Name</th>
-                    <th class="px-3 py-1.5 text-left text-muted-foreground">Type</th>
-                    <th class="px-3 py-1.5 text-left text-muted-foreground">Content</th>
-                    <th class="px-3 py-1.5 text-left text-muted-foreground">TTL</th>
+                    <th class="px-3 py-1.5 text-left text-muted-foreground">{$t('common.name')}</th>
+                    <th class="px-3 py-1.5 text-left text-muted-foreground">{$t('common.type')}</th>
+                    <th class="px-3 py-1.5 text-left text-muted-foreground">{$t('dns.content')}</th>
+                    <th class="px-3 py-1.5 text-left text-muted-foreground">{$t('dns.ttl')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1421,7 +1401,7 @@
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl fade-up"
          role="dialog" aria-modal="true" aria-label="Add DNS Zone">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-base font-semibold text-foreground">Add DNS Zone</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('dns.add_dns_zone')}</h2>
         <button on:click={() => showAddZoneModal = false}
                 class="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1432,7 +1412,7 @@
 
       <form on:submit={handleAddZone} class="space-y-4">
         <div>
-          <label for="zone-domain" class="block text-sm font-medium text-foreground mb-1.5">Domain Name</label>
+          <label for="zone-domain" class="block text-sm font-medium text-foreground mb-1.5">{$t('dns.domain_name')}</label>
           <input id="zone-domain" type="text" bind:value={newZoneDomain} placeholder="example.com"
                  required autocomplete="off"
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm
@@ -1441,8 +1421,7 @@
         </div>
 
         <div>
-          <label for="zone-ip" class="block text-sm font-medium text-foreground mb-1.5">
-            Server IP <span class="text-muted-foreground font-normal">(optional — used for default A record)</span>
+          <label for="zone-ip" class="block text-sm font-medium text-foreground mb-1.5">{$t('dns.server_ip')}<span class="text-muted-foreground font-normal">{$t('dns.optional_used_for_default_a_record')}</span>
           </label>
           <input id="zone-ip" type="text" bind:value={newZoneIp} placeholder="192.0.2.1" autocomplete="off"
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm
@@ -1453,10 +1432,8 @@
         <label class="flex items-start gap-2.5 cursor-pointer rounded-lg border border-border p-3 hover:bg-muted/30 transition-colors">
           <input type="checkbox" bind:checked={createDefaultRecords} class="mt-0.5 accent-primary"/>
           <div>
-            <p class="text-sm font-medium text-foreground">Create default records</p>
-            <p class="text-xs text-muted-foreground mt-0.5">
-              Automatically creates A, MX, SPF, and DMARC records. DKIM key will be generated asynchronously.
-            </p>
+            <p class="text-sm font-medium text-foreground">{$t('dns.create_default_records')}</p>
+            <p class="text-xs text-muted-foreground mt-0.5">{$t('dns.create_default_records_desc')}</p>
           </div>
         </label>
 
@@ -1501,11 +1478,8 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-foreground">Delete DNS Zone</h2>
-          <p class="text-sm text-muted-foreground mt-0.5">
-            Delete <span class="font-mono text-foreground">{deleteZoneTarget.zone}</span> and all its records?
-            This action cannot be undone.
-          </p>
+          <h2 class="text-base font-semibold text-foreground">{$t('dns.delete_zone_confirm_title')}</h2>
+          <p class="text-sm text-muted-foreground mt-0.5">{$t('common.delete')}<span class="font-mono text-foreground">{deleteZoneTarget.zone}</span>{$t('dns.and_all_its_records_this_action_cannot_b')}</p>
         </div>
       </div>
       <div class="flex gap-2">

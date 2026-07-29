@@ -442,7 +442,7 @@
       <span>{loadError}</span>
       <button on:click={() => void loadData()}
               class="ml-auto text-xs font-semibold underline underline-offset-2 hover:no-underline">
-        Retry
+        {$t('common.retry')}
       </button>
     </div>
   {/if}
@@ -612,10 +612,10 @@
             </svg>
           </div>
           <p class="text-sm font-medium text-foreground mb-1">
-            {searchQuery || domainFilter || statusFilter !== 'all' ? 'No accounts match your filters' : 'No email accounts yet'}
+            {searchQuery || domainFilter || statusFilter !== 'all' ? $t('email.no_accounts_filter') : $t('email.no_accounts_yet')}
           </p>
           <p class="text-xs text-muted-foreground mb-4">
-            {searchQuery || domainFilter || statusFilter !== 'all' ? 'Try adjusting your search or filters.' : 'Create your first email account to get started.'}
+            {searchQuery || domainFilter || statusFilter !== 'all' ? $t('email.adjust_filters') : $t('email.create_first_account')}
           </p>
           {#if !searchQuery && !domainFilter && statusFilter === 'all' && domains.length > 0}
             <button
@@ -626,7 +626,7 @@
               <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
               </svg>
-              Create Email Account
+               {$t('email.create_account')}
             </button>
           {/if}
         </div>
@@ -664,7 +664,7 @@
                       <div class="mt-2 flex items-center gap-1.5">
                         <input
                           type="password"
-                          placeholder="New password (min 10 chars)"
+                          placeholder={$t('email.new_password')}
                           bind:value={changePwMap[acct.id]}
                           class="h-8 flex-1 rounded-lg border border-border bg-background px-2 text-xs
                                  text-foreground placeholder:text-muted-foreground
@@ -675,12 +675,12 @@
                           disabled={changePwLoading[acct.id]}
                           class="h-8 px-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium
                                  hover:bg-primary/90 transition-colors disabled:opacity-50"
-                        >Save</button>
+                        >{$t("common.save")}</button>
                         <button
                           on:click={() => { const m = {...changePwMap}; delete m[acct.id]; changePwMap = m; }}
                           class="h-8 px-2 rounded-lg border border-border text-xs text-muted-foreground
                                  hover:bg-muted transition-colors"
-                        >Cancel</button>
+                        >{$t("common.cancel")}</button>
                       </div>
                     {/if}
 
@@ -693,18 +693,18 @@
                           class="h-8 w-28 rounded-lg border border-border bg-background px-2 text-xs
                                  text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                         />
-                        <span class="text-xs text-muted-foreground">MB</span>
+                        <span class="text-xs text-muted-foreground">{$t('email.mb')}</span>
                         <button
                           on:click={() => handleEditQuota(acct)}
                           disabled={editQuotaLoading[acct.id]}
                           class="h-8 px-2 rounded-lg bg-primary text-primary-foreground text-xs font-medium
                                  hover:bg-primary/90 transition-colors disabled:opacity-50"
-                        >Save</button>
+                        >{$t("common.save")}</button>
                         <button
                           on:click={() => { const m = {...editQuotaMap}; delete m[acct.id]; editQuotaMap = m; }}
                           class="h-8 px-2 rounded-lg border border-border text-xs text-muted-foreground
                                  hover:bg-muted transition-colors"
-                        >Cancel</button>
+                        >{$t("common.cancel")}</button>
                       </div>
                     {/if}
                   </td>
@@ -734,13 +734,13 @@
                   <td class="px-4 py-3">
                     {#if acct.status === 'active'}
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                                   bg-green-500/10 text-green-400 border border-green-500/20">Active</span>
+                                   bg-green-500/10 text-green-400 border border-green-500/20">{$t('sites.active')}</span>
                     {:else if acct.status === 'suspended'}
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                                   bg-red-500/10 text-red-400 border border-red-500/20">Suspended</span>
+                                   bg-red-500/10 text-red-400 border border-red-500/20">{$t('sites.suspended')}</span>
                     {:else if acct.status === 'provisioning'}
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
-                                   bg-amber-500/10 text-amber-400 border border-amber-500/20">Provisioning</span>
+                                   bg-amber-500/10 text-amber-400 border border-amber-500/20">{$t('sites.provisioning')}</span>
                     {:else}
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium
                                    bg-muted text-muted-foreground border border-border">{acct.status}</span>
@@ -760,7 +760,7 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                         </svg>
-                        <span class="hidden sm:inline">Webmail</span>
+                        <span class="hidden sm:inline">{$t('email.webmail')}</span>
                       </button>
 
                       <button
@@ -832,8 +832,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
             d="M17 8l4 4m0 0l-4 4m4-4H3"/>
         </svg>
-        <p class="font-medium text-foreground mb-1">Email Forwarders</p>
-        <p class="text-xs">Forwarder management is available in the per-site email settings.</p>
+        <p class="font-medium text-foreground mb-1">{$t('email.forwarders_placeholder_title')}</p>
+        <p class="text-xs">{$t('email.forwarders_placeholder_desc')}</p>
       </div>
     </div>
   {/if}
@@ -852,9 +852,7 @@
             <svg class="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2"/>
-            </svg>
-            Mail Server Connection Info
-          </div>
+            </svg>{$t('email.mail_server_info')}</div>
           <svg class="w-4 h-4 text-muted-foreground transition-transform {showServerInfo ? 'rotate-180' : ''}"
                fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -863,25 +861,22 @@
 
         {#if showServerInfo}
           <div class="px-4 pb-4 border-t border-border">
-            <p class="text-xs text-muted-foreground mt-3 mb-3">
-              Replace <code class="bg-muted px-1 py-0.5 rounded text-foreground">{'{domain}'}</code>
-              with the actual domain for the mailbox.
-            </p>
+            <p class="text-xs text-muted-foreground mt-3 mb-3">{$t('email.replace')}<code class="bg-muted px-1 py-0.5 rounded text-foreground">{'{domain}'}</code>{$t('email.with_the_actual_domain_for_the_mailbox')}</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div class="bg-muted/40 rounded-lg px-3 py-2.5 space-y-1">
-                <p class="text-xs font-medium text-foreground">IMAP (Incoming)</p>
+                <p class="text-xs font-medium text-foreground">{$t('email.imap_incoming')}</p>
                 <p class="text-xs text-muted-foreground font-mono">mail.{'{domain}'}:993 — SSL/TLS</p>
               </div>
               <div class="bg-muted/40 rounded-lg px-3 py-2.5 space-y-1">
-                <p class="text-xs font-medium text-foreground">SMTP (Outgoing)</p>
+                <p class="text-xs font-medium text-foreground">{$t('email.smtp_outgoing')}</p>
                 <p class="text-xs text-muted-foreground font-mono">mail.{'{domain}'}:587 — STARTTLS</p>
               </div>
               <div class="bg-muted/40 rounded-lg px-3 py-2.5 space-y-1">
-                <p class="text-xs font-medium text-foreground">POP3 (Incoming)</p>
+                <p class="text-xs font-medium text-foreground">{$t('email.pop3_incoming')}</p>
                 <p class="text-xs text-muted-foreground font-mono">mail.{'{domain}'}:995 — SSL/TLS</p>
               </div>
               <div class="bg-muted/40 rounded-lg px-3 py-2.5 space-y-1">
-                <p class="text-xs font-medium text-foreground">Webmail</p>
+                <p class="text-xs font-medium text-foreground">{$t('email.webmail')}</p>
                 <p class="text-xs text-muted-foreground font-mono">https://mail.{'{domain}'}</p>
               </div>
             </div>
@@ -900,10 +895,8 @@
       <!-- Header description -->
       <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>
-          <h2 class="text-base font-semibold text-foreground">SMTP Sending Limits</h2>
-          <p class="text-sm text-muted-foreground mt-0.5">
-            Control outbound email rate per domain to prevent spam and abuse.
-          </p>
+          <h2 class="text-base font-semibold text-foreground">{$t('email.smtp_limits_title')}</h2>
+          <p class="text-sm text-muted-foreground mt-0.5">{$t('email.smtp_limits_desc')}</p>
         </div>
         <button
           on:click={() => void loadSmtpLimits()}
@@ -914,9 +907,7 @@
           <svg class="w-3.5 h-3.5 {smtpLoading ? 'animate-spin' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-          </svg>
-          Refresh
-        </button>
+          </svg>{$t('common.refresh')}</button>
       </div>
 
       <!-- Load error -->
@@ -947,10 +938,8 @@
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
             </svg>
           </div>
-          <p class="text-sm font-medium text-foreground mb-1">No SMTP limits configured</p>
-          <p class="text-xs text-muted-foreground">
-            Limits are created automatically when a domain is added, or you can add them manually per domain.
-          </p>
+          <p class="text-sm font-medium text-foreground mb-1">{$t('email.no_limits')}</p>
+          <p class="text-xs text-muted-foreground">{$t('email.no_limits_desc')}</p>
         </div>
 
       <!-- Domain limits table -->
@@ -959,13 +948,13 @@
           <table class="w-full text-sm">
             <thead class="bg-muted/50">
               <tr>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">Domain</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden sm:table-cell">Hourly</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden md:table-cell">Daily</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Action</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden lg:table-cell">Relay</th>
-                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">Enabled</th>
-                <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase tracking-wider">Actions</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">{$t('email.domain')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden sm:table-cell">{$t('email.hourly')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden md:table-cell">{$t('email.daily')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden lg:table-cell">{$t('email.action')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider hidden lg:table-cell">{$t('email.relay')}</th>
+                <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase tracking-wider">{$t('common.enabled')}</th>
+                <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase tracking-wider">{$t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -1081,7 +1070,7 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
                         </svg>
-                        <span class="hidden sm:inline">Reset</span>
+                        <span class="hidden sm:inline">{$t('email.reset')}</span>
                       </button>
                     </div>
                   </td>
@@ -1102,9 +1091,7 @@
             <svg class="w-4 h-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
-            </svg>
-            Global Defaults
-          </div>
+            </svg>{$t('email.global_defaults')}</div>
           <svg class="w-4 h-4 text-muted-foreground transition-transform {showGlobalDefaults ? 'rotate-180' : ''}"
                fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -1113,12 +1100,10 @@
 
         {#if showGlobalDefaults}
           <div class="px-4 pb-4 border-t border-border pt-4 space-y-4">
-            <p class="text-xs text-muted-foreground">
-              Default limits applied to newly added domains. Existing domains are not affected.
-            </p>
+            <p class="text-xs text-muted-foreground">{$t('email.global_defaults_desc')}</p>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <div>
-                <label class="block text-xs font-medium text-foreground mb-1.5">Hourly limit</label>
+                <label class="block text-xs font-medium text-foreground mb-1.5">{$t('email.hourly_limit')}</label>
                 <input
                   type="number"
                   bind:value={globalDefaults.hourly_limit}
@@ -1128,7 +1113,7 @@
                 />
               </div>
               <div>
-                <label class="block text-xs font-medium text-foreground mb-1.5">Daily limit</label>
+                <label class="block text-xs font-medium text-foreground mb-1.5">{$t('email.daily_limit')}</label>
                 <input
                   type="number"
                   bind:value={globalDefaults.daily_limit}
@@ -1138,15 +1123,15 @@
                 />
               </div>
               <div>
-                <label class="block text-xs font-medium text-foreground mb-1.5">When exceeded</label>
+                <label class="block text-xs font-medium text-foreground mb-1.5">{$t('email.when_exceeded')}</label>
                 <select
                   bind:value={globalDefaults.rate_action}
                   class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                          focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 >
-                  <option value="queue">Queue (hold and retry)</option>
-                  <option value="reject">Reject (bounce with error)</option>
-                  <option value="bounce">Bounce (send NDR)</option>
+                  <option value="queue">{$t('email.queue')}</option>
+                  <option value="reject">{$t('email.reject')}</option>
+                  <option value="bounce">{$t('email.bounce')}</option>
                 </select>
               </div>
             </div>
@@ -1178,7 +1163,7 @@
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl"
          role="dialog" aria-modal="true" aria-label="Create Email Account">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-base font-semibold text-foreground">Create Email Account</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('email.create_account')}</h2>
         <button
           on:click={() => showCreateModal = false}
           class="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground
@@ -1192,7 +1177,7 @@
 
       <form on:submit={handleCreate} class="space-y-4">
         <div>
-          <label for="create-domain" class="block text-sm font-medium text-foreground mb-1.5">Domain</label>
+          <label for="create-domain" class="block text-sm font-medium text-foreground mb-1.5">{$t('email.domain')}</label>
           <select id="create-domain" bind:value={createDomainId}
                   class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm
                          text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
@@ -1203,7 +1188,7 @@
         </div>
 
         <div>
-          <label for="create-username" class="block text-sm font-medium text-foreground mb-1.5">Username</label>
+          <label for="create-username" class="block text-sm font-medium text-foreground mb-1.5">{$t('email.username')}</label>
           <div class="flex items-center border border-border rounded-lg overflow-hidden
                       focus-within:ring-2 focus-within:ring-primary/50 focus-within:border-primary">
             <input
@@ -1223,7 +1208,7 @@
         </div>
 
         <div>
-          <label for="create-password" class="block text-sm font-medium text-foreground mb-1.5">Password</label>
+          <label for="create-password" class="block text-sm font-medium text-foreground mb-1.5">{$t('auth.password')}</label>
           <div class="flex gap-2">
             <div class="flex-1 relative">
               <input
@@ -1266,9 +1251,7 @@
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
-              Generate
-            </button>
+              </svg>{$t('email.generate')}</button>
           </div>
           {#if createPassword}
             <div class="mt-2 space-y-1">
@@ -1278,15 +1261,14 @@
                               {i <= pwStrength.score ? pwStrength.color : 'bg-muted'}"></div>
                 {/each}
               </div>
-              <p class="text-xs text-muted-foreground">Strength: <span class="font-medium text-foreground">{pwStrength.label}</span></p>
+              <p class="text-xs text-muted-foreground">{$t('email.strength_label')}<span class="font-medium text-foreground">{pwStrength.label}</span></p>
             </div>
           {/if}
-          <p class="text-xs text-muted-foreground mt-1">Min 10 chars — must include uppercase, lowercase, digit, and special character.</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('email.password_reqs')}</p>
         </div>
 
         <div>
-          <label for="create-quota" class="block text-sm font-medium text-foreground mb-1.5">
-            Storage Quota: <span class="text-primary font-semibold">{formatMb(createQuotaMb)}</span>
+          <label for="create-quota" class="block text-sm font-medium text-foreground mb-1.5">{$t('email.storage_quota')}<span class="text-primary font-semibold">{formatMb(createQuotaMb)}</span>
           </label>
           <input
             id="create-quota"
@@ -1296,7 +1278,7 @@
             class="w-full accent-primary"
           />
           <div class="flex justify-between text-xs text-muted-foreground mt-0.5">
-            <span>100 MB</span><span>10 GB</span>
+            <span>{$t('email.100_mb')}</span><span>{$t('email.10_gb')}</span>
           </div>
         </div>
 
@@ -1341,7 +1323,7 @@
          role="dialog" aria-modal="true" aria-label="Edit SMTP Limits">
       <div class="flex items-center justify-between mb-5">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Edit SMTP Limits</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('email.edit_smtp_title')}</h2>
           <p class="text-xs text-muted-foreground font-mono mt-0.5">{editDomain}</p>
         </div>
         <button
@@ -1359,7 +1341,7 @@
       <div class="space-y-5">
         <!-- Hourly limit -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5">Hourly limit</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5">{$t('email.hourly_limit')}</label>
           <input
             type="number"
             bind:value={editForm.hourly_limit}
@@ -1389,7 +1371,7 @@
 
         <!-- Daily limit -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5">Daily limit</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5">{$t('email.daily_limit')}</label>
           <input
             type="number"
             bind:value={editForm.daily_limit}
@@ -1419,7 +1401,7 @@
 
         <!-- When limit exceeded — radio cards -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-2">When limit exceeded</label>
+          <label class="block text-sm font-medium text-foreground mb-2">{$t('email.when_limit_exceeded')}</label>
           <div class="grid grid-cols-3 gap-2">
             {#each [
               { value: 'queue',  label: 'Queue',  desc: 'Hold and retry' },
@@ -1517,16 +1499,14 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-foreground">Delete Email Account</h2>
-          <p class="text-sm text-muted-foreground mt-0.5">
-            This will permanently delete <span class="font-mono text-foreground">{addr}</span> and all its emails.
-          </p>
+          <h2 class="text-base font-semibold text-foreground">{$t('email.delete_confirm_title')}</h2>
+          <p class="text-sm text-muted-foreground mt-0.5">{$t('email.this_will_permanently_delete')}<span class="font-mono text-foreground">{addr}</span>{$t('email.and_all_its_emails')}</p>
         </div>
       </div>
 
       <label class="flex items-start gap-2.5 cursor-pointer mb-5">
         <input type="checkbox" bind:checked={deleteConfirmCheck} class="mt-0.5 accent-red-500"/>
-        <span class="text-sm text-foreground">I understand this will delete all emails in this mailbox and cannot be undone.</span>
+        <span class="text-sm text-foreground">{$t('email.delete_confirm_check')}</span>
       </label>
 
       <div class="flex gap-2">

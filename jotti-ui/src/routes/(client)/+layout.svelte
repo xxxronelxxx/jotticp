@@ -129,7 +129,7 @@
             <path stroke-linecap="round" stroke-linejoin="round"
                   d={$theme === 'dark' ? getIconPath('sun') : getIconPath('moon')} />
           </svg>
-          <span>{$theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
+          <span>{$theme === 'dark' ? $t('client.light_mode') : $t('client.dark_mode')}</span>
         </button>
 
         <button

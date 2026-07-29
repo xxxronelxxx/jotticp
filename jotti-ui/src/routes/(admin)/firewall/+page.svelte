@@ -568,26 +568,26 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
         </svg>
       </div>
-      <h2 class="text-sm font-semibold text-foreground">Threat Overview</h2>
-      <span class="ml-auto text-xs text-muted-foreground">Updates every 30s</span>
+      <h2 class="text-sm font-semibold text-foreground">{$t('firewall.threat_overview')}</h2>
+      <span class="ml-auto text-xs text-muted-foreground">{$t('firewall.updates_30s')}</span>
     </div>
 
     <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
 
       <!-- Blocked today -->
       <div class="bg-red-500/5 border border-red-500/15 rounded-xl p-3 space-y-1">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide">Blocked today</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide">{$t('firewall.blocked_today')}</p>
         {#if ufwLoading}
           <div class="h-8 w-16 bg-muted animate-pulse rounded"></div>
         {:else}
           <p class="text-2xl font-bold text-red-400">{blockedToday}</p>
-          <p class="text-xs text-muted-foreground">total bans today</p>
+          <p class="text-xs text-muted-foreground">{$t('firewall.total_bans_today')}</p>
         {/if}
       </div>
 
       <!-- Blocked this hour -->
       <div class="bg-amber-500/5 border border-amber-500/15 rounded-xl p-3 space-y-1">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide">This hour</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide">{$t('firewall.this_hour')}</p>
         {#if ufwLoading}
           <div class="h-8 w-10 bg-muted animate-pulse rounded"></div>
         {:else}
@@ -599,13 +599,13 @@
               </svg>
             {/if}
           </div>
-          <p class="text-xs text-muted-foreground">recent activity</p>
+          <p class="text-xs text-muted-foreground">{$t('firewall.recent_activity')}</p>
         {/if}
       </div>
 
       <!-- Active bans -->
       <div class="bg-muted/20 border border-border rounded-xl p-3 space-y-1">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide">Active bans</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide">{$t('firewall.active_bans')}</p>
         {#if jailsLoading}
           <div class="h-8 w-10 bg-muted animate-pulse rounded"></div>
         {:else}
@@ -615,13 +615,13 @@
               <span class="relative inline-flex threat-pulse w-2.5 h-2.5 rounded-full bg-red-400 shrink-0 mt-1"></span>
             {/if}
           </div>
-          <p class="text-xs text-muted-foreground">IPs banned now</p>
+          <p class="text-xs text-muted-foreground">{$t('firewall.ips_banned_now')}</p>
         {/if}
       </div>
 
       <!-- Top attacker -->
       <div class="bg-muted/20 border border-border rounded-xl p-3 space-y-1">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide">Top attacker</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide">{$t('firewall.top_attacker')}</p>
         {#if ufwLoading}
           <div class="h-6 w-24 bg-muted animate-pulse rounded"></div>
         {:else if topAttackerIp}
@@ -636,7 +636,7 @@
               </svg>
             </button>
           </div>
-          <p class="text-xs text-muted-foreground">most attempts</p>
+          <p class="text-xs text-muted-foreground">{$t('firewall.most_attempts')}</p>
         {:else}
           <p class="text-sm text-muted-foreground">—</p>
         {/if}
@@ -644,7 +644,7 @@
 
       <!-- Geo blocks -->
       <div class="bg-muted/20 border border-border rounded-xl p-3 space-y-1 hidden lg:block">
-        <p class="text-xs text-muted-foreground uppercase tracking-wide">Geo blocks</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wide">{$t('firewall.geo_blocks')}</p>
         <p class="text-2xl font-bold text-foreground">{blockedCountries.length}</p>
         <p class="text-xs text-muted-foreground">
           {blockedCountries.length === 0 ? 'No countries blocked' : `countr${blockedCountries.length === 1 ? 'y' : 'ies'} blocked`}
@@ -664,8 +664,8 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-sm font-semibold text-foreground">Country Blocking</h2>
-          <p class="text-xs text-muted-foreground">Block all traffic from selected countries</p>
+          <h2 class="text-sm font-semibold text-foreground">{$t('firewall.country_blocking')}</h2>
+          <p class="text-xs text-muted-foreground">{$t('firewall.country_blocking_desc')}</p>
         </div>
       </div>
       <button
@@ -682,7 +682,7 @@
     <!-- Currently blocked chips -->
     {#if blockedCountries.length > 0}
       <div class="space-y-2">
-        <p class="text-xs text-muted-foreground">Currently blocked:</p>
+        <p class="text-xs text-muted-foreground">{$t('firewall.currently_blocked')}</p>
         <div class="flex flex-wrap gap-2">
           {#each blockedCountries as code}
             {@const country = COUNTRIES.find(c => c.code === code)}
@@ -702,12 +702,12 @@
         </div>
       </div>
     {:else}
-      <p class="text-xs text-muted-foreground">No countries currently blocked.</p>
+      <p class="text-xs text-muted-foreground">{$t('firewall.no_countries_currently_blocked')}</p>
     {/if}
 
     <!-- Quick-toggle high-risk countries -->
     <div class="space-y-2">
-      <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide">Quick-add high-risk:</p>
+      <p class="text-xs text-muted-foreground font-medium uppercase tracking-wide">{$t('firewall.quick_add_high_risk')}</p>
       <div class="flex flex-wrap gap-2">
         {#each COUNTRIES.slice(0, 8) as country}
           {@const blocked = blockedCountries.includes(country.code)}
@@ -729,7 +729,7 @@
 
     <!-- Searchable dropdown for any country -->
     <div class="space-y-2">
-      <p class="text-xs text-muted-foreground">Search and add any country:</p>
+      <p class="text-xs text-muted-foreground">{$t('firewall.search_country')}</p>
       <div class="flex gap-2">
         <input
           type="text"
@@ -756,19 +756,17 @@
 
     <!-- Header + Add button -->
     <div class="flex items-center justify-between px-4 py-3 border-b border-border">
-      <h2 class="text-sm font-semibold text-foreground">Firewall Rules</h2>
+      <h2 class="text-sm font-semibold text-foreground">{$t('firewall.firewall_rules')}</h2>
       <button on:click={openAddModal}
               class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Add Rule
-      </button>
+        </svg>{$t('firewall.add_rule')}</button>
     </div>
 
     <!-- Quick-preset row -->
     <div class="px-4 py-2.5 border-b border-border bg-muted/20 flex flex-wrap gap-2">
-      <span class="text-xs text-muted-foreground self-center mr-1">Quick add:</span>
+      <span class="text-xs text-muted-foreground self-center mr-1">{$t('firewall.quick_add')}</span>
       {#each [
         { label: 'Allow SSH',           port: '22',  desc: 'SSH'         },
         { label: 'Allow HTTP',          port: '80',  desc: 'HTTP'        },
@@ -794,21 +792,21 @@
       </div>
     {:else if rules.length === 0}
       <div class="p-8 text-center">
-        <p class="text-sm text-muted-foreground">No firewall rules configured.</p>
+        <p class="text-sm text-muted-foreground">{$t('firewall.no_rules')}</p>
       </div>
     {:else}
       <div class="overflow-x-auto">
         <table class="w-full">
           <thead class="bg-muted/50">
             <tr>
-              <th class="px-3 py-3 text-xs text-muted-foreground uppercase text-left w-12">Order</th>
-              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left">Port / Range</th>
-              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden sm:table-cell">Protocol</th>
-              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden sm:table-cell">Direction</th>
-              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left">Action</th>
-              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden md:table-cell">Source</th>
-              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden lg:table-cell">Description</th>
-              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left">Delete</th>
+              <th class="px-3 py-3 text-xs text-muted-foreground uppercase text-left w-12">{$t('firewall.col_order')}</th>
+              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left">{$t('firewall.col_port')}</th>
+              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden sm:table-cell">{$t('firewall.protocol')}</th>
+              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden sm:table-cell">{$t('firewall.col_direction')}</th>
+              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left">{$t('email.action')}</th>
+              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden md:table-cell">{$t('firewall.source')}</th>
+              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left hidden lg:table-cell">{$t('common.description')}</th>
+              <th class="px-4 py-3 text-xs text-muted-foreground uppercase text-left">{$t('common.delete')}</th>
             </tr>
           </thead>
           <tbody>
@@ -874,11 +872,9 @@
                       <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                           d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                      Delete
-                    </button>
+                      </svg>{$t('common.delete')}</button>
                   {:else}
-                    <span class="text-xs text-muted-foreground/40">default</span>
+                    <span class="text-xs text-muted-foreground/40">{$t('firewall.default_label')}</span>
                   {/if}
                 </td>
               </tr>
@@ -892,7 +888,7 @@
   <!-- ── Fail2ban Jails ─────────────────────────────────────────────────────── -->
   <div class="bg-card border border-border rounded-xl overflow-hidden transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
     <div class="px-4 py-3 border-b border-border">
-      <h2 class="text-sm font-semibold text-foreground">Fail2ban Jails</h2>
+      <h2 class="text-sm font-semibold text-foreground">{$t('firewall.fail2ban_jails')}</h2>
     </div>
 
     {#if jailsLoading}
@@ -903,7 +899,7 @@
       </div>
     {:else if jails.length === 0}
       <div class="p-8 text-center">
-        <p class="text-sm text-muted-foreground">No fail2ban jails configured.</p>
+        <p class="text-sm text-muted-foreground">{$t('firewall.no_jails')}</p>
       </div>
     {:else}
       <div class="divide-y divide-border">
@@ -914,9 +910,9 @@
                 <span class="w-2 h-2 rounded-full flex-shrink-0 {jail.enabled ? 'bg-green-400' : 'bg-muted-foreground'}"></span>
                 <span class="text-sm font-mono font-medium text-foreground truncate">{jail.name}</span>
                 <span class="hidden sm:flex items-center gap-3 text-xs text-muted-foreground">
-                  <span>Max retry: <span class="text-foreground">{jail.maxretry}</span></span>
-                  <span>Find time: <span class="text-foreground">{formatSeconds(jail.findtime)}</span></span>
-                  <span>Ban time: <span class="text-foreground">{formatSeconds(jail.bantime)}</span></span>
+                  <span>{$t('firewall.max_retry')}<span class="text-foreground">{jail.maxretry}</span></span>
+                  <span>{$t('firewall.find_time')}<span class="text-foreground">{formatSeconds(jail.findtime)}</span></span>
+                  <span>{$t('firewall.ban_time')}<span class="text-foreground">{formatSeconds(jail.bantime)}</span></span>
                 </span>
               </div>
               <div class="flex items-center gap-2 flex-shrink-0">
@@ -925,9 +921,7 @@
                     {jail.banned_count} banned
                   </span>
                 {:else}
-                  <span class="px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">
-                    clean
-                  </span>
+                  <span class="px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">{$t('firewall.clean')}</span>
                 {/if}
                 <button
                   on:click={() => expandedJail = expandedJail === jail.name ? null : jail.name}
@@ -956,8 +950,8 @@
                     <table class="w-full">
                       <thead class="bg-muted/50">
                         <tr>
-                          <th class="px-3 py-2 text-xs text-muted-foreground uppercase text-left">IP Address</th>
-                          <th class="px-3 py-2 text-xs text-muted-foreground uppercase text-right">Unban</th>
+                          <th class="px-3 py-2 text-xs text-muted-foreground uppercase text-left">{$t('firewall.ip_address')}</th>
+                          <th class="px-3 py-2 text-xs text-muted-foreground uppercase text-right">{$t('firewall.unban')}</th>
                         </tr>
                       </thead>
                       <tbody class="divide-y divide-border">
@@ -980,7 +974,7 @@
                     </table>
                   </div>
                 {:else}
-                  <p class="text-xs text-muted-foreground py-1">No banned IPs in this jail.</p>
+                  <p class="text-xs text-muted-foreground py-1">{$t('firewall.no_banned_ips')}</p>
                 {/if}
 
                 <!-- Manual unban -->
@@ -1006,25 +1000,25 @@
 
   <!-- ── Rate Limiting ──────────────────────────────────────────────────────── -->
   <div class="bg-card border border-border rounded-xl p-4 space-y-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-    <h2 class="text-sm font-semibold text-foreground">Per-Site Rate Limiting</h2>
+    <h2 class="text-sm font-semibold text-foreground">{$t('firewall.rate_limiting')}</h2>
     <div class="flex flex-col sm:flex-row gap-3 items-end">
       <div class="flex-1 space-y-1">
-        <label class="text-xs text-muted-foreground">Site</label>
+        <label class="text-xs text-muted-foreground">{$t('firewall.site')}</label>
         <select bind:value={rateSite}
                 class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
-          <option value="">Select a site</option>
+          <option value="">{$t('firewall.select_site_hint')}</option>
           {#each sites as site}
             <option value={site.id}>{site.domain}</option>
           {/each}
         </select>
       </div>
       <div class="w-full sm:w-36 space-y-1">
-        <label class="text-xs text-muted-foreground">Requests / minute</label>
+        <label class="text-xs text-muted-foreground">{$t('firewall.req_per_minute')}</label>
         <input type="number" bind:value={rateRpm} min="1" max="10000"
                class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
       </div>
       <div class="w-full sm:w-36 space-y-1">
-        <label class="text-xs text-muted-foreground">Burst allowance</label>
+        <label class="text-xs text-muted-foreground">{$t('firewall.burst_allowance')}</label>
         <input type="number" bind:value={rateBurst} min="1" max="1000"
                class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
       </div>
@@ -1046,7 +1040,7 @@
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-5">
 
       <div class="flex items-center justify-between">
-        <h3 class="text-base font-semibold text-foreground">Add Firewall Rule</h3>
+        <h3 class="text-base font-semibold text-foreground">{$t('firewall.add_rule_title')}</h3>
         <button on:click={() => showAddModal = false}
                 class="text-muted-foreground hover:text-foreground transition-colors">
           <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1057,7 +1051,7 @@
 
       <!-- Action -->
       <div class="space-y-2">
-        <label class="text-xs text-muted-foreground">Action</label>
+        <label class="text-xs text-muted-foreground">{$t('email.action')}</label>
         <div class="flex gap-2">
           <button on:click={() => modalAction = 'allow'}
                   class="flex-1 h-9 rounded-lg border text-sm font-medium transition-colors
@@ -1078,11 +1072,11 @@
 
       <!-- Port -->
       <div class="space-y-2">
-        <label class="text-xs text-muted-foreground">Port</label>
+        <label class="text-xs text-muted-foreground">{$t('firewall.port')}</label>
         <div class="flex gap-2">
           <select bind:value={modalCommonPort} on:change={onCommonPortChange}
                   class="w-48 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50">
-            <option value="">Common ports…</option>
+            <option value="">{$t('firewall.common_ports')}</option>
             {#each commonPorts as cp}
               <option value={cp.port}>{cp.label}</option>
             {/each}
@@ -1095,7 +1089,7 @@
 
       <!-- Protocol -->
       <div class="space-y-2">
-        <label class="text-xs text-muted-foreground">Protocol</label>
+        <label class="text-xs text-muted-foreground">{$t('firewall.protocol')}</label>
         <div class="flex gap-2">
           {#each (['tcp', 'udp', 'both'] as const) as proto}
             <button on:click={() => modalProto = proto}
@@ -1111,7 +1105,7 @@
 
       <!-- Source -->
       <div class="space-y-2">
-        <label class="text-xs text-muted-foreground">Source</label>
+        <label class="text-xs text-muted-foreground">{$t('firewall.source')}</label>
         <div class="flex gap-2">
           <button on:click={() => modalSource = 'any'}
                   class="h-9 px-3 rounded-lg border text-sm font-medium transition-colors
@@ -1130,7 +1124,7 @@
 
       <!-- Description -->
       <div class="space-y-2">
-        <label class="text-xs text-muted-foreground">Description (optional)</label>
+        <label class="text-xs text-muted-foreground">{$t('firewall.description_optional')}</label>
         <input type="text" bind:value={modalDesc}
                placeholder="e.g. Office VPN"
                class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
@@ -1159,10 +1153,8 @@
   <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
        on:click|self={() => { confirmUnbanJail = ''; confirmUnbanIp = ''; }}>
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl space-y-4">
-      <h3 class="text-base font-semibold text-foreground">Confirm Unban</h3>
-      <p class="text-sm text-muted-foreground">
-        Unban <span class="font-mono text-foreground">{confirmUnbanIp}</span> from
-        <span class="font-medium text-foreground">{confirmUnbanJail}</span>?
+      <h3 class="text-base font-semibold text-foreground">{$t('firewall.confirm_unban')}</h3>
+      <p class="text-sm text-muted-foreground">{$t('firewall.unban')}<span class="font-mono text-foreground">{confirmUnbanIp}</span>{$t('firewall.from')}<span class="font-medium text-foreground">{confirmUnbanJail}</span>?
       </p>
       <div class="flex justify-end gap-2">
         <button on:click={() => { confirmUnbanJail = ''; confirmUnbanIp = ''; }}
@@ -1170,9 +1162,7 @@
           Cancel
         </button>
         <button on:click={confirmUnban}
-                class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2 transition-colors">
-          Unban
-        </button>
+                class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2 transition-colors">{$t('firewall.unban')}</button>
       </div>
     </div>
   </div>

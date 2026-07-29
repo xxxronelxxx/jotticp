@@ -124,7 +124,7 @@
       </div>
       <div class="min-w-0">
         <div class="flex items-center gap-1.5 text-sm">
-          <span class="font-semibold text-foreground">File Manager</span>
+          <span class="font-semibold text-foreground">{$t('nav.files')}</span>
           {#if selectedSite}
             <svg class="w-3.5 h-3.5 text-muted-foreground shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6 12l4-4-4-4"/>
@@ -181,9 +181,7 @@
                    min-w-[220px] max-w-[300px] py-1 overflow-hidden"
             on:click|stopPropagation
           >
-            <p class="px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-              Switch site
-            </p>
+            <p class="px-3 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{$t('filemanager.switch_site')}</p>
             {#each sites as s}
               <button
                 type="button"
@@ -227,7 +225,7 @@
       <div class="flex items-center justify-center h-full">
         <div class="flex flex-col items-center gap-3">
           <div class="w-8 h-8 rounded-full border-2 border-border border-t-primary animate-spin"></div>
-          <p class="text-sm text-muted-foreground">Loading sites…</p>
+          <p class="text-sm text-muted-foreground">{$t('filemanager.loading_sites')}</p>
         </div>
       </div>
 
@@ -240,16 +238,14 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>
             </svg>
           </div>
-          <h3 class="text-base font-semibold text-foreground mb-1">No sites yet</h3>
-          <p class="text-sm text-muted-foreground">Create a site first to start browsing files.</p>
+          <h3 class="text-base font-semibold text-foreground mb-1">{$t('backups.no_sites_yet')}</h3>
+          <p class="text-sm text-muted-foreground">{$t('filemanager.no_sites_desc')}</p>
           <a href="/sites/new"
              class="mt-4 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                     hover:bg-primary/90 inline-flex items-center gap-2 transition-colors">
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            Create site
-          </a>
+            </svg>{$t('filemanager.create_site')}</a>
         </div>
       </div>
 
@@ -265,7 +261,7 @@
               </svg>
             </div>
             <div>
-              <h2 class="text-base font-semibold text-foreground">Select a site to browse files</h2>
+              <h2 class="text-base font-semibold text-foreground">{$t('filemanager.select_site_title')}</h2>
               <p class="text-xs text-muted-foreground">{sites.length} site{sites.length !== 1 ? 's' : ''} available</p>
             </div>
           </div>
@@ -324,7 +320,7 @@
        on:click|self={() => showShortcutsHelp = false}>
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-sm shadow-2xl">
       <div class="flex items-center justify-between mb-4">
-        <h3 class="text-base font-semibold text-foreground">Keyboard Shortcuts</h3>
+        <h3 class="text-base font-semibold text-foreground">{$t('filemanager.keyboard_shortcuts')}</h3>
         <button
           type="button"
           on:click={() => showShortcutsHelp = false}

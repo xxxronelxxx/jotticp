@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { api } from '$api/client';
+  import { t } from '$lib/i18n';
   import type { Site } from '$api/client';
 
   // ── State ──────────────────────────────────────────────────────────────────
@@ -399,7 +400,7 @@
   $: checklistCritical = checklist.filter(c => c.status === 'critical').length;
 </script>
 
-<svelte:head><title>Security — JottiCP</title></svelte:head>
+<svelte:head><title>{$t('security.title')} — JottiCP</title></svelte:head>
 
 <!-- ── Toast ──────────────────────────────────────────────────────────────── -->
 {#if toastMsg}
@@ -423,8 +424,8 @@
       </svg>
     </div>
     <div>
-      <h1 class="text-xl font-bold text-foreground">Security</h1>
-      <p class="text-sm text-muted-foreground">System-wide security posture and configuration</p>
+      <h1 class="text-xl font-bold text-foreground">{$t('security.title')}</h1>
+      <p class="text-sm text-muted-foreground">{$t('security.subtitle')}</p>
     </div>
   </div>
 
@@ -461,11 +462,11 @@
 
       <!-- Score breakdown -->
       <div class="flex-1">
-        <h2 class="text-lg font-semibold text-foreground mb-1">Security Score</h2>
+        <h2 class="text-lg font-semibold text-foreground mb-1">{$t('security.score_title')}</h2>
         <p class="text-sm text-muted-foreground mb-4">
-          {securityScore >= 80 ? 'Your system is well-protected.'
-          : securityScore >= 60 ? 'A few improvements are recommended.'
-          : 'Critical security gaps detected — take action now.'}
+          {securityScore >= 80 ? $t('security.system_well_protected')
+          : securityScore >= 60 ? $t('security.improvements_recommended')
+          : $t('security.critical_gaps')}
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {#each scoreItems as item}
@@ -480,7 +481,7 @@
               </span>
               <div class="min-w-0">
                 <span class="block text-xs font-medium text-foreground truncate">{item.label}</span>
-                <span class="block text-xs text-muted-foreground">{ok ? item.desc : 'Not configured'} <span class="text-primary/70">(+{item.points})</span></span>
+                <span class="block text-xs text-muted-foreground">{ok ? item.desc : $t('security.not_configured')} <span class="text-primary/70">(+{item.points})</span></span>
               </div>
             </div>
           {/each}
@@ -498,19 +499,19 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
           </svg>
         </div>
-        <h2 class="text-base font-semibold text-foreground">Security Checklist</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('security.checklist_title')}</h2>
       </div>
       <div class="flex items-center gap-2 text-xs">
         {#if checklistCritical > 0}
           <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border bg-red-500/10 text-red-400 border-red-500/20">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
-            {checklistCritical} critical
+            {checklistCritical} {$t('security.critical_label')}
           </span>
         {/if}
         {#if checklistWarnings > 0}
           <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border bg-amber-500/10 text-amber-400 border-amber-500/20">
             <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-            {checklistWarnings} warnings
+            {checklistWarnings} {$t('security.warnings_label')}
           </span>
         {/if}
         <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full border bg-green-500/10 text-green-400 border-green-500/20">
@@ -569,9 +570,7 @@
                   {/if}
                 </button>
               {:else}
-                <a href="/ssl" class="h-8 px-4 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2">
-                  View Details
-                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                <a href="/ssl" class="h-8 px-4 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2">{$t('security.view_details')}<svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </a>
               {/if}
             </div>
@@ -590,20 +589,18 @@
         </svg>
       </div>
       <div>
-        <h2 class="text-base font-semibold text-foreground">Recent Attack Timeline</h2>
-        <p class="text-xs text-muted-foreground">Fail2ban ban events — last 24 hours</p>
+        <h2 class="text-base font-semibold text-foreground">{$t('security.attack_timeline')}</h2>
+        <p class="text-xs text-muted-foreground">{$t('security.attack_timeline_desc')}</p>
       </div>
       <div class="ml-auto flex items-center gap-3 text-xs text-muted-foreground">
-        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> Brute force</span>
-        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> Scan</span>
-        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span> Rate limit</span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> {$t('security.brute_force')}</span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> {$t('security.scan')}</span>
+        <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span> {$t('security.rate_limit')}</span>
       </div>
     </div>
 
     {#if recentBans.length === 0}
-      <div class="h-16 flex items-center justify-center text-sm text-muted-foreground bg-muted/10 rounded-lg">
-        No ban events in last 24 hours
-      </div>
+      <div class="h-16 flex items-center justify-center text-sm text-muted-foreground bg-muted/10 rounded-lg">{$t('security.no_ban_events')}</div>
     {:else}
       <div class="relative h-14 bg-muted/20 rounded-lg overflow-hidden border border-border">
         {#each recentBans as ban}
@@ -618,7 +615,7 @@
         {/each}
         <!-- Time labels -->
         <div class="absolute bottom-0 left-0 right-0 flex justify-between px-2 pb-1 text-[9px] text-muted-foreground select-none">
-          <span>24h ago</span><span>12h</span><span>6h</span><span>now</span>
+          <span>{$t('security.last_24h')}</span><span>{$t('security.time_12h')}</span><span>{$t('security.time_6h')}</span><span>{$t('cron.countdown_now')}</span>
         </div>
       </div>
       <p class="text-xs text-muted-foreground">{recentBans.length} ban event{recentBans.length !== 1 ? 's' : ''} in the last 24h</p>
@@ -634,22 +631,22 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
         </svg>
       </div>
-      <h2 class="text-base font-semibold text-foreground">Login Activity</h2>
-      <span class="ml-auto text-xs text-muted-foreground">Last 10 attempts</span>
+      <h2 class="text-base font-semibold text-foreground">{$t('security.login_activity')}</h2>
+      <span class="ml-auto text-xs text-muted-foreground">{$t('security.last_10_attempts')}</span>
     </div>
 
     {#if loginAttempts.length === 0}
-      <div class="py-8 text-center text-sm text-muted-foreground">No recent login attempts recorded</div>
+      <div class="py-8 text-center text-sm text-muted-foreground">{$t('security.no_login_attempts')}</div>
     {:else}
       <div class="rounded-xl border border-border overflow-hidden">
         <table class="w-full text-sm">
           <thead>
             <tr class="bg-muted/20 border-b border-border">
-              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">IP Address</th>
-              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">Country</th>
-              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground hidden sm:table-cell">Client</th>
-              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground hidden md:table-cell">Time</th>
-              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">Status</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('firewall.ip_address')}</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('security.country')}</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground hidden sm:table-cell">{$t('security.client')}</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground hidden md:table-cell">{$t('security.time')}</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('common.status')}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-border">
@@ -663,9 +660,9 @@
                 <td class="px-4 py-2 text-xs text-muted-foreground hidden md:table-cell">{timeAgo(attempt.time)}</td>
                 <td class="px-4 py-2">
                   {#if attempt.status === 'success'}
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">Allowed</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">{$t('security.allowed')}</span>
                   {:else}
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-red-500/10 text-red-400 border-red-500/20">Blocked</span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-red-500/10 text-red-400 border-red-500/20">{$t('security.blocked')}</span>
                   {/if}
                 </td>
               </tr>
@@ -688,7 +685,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
             </svg>
           </div>
-          <h2 class="text-base font-semibold text-foreground">Fail2ban</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('security.fail2ban')}</h2>
         </div>
         <button
           class="h-5 w-9 rounded-full {fail2banActive ? 'bg-primary' : 'bg-muted'} relative cursor-pointer transition-colors"
@@ -718,14 +715,14 @@
         {#if banListExpanded}
           <div class="mt-2 rounded-xl border border-border overflow-hidden">
             {#if blockedIps.length === 0}
-              <div class="py-6 text-center text-sm text-muted-foreground">No banned IPs</div>
+              <div class="py-6 text-center text-sm text-muted-foreground">{$t('security.no_banned_ips')}</div>
             {:else}
               <table class="w-full text-sm">
                 <thead>
                   <tr class="bg-muted/20 border-b border-border">
-                    <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">IP</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">Jail</th>
-                    <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">Since</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('security.ip')}</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('security.jail')}</th>
+                    <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('security.since')}</th>
                     <th class="px-4 py-2"></th>
                   </tr>
                 </thead>
@@ -746,9 +743,7 @@
               <div class="px-4 py-3 border-t border-border bg-muted/10">
                 <button
                   class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2"
-                  on:click={unbanAll} disabled={savingFail2ban}>
-                  Unban All
-                </button>
+                  on:click={unbanAll} disabled={savingFail2ban}>{$t('security.unban_all')}</button>
               </div>
             {/if}
           </div>
@@ -757,22 +752,22 @@
 
       <!-- Config inputs -->
       <div class="space-y-3">
-        <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Configuration</h3>
+        <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('security.config')}</h3>
         <div class="grid grid-cols-3 gap-3">
           <div>
-            <label class="block text-xs text-muted-foreground mb-1.5">Max Retry</label>
+            <label class="block text-xs text-muted-foreground mb-1.5">{$t('security.max_retry')}</label>
             <input type="number" min="1" max="20"
               class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               bind:value={fail2banMaxretry}/>
           </div>
           <div>
-            <label class="block text-xs text-muted-foreground mb-1.5">Find Time (s)</label>
+            <label class="block text-xs text-muted-foreground mb-1.5">{$t('security.find_time')}</label>
             <input type="number" min="60"
               class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               bind:value={fail2banFindtime}/>
           </div>
           <div>
-            <label class="block text-xs text-muted-foreground mb-1.5">Ban Time (s)</label>
+            <label class="block text-xs text-muted-foreground mb-1.5">{$t('security.ban_time')}</label>
             <input type="number" min="60"
               class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
               bind:value={fail2banBantime}/>
@@ -797,25 +792,23 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
           </svg>
         </div>
-        <h2 class="text-base font-semibold text-foreground">Two-Factor Authentication</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('settings.two_factor_auth')}</h2>
       </div>
 
       <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-muted/20 border border-border">
         <div>
-          <span class="block text-sm font-medium text-foreground">Admin 2FA</span>
-          <span class="text-xs text-muted-foreground">Protect your admin account with TOTP</span>
+          <span class="block text-sm font-medium text-foreground">{$t('security.admin_2fa')}</span>
+          <span class="text-xs text-muted-foreground">{$t('security.admin_2fa_desc')}</span>
         </div>
         <a href="/settings/totp"
-           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2">
-          Configure
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2">{$t('security.configure')}<svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </a>
       </div>
 
       <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-muted/20 border border-border">
         <div>
-          <span class="block text-sm font-medium text-foreground">Force 2FA for all users</span>
-          <span class="text-xs text-muted-foreground">Require TOTP on every user account</span>
+          <span class="block text-sm font-medium text-foreground">{$t('security.force_2fa')}</span>
+          <span class="text-xs text-muted-foreground">{$t('security.force_2fa_desc')}</span>
         </div>
         <button
           class="h-5 w-9 rounded-full {twoFAForced ? 'bg-primary' : 'bg-muted'} relative cursor-pointer transition-colors shrink-0"
@@ -827,9 +820,9 @@
 
       <!-- SSL status mini-list -->
       <div class="border-t border-border pt-4">
-        <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">SSL Certificates</h3>
+        <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">{$t('ssl.title')}</h3>
         {#if sites.length === 0}
-          <p class="text-sm text-muted-foreground">No sites found.</p>
+          <p class="text-sm text-muted-foreground">{$t('dashboard.no_sites_found')}</p>
         {:else}
           <div class="space-y-2">
             {#each sites.slice(0, 5) as site}
@@ -864,7 +857,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"/>
             </svg>
           </div>
-          <h2 class="text-base font-semibold text-foreground">ModSecurity WAF</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('security.modsecurity_waf')}</h2>
         </div>
         <button
           class="h-5 w-9 rounded-full {wafActive ? 'bg-primary' : 'bg-muted'} relative cursor-pointer transition-colors"
@@ -876,7 +869,7 @@
 
       <!-- Mode radio -->
       <div>
-        <label class="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">Mode</label>
+        <label class="block text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-2">{$t('security.mode')}</label>
         <div class="flex gap-2">
           {#each [
             { value: 'detection',  label: 'Detection',  desc: 'Log only' },
@@ -894,8 +887,8 @@
 
       <!-- Rules version -->
       <div class="flex items-center gap-2">
-        <span class="text-xs text-muted-foreground">OWASP CRS Rules:</span>
-        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-blue-500/10 text-blue-400 border-blue-500/20">v3.3.x</span>
+        <span class="text-xs text-muted-foreground">{$t('security.owasp_crs')}</span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-blue-500/10 text-blue-400 border-blue-500/20">{$t('security.v33x')}</span>
       </div>
 
       <!-- Recent blocks expandable -->
@@ -904,7 +897,7 @@
           class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-muted/20 border border-border hover:bg-muted/30 transition-colors"
           on:click={() => wafLogsExpanded = !wafLogsExpanded}>
           <div class="flex items-center gap-2">
-            <span class="text-sm text-foreground">Recent Blocks</span>
+            <span class="text-sm text-foreground">{$t('security.recent_blocks')}</span>
             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-purple-500/10 text-purple-400 border-purple-500/20">{wafLogs.length}</span>
           </div>
           <svg class="w-4 h-4 text-muted-foreground transition-transform {wafLogsExpanded ? 'rotate-180' : ''}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -915,16 +908,16 @@
         {#if wafLogsExpanded}
           <div class="mt-2 rounded-xl border border-border overflow-hidden">
             {#if wafLogs.length === 0}
-              <div class="py-6 text-center text-sm text-muted-foreground">No blocked requests</div>
+              <div class="py-6 text-center text-sm text-muted-foreground">{$t('security.no_blocked_requests')}</div>
             {:else}
               <div class="overflow-x-auto">
                 <table class="w-full text-sm">
                   <thead>
                     <tr class="bg-muted/20 border-b border-border">
-                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">IP</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">Rule</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">URI</th>
-                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">When</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('security.ip')}</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('security.rule')}</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('security.uri')}</th>
+                      <th class="px-4 py-2 text-left text-xs font-medium text-muted-foreground">{$t('backups.col_when')}</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-border">
@@ -955,13 +948,13 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
           </svg>
         </div>
-        <h2 class="text-base font-semibold text-foreground">Automatic Security Updates</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('security.automatic_updates')}</h2>
       </div>
 
       <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-muted/20 border border-border">
         <div>
-          <span class="block text-sm font-medium text-foreground">OS Updates</span>
-          <span class="text-xs text-muted-foreground">System security patches</span>
+          <span class="block text-sm font-medium text-foreground">{$t('security.os_updates')}</span>
+          <span class="text-xs text-muted-foreground">{$t('security.os_updates_desc')}</span>
         </div>
         <button
           class="h-5 w-9 rounded-full {osUpdates ? 'bg-primary' : 'bg-muted'} relative cursor-pointer transition-colors shrink-0"
@@ -973,8 +966,8 @@
 
       <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-muted/20 border border-border">
         <div>
-          <span class="block text-sm font-medium text-foreground">PHP Updates</span>
-          <span class="text-xs text-muted-foreground">PHP minor/patch releases</span>
+          <span class="block text-sm font-medium text-foreground">{$t('security.php_updates')}</span>
+          <span class="text-xs text-muted-foreground">{$t('security.php_updates_desc')}</span>
         </div>
         <button
           class="h-5 w-9 rounded-full {phpUpdates ? 'bg-primary' : 'bg-muted'} relative cursor-pointer transition-colors shrink-0"
@@ -986,8 +979,8 @@
 
       <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-muted/20 border border-border">
         <div>
-          <span class="block text-sm font-medium text-foreground">Web Server Updates</span>
-          <span class="text-xs text-muted-foreground">Nginx / Apache / OLS patches</span>
+          <span class="block text-sm font-medium text-foreground">{$t('security.web_server_updates')}</span>
+          <span class="text-xs text-muted-foreground">{$t('security.web_server_updates_desc')}</span>
         </div>
         <button
           class="h-5 w-9 rounded-full {webserverUpdates ? 'bg-primary' : 'bg-muted'} relative cursor-pointer transition-colors shrink-0"
@@ -998,9 +991,7 @@
       </div>
 
       <div class="flex items-center gap-2 pt-1 text-xs text-muted-foreground">
-        <svg class="w-3.5 h-3.5 shrink-0 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-        Last updated: today
-      </div>
+        <svg class="w-3.5 h-3.5 shrink-0 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>{$t('security.last_updated_today')}</div>
     </div>
 
   </div><!-- end 2-col grid -->
@@ -1014,8 +1005,8 @@
         </svg>
       </div>
       <div>
-        <h2 class="text-base font-semibold text-foreground">SSH Security</h2>
-        <p class="text-sm text-muted-foreground">Authentication and access configuration</p>
+        <h2 class="text-base font-semibold text-foreground">{$t('security.ssh_security')}</h2>
+        <p class="text-sm text-muted-foreground">{$t('security.ssh_security_desc')}</p>
       </div>
     </div>
 
@@ -1023,7 +1014,7 @@
       <!-- PasswordAuthentication -->
       <div class="px-4 py-4 rounded-xl border border-border bg-muted/10 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-foreground">Password Authentication</span>
+          <span class="text-sm font-medium text-foreground">{$t('security.password_auth')}</span>
           <button
             class="h-5 w-9 rounded-full {sshPasswordAuth ? 'bg-amber-400' : 'bg-primary'} relative cursor-pointer transition-colors shrink-0"
             on:click={() => sshPasswordAuth = !sshPasswordAuth}
@@ -1032,17 +1023,17 @@
           </button>
         </div>
         {#if sshPasswordAuth}
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-amber-500/10 text-amber-400 border-amber-500/20">Enabled — risk</span>
-          <span class="block text-xs text-muted-foreground">Recommended: disabled (use SSH keys)</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-amber-500/10 text-amber-400 border-amber-500/20">{$t('security.enabled_risk')}</span>
+          <span class="block text-xs text-muted-foreground">{$t('security.disabled_recommended')}</span>
         {:else}
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">Disabled — secure</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">{$t('security.disabled_secure')}</span>
         {/if}
       </div>
 
       <!-- PermitRootLogin -->
       <div class="px-4 py-4 rounded-xl border border-border bg-muted/10 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-sm font-medium text-foreground">Permit Root Login</span>
+          <span class="text-sm font-medium text-foreground">{$t('security.permit_root_login')}</span>
           <button
             class="h-5 w-9 rounded-full {sshPermitRoot ? 'bg-red-500' : 'bg-primary'} relative cursor-pointer transition-colors shrink-0"
             on:click={() => sshPermitRoot = !sshPermitRoot}
@@ -1051,10 +1042,10 @@
           </button>
         </div>
         {#if sshPermitRoot}
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-red-500/10 text-red-400 border-red-500/20">Enabled — high risk</span>
-          <span class="block text-xs text-muted-foreground">Recommended: no or prohibit-password</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-red-500/10 text-red-400 border-red-500/20">{$t('security.enabled_high_risk')}</span>
+          <span class="block text-xs text-muted-foreground">{$t('security.recommended_no_or_prohibit_password')}</span>
         {:else}
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">Disabled — secure</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border bg-green-500/10 text-green-400 border-green-500/20">{$t('security.disabled_secure')}</span>
         {/if}
       </div>
     </div>
@@ -1066,7 +1057,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
         </svg>
         <p class="text-sm">
-          <span class="font-medium text-amber-400">Insecure SSH settings detected. </span>
+          <span class="font-medium text-amber-400">{$t('security.insecure_ssh_settings_detected')}</span>
           <span class="text-muted-foreground">
             {#if sshPasswordAuth && sshPermitRoot}Disable both password authentication and root login immediately.
             {:else if sshPasswordAuth}Disable password authentication and use SSH keys only.
@@ -1092,17 +1083,17 @@
 
       {#if sshConfigExpanded}
         <div class="mt-3 p-4 rounded-xl bg-muted/20 border border-border font-mono text-xs text-foreground leading-6 space-y-0.5">
-          <div class="text-muted-foreground"># /etc/ssh/sshd_config (relevant lines)</div>
-          <div>Port <span class="text-primary">22</span></div>
-          <div>PermitRootLogin <span class="{sshPermitRoot ? 'text-red-400' : 'text-green-400'}">{sshPermitRoot ? 'yes' : 'no'}</span></div>
-          <div>PasswordAuthentication <span class="{sshPasswordAuth ? 'text-amber-400' : 'text-green-400'}">{sshPasswordAuth ? 'yes' : 'no'}</span></div>
-          <div>PubkeyAuthentication <span class="text-green-400">yes</span></div>
-          <div>ChallengeResponseAuthentication <span class="text-green-400">no</span></div>
-          <div>UsePAM <span class="text-green-400">yes</span></div>
-          <div>X11Forwarding <span class="text-green-400">no</span></div>
-          <div>PrintMotd <span class="text-muted-foreground">no</span></div>
-          <div>AcceptEnv <span class="text-muted-foreground">LANG LC_*</span></div>
-          <div>Subsystem <span class="text-muted-foreground">sftp /usr/lib/openssh/sftp-server</span></div>
+          <div class="text-muted-foreground">{$t('security.etc_ssh_sshd_config_relevant_lines')}</div>
+          <div>{$t('settings.port')}<span class="text-primary">22</span></div>
+          <div>{$t('security.permitrootlogin')}<span class="{sshPermitRoot ? 'text-red-400' : 'text-green-400'}">{sshPermitRoot ? 'yes' : 'no'}</span></div>
+          <div>{$t('security.passwordauthentication')}<span class="{sshPasswordAuth ? 'text-amber-400' : 'text-green-400'}">{sshPasswordAuth ? 'yes' : 'no'}</span></div>
+          <div>{$t('security.pubkeyauthentication')}<span class="text-green-400">{$t('security.yes')}</span></div>
+          <div>{$t('security.challengeresponseauthentication')}<span class="text-green-400">{$t('security.no')}</span></div>
+          <div>{$t('security.usepam')}<span class="text-green-400">{$t('security.yes')}</span></div>
+          <div>{$t('security.x11forwarding')}<span class="text-green-400">{$t('security.no')}</span></div>
+          <div>{$t('security.printmotd')}<span class="text-muted-foreground">{$t('security.no')}</span></div>
+          <div>{$t('security.acceptenv')}<span class="text-muted-foreground">{$t('security.lang_lc')}</span></div>
+          <div>{$t('security.subsystem')}<span class="text-muted-foreground">{$t('security.sftp_usr_lib_openssh_sftp_server')}</span></div>
         </div>
       {/if}
     </div>

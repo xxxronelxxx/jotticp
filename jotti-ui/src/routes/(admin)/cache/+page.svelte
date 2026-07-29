@@ -423,13 +423,13 @@
           </svg>
         </div>
         <div>
-          <h3 id="confirm-title" class="text-base font-semibold text-foreground mb-1 flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="8" ry="3.2" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-30 12 12)"/><circle cx="18.9" cy="8.0" r="1.4" fill="currentColor"/></svg>Flush All Caches</h3>
-          <p class="text-sm text-muted-foreground">This will flush OPcache and all Valkey keys for the selected site. Temporarily degraded performance while caches warm up.</p>
+          <h3 id="confirm-title" class="text-base font-semibold text-foreground mb-1 flex items-center gap-2"><svg class="w-4 h-4 text-primary shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="2.8" fill="currentColor"/><ellipse cx="12" cy="12" rx="8" ry="3.2" stroke="currentColor" stroke-width="1.5" fill="none" transform="rotate(-30 12 12)"/><circle cx="18.9" cy="8.0" r="1.4" fill="currentColor"/></svg>{$t('cache.flush_all')}</h3>
+          <p class="text-sm text-muted-foreground">{$t('cache.flush_all_desc')}</p>
         </div>
       </div>
       <div class="flex justify-end gap-3">
         <button class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
-                on:click={() => confirmFlushAll = false}>Cancel</button>
+                on:click={() => confirmFlushAll = false}>{$t("common.cancel")}</button>
         <button class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
                 on:click={flushAll} disabled={flushingAll}>
           {#if flushingAll}
@@ -454,7 +454,7 @@
       <!-- Header -->
       <div class="flex items-center justify-between mb-4">
         <div>
-          <h2 class="text-base font-semibold text-foreground">OPcache Cached Files</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('cache.opcache_files_title')}</h2>
           <p class="text-xs text-muted-foreground mt-0.5">{opcacheFiles.length} file{opcacheFiles.length !== 1 ? 's' : ''} in cache</p>
         </div>
         <div class="flex items-center gap-2">
@@ -504,9 +504,7 @@
             <svg class="w-5 h-5 animate-spin text-primary" fill="none" viewBox="0 0 24 24">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-            </svg>
-            Loading cached files…
-          </div>
+            </svg>{$t('cache.loading_cached_files')}</div>
         {:else if filteredOpcacheFiles.length === 0}
           <div class="flex flex-col items-center py-12 text-center">
             <div class="p-3 bg-muted/20 rounded-full mb-3">
@@ -525,10 +523,10 @@
           <table class="w-full">
             <thead class="bg-muted/50 sticky top-0">
               <tr>
-                <th class="px-3 py-2.5 text-left text-xs text-muted-foreground uppercase">File path</th>
-                <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">Hits</th>
-                <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase hidden sm:table-cell">Size</th>
-                <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">Action</th>
+                <th class="px-3 py-2.5 text-left text-xs text-muted-foreground uppercase">{$t('cache.col_file_path')}</th>
+                <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">{$t('cache.col_hits')}</th>
+                <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase hidden sm:table-cell">{$t('common.size')}</th>
+                <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">{$t('email.action')}</th>
               </tr>
             </thead>
             <tbody>
@@ -579,7 +577,7 @@
       <!-- Header -->
       <div class="flex items-center justify-between mb-4">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Valkey Key Browser</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('cache.valkey_browser_title')}</h2>
           <p class="text-xs text-muted-foreground mt-0.5">{valkeyKeys.length} key{valkeyKeys.length !== 1 ? 's' : ''} found</p>
         </div>
         <button
@@ -624,9 +622,7 @@
               <svg class="w-5 h-5 animate-spin text-primary" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-              </svg>
-              Loading keys…
-            </div>
+              </svg>{$t('cache.loading_keys')}</div>
           {:else if valkeyKeys.length === 0}
             <div class="flex flex-col items-center py-12 text-center px-4">
               <div class="p-3 bg-muted/20 rounded-full mb-3">
@@ -634,17 +630,17 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
                 </svg>
               </div>
-              <p class="text-sm font-medium text-foreground mb-1">No keys found</p>
-              <p class="text-xs text-muted-foreground">Key browser requires Redis/Valkey CLI access — coming soon</p>
+              <p class="text-sm font-medium text-foreground mb-1">{$t('cache.no_keys')}</p>
+              <p class="text-xs text-muted-foreground">{$t('cache.no_keys_desc')}</p>
             </div>
           {:else}
             <table class="w-full">
               <thead class="bg-muted/50 sticky top-0">
                 <tr>
-                  <th class="px-3 py-2.5 text-left text-xs text-muted-foreground uppercase">Key</th>
-                  <th class="px-3 py-2.5 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">Type</th>
-                  <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">TTL</th>
-                  <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">Del</th>
+                  <th class="px-3 py-2.5 text-left text-xs text-muted-foreground uppercase">{$t('cache.col_key')}</th>
+                  <th class="px-3 py-2.5 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">{$t('common.type')}</th>
+                  <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">{$t('dns.ttl')}</th>
+                  <th class="px-3 py-2.5 text-right text-xs text-muted-foreground uppercase">{$t('cache.col_del')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -689,12 +685,12 @@
                     on:click={() => valkeyKeysPage = Math.max(0, valkeyKeysPage - 1)}
                     disabled={valkeyKeysPage === 0}
                     class="h-7 px-2.5 rounded border border-border hover:bg-muted disabled:opacity-40 transition-all duration-150 active:scale-95"
-                  >Prev</button>
+                  >{$t("common.back")}</button>
                   <button
                     on:click={() => valkeyKeysPage = Math.min(valkeyTotalPages - 1, valkeyKeysPage + 1)}
                     disabled={valkeyKeysPage >= valkeyTotalPages - 1}
                     class="h-7 px-2.5 rounded border border-border hover:bg-muted disabled:opacity-40 transition-all duration-150 active:scale-95"
-                  >Next</button>
+                  >{$t("common.next")}</button>
                 </div>
               </div>
             {/if}
@@ -706,9 +702,7 @@
           <div class="w-64 flex flex-col gap-2 shrink-0">
             <div class="text-xs font-medium text-muted-foreground truncate" title={valkeySelectedKey}>{valkeySelectedKey}</div>
             {#if valkeyKeyValueLoading}
-              <div class="flex-1 rounded-xl bg-muted/20 flex items-center justify-center text-xs text-muted-foreground">
-                Loading…
-              </div>
+              <div class="flex-1 rounded-xl bg-muted/20 flex items-center justify-center text-xs text-muted-foreground">{$t('common.loading')}</div>
             {:else}
               <pre class="flex-1 bg-[#0d1117] rounded-xl p-3 text-xs font-mono text-slate-300 overflow-auto leading-relaxed">{valkeyKeyValue || '(empty)'}</pre>
             {/if}
@@ -781,7 +775,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
           </svg>
         </div>
-        <h2 class="text-base font-semibold text-foreground">OPcache</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('cache.opcache')}</h2>
       </div>
       <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border
         {opcacheStats?.enabled ? 'bg-green-500/10 text-green-400 border-green-500/20' : 'bg-muted/20 text-muted-foreground border-border'}">
@@ -794,7 +788,7 @@
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
         <!-- Hit rate donut -->
         <div class="col-span-2 sm:col-span-1 flex flex-col items-start gap-2">
-          <span class="text-xs text-muted-foreground">Hit Rate</span>
+          <span class="text-xs text-muted-foreground">{$t('cache.hit_rate')}</span>
           <div class="flex items-center gap-3">
             <!-- CSS-only donut chart -->
             <svg class="w-16 h-16 -rotate-90" viewBox="0 0 36 36">
@@ -820,11 +814,11 @@
           </div>
         </div>
         <div class="flex flex-col">
-          <span class="text-xs text-muted-foreground mb-1">Cached Files</span>
+          <span class="text-xs text-muted-foreground mb-1">{$t('cache.cached_files')}</span>
           <span class="text-xl font-semibold text-foreground">{opcacheStats.cached_scripts}</span>
         </div>
         <div class="flex flex-col">
-          <span class="text-xs text-muted-foreground mb-1">JIT</span>
+          <span class="text-xs text-muted-foreground mb-1">{$t('cache.jit')}</span>
           <span class="text-xl font-semibold {opcacheStats.jit_enabled ? 'text-green-400' : 'text-muted-foreground'}">
             {opcacheStats.jit_enabled ? 'On' : 'Off'}
           </span>
@@ -834,7 +828,7 @@
         </div>
         <!-- Memory ring -->
         <div class="flex flex-col items-start gap-2">
-          <span class="text-xs text-muted-foreground">Memory</span>
+          <span class="text-xs text-muted-foreground">{$t('cache.memory')}</span>
           <div class="flex items-center gap-2">
             <svg class="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="15.9155" fill="none" stroke="currentColor"
@@ -858,7 +852,7 @@
       <!-- Memory bar -->
       <div class="mb-5">
         <div class="flex justify-between text-xs text-muted-foreground mb-1.5">
-          <span>Memory Usage</span>
+          <span>{$t('cache.memory_usage')}</span>
           <span>{fmt(opcacheStats.memory_used_mb)} MB used / {fmt(opcacheStats.memory_free_mb)} MB free</span>
         </div>
         <div class="h-2 rounded-full bg-muted/30 overflow-hidden">
@@ -884,9 +878,7 @@
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-          </svg>
-          View Cached Files
-        </button>
+          </svg>{$t('cache.view_cached_files')}</button>
       </div>
     {:else}
       <div class="flex flex-col items-center py-8 text-center">
@@ -895,7 +887,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
           </svg>
         </div>
-        <p class="text-sm text-muted-foreground">OPcache is not active on this server.</p>
+        <p class="text-sm text-muted-foreground">{$t('cache.opcache_not_active')}</p>
       </div>
     {/if}
   </div>
@@ -910,7 +902,7 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-foreground">Valkey</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('cache.valkey')}</h2>
           {#if valkeyStats?.version && valkeyStats.version !== 'unknown'}
             <span class="text-xs text-muted-foreground">v{valkeyStats.version}</span>
           {/if}
@@ -927,7 +919,7 @@
       <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-5">
         <!-- Hit rate donut -->
         <div class="flex flex-col items-start gap-2">
-          <span class="text-xs text-muted-foreground">Hit Rate</span>
+          <span class="text-xs text-muted-foreground">{$t('cache.hit_rate')}</span>
           <div class="flex items-center gap-3">
             <svg class="w-16 h-16 -rotate-90" viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="15.9155" fill="none" stroke="currentColor"
@@ -951,12 +943,12 @@
           </div>
         </div>
         <div class="flex flex-col">
-          <span class="text-xs text-muted-foreground mb-1">Total Keys</span>
+          <span class="text-xs text-muted-foreground mb-1">{$t('cache.total_keys')}</span>
           <span class="text-xl font-semibold text-foreground">{valkeyStats.keys}</span>
         </div>
         <!-- Memory ring -->
         <div class="flex flex-col items-start gap-1">
-          <span class="text-xs text-muted-foreground">Memory</span>
+          <span class="text-xs text-muted-foreground">{$t('cache.memory')}</span>
           <div class="flex items-center gap-2">
             <svg class="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
               <circle cx="18" cy="18" r="15.9155" fill="none" stroke="currentColor"
@@ -976,7 +968,7 @@
           </div>
         </div>
         <div class="flex flex-col">
-          <span class="text-xs text-muted-foreground mb-1">Uptime</span>
+          <span class="text-xs text-muted-foreground mb-1">{$t('cache.uptime')}</span>
           <span class="text-xl font-semibold text-foreground">{uptimeLabel(valkeyStats.uptime_seconds)}</span>
           <span class="text-xs text-muted-foreground">{valkeyStats.connected_clients} client{valkeyStats.connected_clients === 1 ? '' : 's'}</span>
         </div>
@@ -995,9 +987,7 @@
                 on:click={flushValkey} disabled={flushing || !selectedSiteId}>
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-          </svg>
-          Flush All Keys
-        </button>
+          </svg>{$t('cache.flush_all_keys')}</button>
         <!-- Browse Keys button -->
         <button
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
@@ -1005,9 +995,7 @@
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-          </svg>
-          Browse Keys
-        </button>
+          </svg>{$t('cache.browse_keys')}</button>
         <div class="flex items-center gap-2 flex-1 min-w-48">
           <input
             class="h-9 flex-1 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
@@ -1017,9 +1005,7 @@
             on:keydown={(e) => e.key === 'Enter' && flushByPattern()}
           />
           <button class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
-                  on:click={flushByPattern} disabled={flushing}>
-            Flush Pattern
-          </button>
+                  on:click={flushByPattern} disabled={flushing}>{$t('cache.flush_pattern')}</button>
         </div>
       </div>
     {:else}
@@ -1029,8 +1015,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"/>
           </svg>
         </div>
-        <p class="text-sm font-medium text-foreground mb-1">Cannot connect to Valkey</p>
-        <p class="text-xs text-muted-foreground">Check that the Valkey service is running on this server.</p>
+        <p class="text-sm font-medium text-foreground mb-1">{$t('cache.cannot_connect_to_valkey')}</p>
+        <p class="text-xs text-muted-foreground">{$t('cache.check_that_the_valkey_service_is_running')}</p>
       </div>
     {/if}
   </div>
@@ -1044,8 +1030,8 @@
         </svg>
       </div>
       <div>
-        <h2 class="text-base font-semibold text-foreground">Browser Cache Policy</h2>
-        <p class="text-sm text-muted-foreground">Controls HTTP cache headers sent to visitors</p>
+        <h2 class="text-base font-semibold text-foreground">{$t('cache.browser_cache_policy')}</h2>
+        <p class="text-sm text-muted-foreground">{$t('cache.controls_http_cache_headers_sent_to_visi')}</p>
       </div>
     </div>
 
@@ -1062,7 +1048,7 @@
             : 'border-border hover:border-primary/50 hover:bg-muted/30'}">
           <input type="radio" class="sr-only" name="cachePreset" value={preset.value} bind:group={cachePreset} />
           {#if preset.recommended}
-            <span class="absolute top-2 right-2 text-xs px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">Recommended</span>
+            <span class="absolute top-2 right-2 text-xs px-1.5 py-0.5 rounded-full bg-primary/10 text-primary font-medium">{$t('cache.recommended')}</span>
           {/if}
           <span class="text-lg">{preset.icon}</span>
           <div>
@@ -1081,9 +1067,7 @@
             on:click={applyPreset} disabled={!selectedSiteId}>
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-      </svg>
-      Apply Preset
-    </button>
+      </svg>{$t('cache.apply_preset')}</button>
 
     <!-- Per-site overrides expandable section -->
     {#if sites.length > 0}
@@ -1095,9 +1079,7 @@
           <svg class="w-4 h-4 transition-transform duration-200 {siteOverridesExpanded ? 'rotate-180' : ''}"
                fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-          </svg>
-          Per-site overrides
-          <span class="ml-1 text-xs text-muted-foreground font-normal">
+          </svg>{$t('cache.per_site_overrides')}<span class="ml-1 text-xs text-muted-foreground font-normal">
             ({Object.values(siteOverrides).filter(Boolean).length} custom)
           </span>
         </button>
@@ -1107,10 +1089,10 @@
             <table class="w-full">
               <thead class="bg-muted/50">
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">Site domain</th>
-                  <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">Global preset</th>
-                  <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">Override</th>
-                  <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase">Action</th>
+                  <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">{$t('cache.site_domain')}</th>
+                  <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase hidden sm:table-cell">{$t('cache.global_preset')}</th>
+                  <th class="px-4 py-3 text-left text-xs text-muted-foreground uppercase">{$t('cache.override')}</th>
+                  <th class="px-4 py-3 text-right text-xs text-muted-foreground uppercase">{$t('email.action')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -1127,10 +1109,10 @@
                         class="h-8 rounded-lg border border-border bg-background px-2 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                       >
                         <option value="">Use global ({cachePreset})</option>
-                        <option value="aggressive">Aggressive (1 year)</option>
-                        <option value="balanced">Balanced (1 week)</option>
-                        <option value="minimal">Minimal (1 hour)</option>
-                        <option value="disabled">Disabled</option>
+                        <option value="aggressive">{$t('cache.aggressive_1_year')}</option>
+                        <option value="balanced">{$t('cache.balanced_1_week')}</option>
+                        <option value="minimal">{$t('cache.minimal_1_hour')}</option>
+                        <option value="disabled">{$t('common.disabled')}</option>
                       </select>
                     </td>
                     <td class="px-4 py-3 text-right">
@@ -1167,17 +1149,17 @@
         </svg>
       </div>
       <div>
-        <h2 class="text-base font-semibold text-foreground">Site-Specific Cache Clear</h2>
-        <p class="text-sm text-muted-foreground">Flush all cache layers for a single site</p>
+        <h2 class="text-base font-semibold text-foreground">{$t('cache.site_specific_cache_clear')}</h2>
+        <p class="text-sm text-muted-foreground">{$t('cache.flush_all_cache_layers_for_a_single_site')}</p>
       </div>
     </div>
     <div class="flex flex-wrap gap-3 items-end">
       <div class="flex-1 min-w-48">
-        <label class="block text-xs text-muted-foreground mb-1.5">Site</label>
+        <label class="block text-xs text-muted-foreground mb-1.5">{$t('site_detail.title')}</label>
         <select class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
                 bind:value={selectedSiteId}>
           {#if sites.length === 0}
-            <option value="">No sites found</option>
+            <option value="">{$t('backups.no_sites')}</option>
           {/if}
           {#each sites as s}
             <option value={s.id}>{s.domain}</option>
@@ -1188,9 +1170,7 @@
               on:click={() => confirmFlushAll = true} disabled={!selectedSiteId || flushingAll}>
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-        </svg>
-        Flush Site Cache
-      </button>
+        </svg>{$t('cache.flush_site_cache')}</button>
     </div>
   </div>
 

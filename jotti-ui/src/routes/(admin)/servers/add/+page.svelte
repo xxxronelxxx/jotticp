@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { api } from '$api/client';
+  import { t } from '$lib/i18n';
 
   // ── Form state ──────────────────────────────────────────────────────────────
   let label    = '';
@@ -41,10 +42,10 @@
     isSubmitting = true;
     try {
       const server = await api.servers.create({
-        label:    label.trim(),
-        hostname: hostname.trim(),
-        ip:       ip.trim() || hostname.trim(),
-        ssh_port: sshPort,
+        label:      label.trim(),
+        hostname:   hostname.trim(),
+        ip_address: ip.trim() || hostname.trim(),
+        ssh_port:   sshPort,
       });
       // Simulate enrollment token (real API would return it)
       enrollmentToken = `orbit-enroll-${server.id}-${Math.random().toString(36).slice(2, 10)}`;
@@ -114,7 +115,7 @@
 </script>
 
 <svelte:head>
-  <title>Add Server — JottiCP</title>
+  <title>{$t('servers.add_title')} — JottiCP</title>
 </svelte:head>
 
 <div class="p-4 lg:p-6 max-w-2xl mx-auto space-y-6">
@@ -132,8 +133,8 @@
       </svg>
     </button>
     <div>
-      <h1 class="text-2xl font-bold text-foreground">Add Server</h1>
-      <p class="text-muted-foreground text-sm mt-0.5">Connect a new server to JottiCP</p>
+      <h1 class="text-2xl font-bold text-foreground">{$t('servers.add_title')}</h1>
+      <p class="text-muted-foreground text-sm mt-0.5">{$t('servers.add_subtitle')}</p>
     </div>
   </div>
 
@@ -145,12 +146,12 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div>
-          <p class="text-sm font-semibold text-green-400">Server registered!</p>
-          <p class="text-xs text-muted-foreground mt-0.5">Run the command below on your server to complete setup.</p>
+          <p class="text-sm font-semibold text-green-400">{$t('servers.server_registered')}</p>
+          <p class="text-xs text-muted-foreground mt-0.5">{$t('servers.add_instructions')}</p>
         </div>
       </div>
       <div class="bg-black/20 rounded-lg p-3">
-        <p class="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider">Enrollment command</p>
+        <p class="text-xs text-muted-foreground mb-2 font-medium uppercase tracking-wider">{$t('servers.enrollment_command')}</p>
         <code class="text-xs font-mono text-green-300 break-all leading-relaxed">
           orbit-agent enroll --token {enrollmentToken} --panel {typeof window !== 'undefined' ? window.location.origin : 'https://panel.yourdomain.com'}
         </code>
@@ -166,7 +167,7 @@
               d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0
                  002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
           </svg>
-          Copy Command
+          {$t('servers.copy_command')}
         </button>
         <a
           href="/servers"
@@ -174,7 +175,7 @@
                  hover:bg-muted hover:text-foreground inline-flex items-center gap-2
                  transition-all duration-150 active:scale-95"
         >
-          Back to Servers
+          {$t('servers.back_to_servers')}
         </a>
       </div>
     </div>
@@ -186,16 +187,16 @@
 
       <!-- Server details -->
       <div>
-        <p class="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-4">Server Details</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-4">{$t('servers.server_details')}</p>
         <div class="space-y-4">
           <!-- Label -->
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-label">Server label</label>
+            <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-label">{$t('servers.server_label')}</label>
             <input
               id="srv-label"
               type="text"
               bind:value={label}
-              placeholder="Production VPS"
+              placeholder={$t('servers.server_label_placeholder')}
               class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                      placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                      focus:border-primary w-full"
@@ -205,25 +206,25 @@
           <!-- Hostname / IP row -->
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-hostname">Hostname</label>
+              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-hostname">{$t('servers.hostname')}</label>
               <input
                 id="srv-hostname"
                 type="text"
                 bind:value={hostname}
                 on:input={resetTest}
-                placeholder="server.example.com"
+                placeholder={$t('servers.hostname_placeholder')}
                 class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                        placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                        focus:border-primary w-full"
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-ip">IP Address</label>
+              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-ip">{$t('servers.ip_address')}</label>
               <input
                 id="srv-ip"
                 type="text"
                 bind:value={ip}
-                placeholder="192.168.1.100"
+                placeholder={$t('servers.ip_placeholder')}
                 class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                        placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                        focus:border-primary w-full font-mono"
@@ -234,7 +235,7 @@
           <!-- SSH port / user row -->
           <div class="grid sm:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-port">SSH Port</label>
+              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-port">{$t('servers.ssh_port')}</label>
               <input
                 id="srv-port"
                 type="number"
@@ -248,12 +249,12 @@
               />
             </div>
             <div>
-              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-user">SSH User</label>
+              <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-user">{$t('servers.ssh_user')}</label>
               <input
                 id="srv-user"
                 type="text"
                 bind:value={sshUser}
-                placeholder="root"
+                placeholder={$t('servers.ssh_user_placeholder')}
                 class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                        placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                        focus:border-primary w-full font-mono"
@@ -268,9 +269,9 @@
 
       <!-- Auth method -->
       <div>
-        <p class="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-3">Authentication</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-3">{$t('servers.authentication')}</p>
         <div class="grid grid-cols-2 gap-2 mb-4">
-          {#each [{ value: 'key', label: 'SSH Key' }, { value: 'password', label: 'Password' }] as opt}
+          {#each [{ value: 'key', label: $t('servers.ssh_key') }, { value: 'password', label: $t('servers.ssh_password') }] as opt}
             <button
               type="button"
               on:click={() => authType = opt.value as 'key' | 'password'}
@@ -286,12 +287,12 @@
 
         {#if authType === 'key'}
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-key">SSH Public Key</label>
+            <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-key">{$t('servers.ssh_public_key')}</label>
             <textarea
               id="srv-key"
               bind:value={sshKey}
               rows="4"
-              placeholder="ssh-rsa AAAA..."
+              placeholder={$t('servers.ssh_key_placeholder')}
               class="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm text-foreground
                      placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                      focus:border-primary font-mono resize-none"
@@ -299,12 +300,12 @@
           </div>
         {:else}
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-pass">SSH Password</label>
+            <label class="block text-sm font-medium text-foreground mb-1.5" for="srv-pass">{$t('servers.ssh_password')}</label>
             <input
               id="srv-pass"
               type="password"
               bind:value={password}
-              placeholder="••••••••"
+              placeholder={$t('servers.ssh_pass_placeholder')}
               class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground
                      placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50
                      focus:border-primary w-full"
@@ -331,12 +332,12 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
-            Testing SSH connection...
+            {$t('servers.testing_connection')}
           {:else}
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            Test Connection
+            {$t('servers.test_connection')}
           {/if}
         </button>
 
@@ -373,7 +374,7 @@
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                All checks passed — server is reachable
+                {$t('servers.all_checks_passed')}
               </div>
             {:else if testPhase === 'failed'}
               <div class="flex items-center gap-2 pt-1 text-sm text-red-400 border-t border-border mt-2">
@@ -396,7 +397,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        After saving, you will receive an enrollment token. Run the provided command on the server to install the orbit-agent daemon and complete the connection.
+        {$t('servers.enrollment_info')}
       </div>
 
       <!-- Error -->
@@ -414,7 +415,7 @@
                  hover:bg-muted hover:text-foreground inline-flex items-center gap-2
                  transition-all duration-150 active:scale-95"
         >
-          Cancel
+          {$t('servers.cancel')}
         </a>
         <button
           type="button"
@@ -429,9 +430,9 @@
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
-            Adding…
+            {$t('servers.adding')}
           {:else}
-            Add Server
+            {$t('servers.add_server_btn')}
           {/if}
         </button>
       </div>

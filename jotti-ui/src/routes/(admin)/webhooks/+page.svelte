@@ -246,9 +246,7 @@
     >
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      Add Webhook
-    </button>
+      </svg>{$t('webhooks.add_webhook')}</button>
   </div>
 
   <!-- Webhooks table card -->
@@ -259,7 +257,7 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
         </svg>
       </div>
-      <h3 class="text-sm font-semibold text-foreground">Configured Endpoints</h3>
+      <h3 class="text-sm font-semibold text-foreground">{$t('webhooks.configured_endpoints')}</h3>
     </div>
 
     {#if loading}
@@ -285,17 +283,15 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
           </svg>
         </div>
-        <p class="text-sm font-medium text-foreground mb-1">No webhooks configured</p>
-        <p class="text-xs text-muted-foreground mb-4">Add an endpoint to start receiving event notifications</p>
+        <p class="text-sm font-medium text-foreground mb-1">{$t('webhooks.no_webhooks')}</p>
+        <p class="text-xs text-muted-foreground mb-4">{$t('webhooks.no_webhooks_desc')}</p>
         <button
           on:click={openModal}
           class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Add Webhook
-        </button>
+          </svg>{$t('webhooks.add_webhook')}</button>
       </div>
 
     {:else}
@@ -303,11 +299,11 @@
         <table class="w-full text-sm">
           <thead class="bg-muted/30">
             <tr>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">URL</th>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Events</th>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Status</th>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Created</th>
-              <th class="px-4 py-2.5 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('webhooks.col_url')}</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('webhooks.col_events')}</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('common.status')}</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('common.created')}</th>
+              <th class="px-4 py-2.5 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('common.actions')}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-border">
@@ -364,7 +360,7 @@
                     <!-- Test result badge -->
                     {#if tr}
                       {#if tr.loading}
-                        <span class="text-xs text-muted-foreground px-2 py-0.5 rounded bg-muted animate-pulse">Testing…</span>
+                        <span class="text-xs text-muted-foreground px-2 py-0.5 rounded bg-muted animate-pulse">{$t('webhooks.testing')}</span>
                       {:else if tr.result}
                         <span class="text-[10px] font-medium px-2 py-0.5 rounded whitespace-nowrap
                           {tr.result.success ? 'bg-emerald-500/15 text-emerald-400' : 'bg-red-500/15 text-red-400'}">
@@ -389,9 +385,9 @@
                     <!-- Delete button -->
                     {#if confirmDeleteWebhookId === wh.id}
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs text-destructive">Delete?</span>
-                        <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => deleteWebhook(wh.id)}>Yes</button>
-                        <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmDeleteWebhookId = null}>No</button>
+                        <span class="text-xs text-destructive">{$t('common.delete_confirm')}</span>
+                        <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => deleteWebhook(wh.id)}>{$t("common.yes")}</button>
+                        <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmDeleteWebhookId = null}>{$t("common.no")}</button>
                       </div>
                     {:else}
                       <button
@@ -423,25 +419,20 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       </div>
-      <h3 class="text-sm font-semibold text-foreground">Webhook Security</h3>
+      <h3 class="text-sm font-semibold text-foreground">{$t('webhooks.webhook_security')}</h3>
     </div>
     <div class="space-y-3 text-sm text-muted-foreground">
-      <p>
-        Every request JottiCP sends to your endpoint is signed using
-        <span class="text-foreground font-medium">HMAC-SHA256</span>. The signature is
-        included in the <code class="font-mono text-xs bg-muted px-1 py-0.5 rounded text-foreground">X-JottiCP-Signature</code> header
-        as a hex-encoded digest of the raw request body.
-      </p>
+      <p>{$t('webhooks.every_request_jotticp_sends_to_your_endp')}<span class="text-foreground font-medium">{$t('webhooks.hmac_sha256')}</span>{$t('webhooks.the_signature_is_included_in_the')}<code class="font-mono text-xs bg-muted px-1 py-0.5 rounded text-foreground">{$t('webhooks.x_jotticp_signature')}</code>{$t('webhooks.header_as_a_hex_encoded_digest_of_the_ra')}</p>
       <div class="bg-muted/30 border border-border rounded-lg p-3 font-mono text-xs text-foreground space-y-1">
-        <p class="text-muted-foreground"># Verify the signature in your handler</p>
-        <p>computed = HMAC-SHA256(secret, raw_body)</p>
-        <p>assert request.headers["X-JottiCP-Signature"] == hex(computed)</p>
+        <p class="text-muted-foreground">{$t('webhooks.verify_signature')}</p>
+        <p>{$t('webhooks.computed_hmac_sha256secret_raw_body')}</p>
+        <p>{$t('webhooks.assert_requestheadersx_jotticp_signature')}</p>
       </div>
       <ul class="list-disc list-inside space-y-1 text-xs">
-        <li>If you leave the secret blank, JottiCP auto-generates a cryptographically random 32-byte secret.</li>
-        <li>Rotate secrets by deleting and re-adding the webhook endpoint.</li>
-        <li>JottiCP will retry failed deliveries up to 3 times with exponential back-off.</li>
-        <li>Each request includes an <code class="font-mono bg-muted px-1 py-0.5 rounded text-foreground">X-JottiCP-Event</code> header naming the event type.</li>
+        <li>{$t('webhooks.security_note1')}</li>
+        <li>{$t('webhooks.security_note2')}</li>
+        <li>{$t('webhooks.security_note3')}</li>
+        <li>{$t('webhooks.each_request_includes_an')}<code class="font-mono bg-muted px-1 py-0.5 rounded text-foreground">{$t('webhooks.x_jotticp_event')}</code>{$t('webhooks.header_naming_the_event_type')}</li>
       </ul>
     </div>
   </div>
@@ -459,8 +450,8 @@
       <!-- Modal header -->
       <div class="flex items-center justify-between mb-5">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Add Webhook</h2>
-          <p class="text-xs text-muted-foreground mt-0.5">Register a new HTTP endpoint for event delivery</p>
+          <h2 class="text-base font-semibold text-foreground">{$t('webhooks.add_webhook')}</h2>
+          <p class="text-xs text-muted-foreground mt-0.5">{$t('webhooks.modal_desc')}</p>
         </div>
         <button
           on:click={closeModal}
@@ -476,8 +467,7 @@
       <div class="space-y-4">
         <!-- URL -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="wh-url">
-            Endpoint URL <span class="text-red-400">*</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="wh-url">{$t('webhooks.endpoint_url')}<span class="text-red-400">*</span>
           </label>
           <input
             id="wh-url"
@@ -490,8 +480,7 @@
 
         <!-- Events -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5">
-            Events <span class="text-red-400">*</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5">{$t('webhooks.col_events')}<span class="text-red-400">*</span>
           </label>
           <div class="border border-border rounded-lg overflow-y-auto max-h-48 divide-y divide-border">
             {#each ALL_EVENTS as evt}
@@ -511,9 +500,7 @@
 
         <!-- Secret -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="wh-secret">
-            Signing Secret
-            <span class="text-muted-foreground font-normal ml-1">(optional)</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="wh-secret">{$t('webhooks.signing_secret')}<span class="text-muted-foreground font-normal ml-1">{$t('cron.label_optional')}</span>
           </label>
           <input
             id="wh-secret"
@@ -522,7 +509,7 @@
             placeholder="Leave blank to auto-generate"
             class="h-10 px-3 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring w-full placeholder:text-muted-foreground font-mono"
           />
-          <p class="text-xs text-muted-foreground mt-1">Used to verify the <code class="font-mono bg-muted px-1 rounded">X-JottiCP-Signature</code> header.</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('webhooks.used_to_verify_the')}<code class="font-mono bg-muted px-1 rounded">{$t('webhooks.x_jotticp_signature')}</code>{$t('webhooks.header')}</p>
         </div>
 
         <!-- Error -->
@@ -541,9 +528,7 @@
         <button
           on:click={closeModal}
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-        >
-          Cancel
-        </button>
+        >{$t('common.cancel')}</button>
         <button
           on:click={createWebhook}
           disabled={modalSaving}

@@ -210,12 +210,12 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
       <!-- Action filter -->
       <div>
-        <label class="block text-xs font-medium text-muted-foreground mb-1.5">Action</label>
+        <label class="block text-xs font-medium text-muted-foreground mb-1.5">{$t('audit_log.action')}</label>
         <select
           bind:value={filterAction}
           class="w-full h-9 px-3 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         >
-          <option value="">All actions</option>
+          <option value="">{$t('audit_log.all_actions')}</option>
           {#each COMMON_ACTIONS as action}
             <option value={action}>{action}</option>
           {/each}
@@ -224,12 +224,12 @@
 
       <!-- Resource type filter -->
       <div>
-        <label class="block text-xs font-medium text-muted-foreground mb-1.5">Resource type</label>
+        <label class="block text-xs font-medium text-muted-foreground mb-1.5">{$t('audit_log.resource_type')}</label>
         <select
           bind:value={filterTarget}
           class="w-full h-9 px-3 rounded-lg border border-border bg-background text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
         >
-          <option value="">All resources</option>
+          <option value="">{$t('audit_log.all_resources')}</option>
           {#each RESOURCE_TYPES as rt}
             <option value={rt}>{rt}</option>
           {/each}
@@ -238,7 +238,7 @@
 
       <!-- Date from -->
       <div>
-        <label class="block text-xs font-medium text-muted-foreground mb-1.5">From date</label>
+        <label class="block text-xs font-medium text-muted-foreground mb-1.5">{$t('audit_log.from_date')}</label>
         <input
           type="date"
           bind:value={filterDateFrom}
@@ -248,7 +248,7 @@
 
       <!-- Date to -->
       <div>
-        <label class="block text-xs font-medium text-muted-foreground mb-1.5">To date</label>
+        <label class="block text-xs font-medium text-muted-foreground mb-1.5">{$t('audit_log.to_date')}</label>
         <input
           type="date"
           bind:value={filterDateTo}
@@ -261,16 +261,12 @@
       <button
         on:click={applyFilters}
         class="h-8 px-4 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 transition-colors"
-      >
-        Apply Filters
-      </button>
+      >{$t('audit_log.apply_filters')}</button>
       {#if filterAction || filterTarget || filterDateFrom || filterDateTo}
         <button
           on:click={clearFilters}
           class="h-8 px-3 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-        >
-          Clear
-        </button>
+        >{$t('audit_log.clear')}</button>
       {/if}
     </div>
   </div>
@@ -298,9 +294,7 @@
       >
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        Refresh
-      </button>
+        </svg>{$t('common.refresh')}</button>
     </div>
 
     {#if loading}
@@ -323,7 +317,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
           </svg>
         </div>
-        <p class="text-sm font-medium text-foreground mb-1">No audit entries found</p>
+        <p class="text-sm font-medium text-foreground mb-1">{$t('audit_log.no_entries')}</p>
         <p class="text-xs text-muted-foreground">
           {filterAction || filterTarget || filterDateFrom || filterDateTo
             ? 'Try changing or clearing your filters'
@@ -337,11 +331,11 @@
           <thead class="border-b border-border bg-muted/30">
             <tr>
               <th class="px-5 py-2.5 text-left text-xs font-medium text-muted-foreground w-8"></th>
-              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">Action</th>
-              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">Resource</th>
-              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">User</th>
-              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">IP</th>
-              <th class="px-3 py-2.5 text-right text-xs font-medium text-muted-foreground pr-5">Time</th>
+              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">{$t('audit_log.action')}</th>
+              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">{$t('audit_log.col_resource')}</th>
+              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">{$t('users.user_role')}</th>
+              <th class="px-3 py-2.5 text-left text-xs font-medium text-muted-foreground">{$t('settings.ip')}</th>
+              <th class="px-3 py-2.5 text-right text-xs font-medium text-muted-foreground pr-5">{$t('settings.time')}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-border">
@@ -427,17 +421,13 @@
           on:click={prevPage}
           disabled={page === 0}
           class="h-8 px-3 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >
-          ← Previous
-        </button>
+        >{$t('audit_log.prev')}</button>
         <span class="text-xs text-muted-foreground">Page {page + 1}</span>
         <button
           on:click={nextPage}
           disabled={entries.length < PAGE_SIZE}
           class="h-8 px-3 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-        >
-          Next →
-        </button>
+        >{$t('audit_log.next')}</button>
       </div>
     {/if}
   </div>

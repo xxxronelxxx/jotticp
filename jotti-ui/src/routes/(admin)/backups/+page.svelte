@@ -503,7 +503,7 @@
       <div class="bg-card border border-border rounded-xl p-4 fade-up" style="animation-delay:0.14s">
         <p class="text-xs text-muted-foreground uppercase tracking-wide font-medium mb-1">{$t('backups.success_rate')}</p>
         <p class="text-lg font-bold {successRate >= 90 ? 'text-green-400' : successRate >= 70 ? 'text-amber-400' : 'text-red-400'}">{successRate}%</p>
-        <p class="text-xs text-muted-foreground mt-0.5">Last 30 days</p>
+        <p class="text-xs text-muted-foreground mt-0.5">{$t('backups.last_30_days')}</p>
         <div class="bg-muted rounded-full h-1.5 mt-2">
           <div class="h-1.5 rounded-full transition-all {successRate >= 90 ? 'bg-green-500' : successRate >= 70 ? 'bg-amber-500' : 'bg-red-500'}"
                style="width:{successRate}%"></div>
@@ -538,9 +538,7 @@
               Backup in progress — {sites.find(s => s.id === activeProgress?.siteId)?.domain ?? 'site'}
             </p>
             <button on:click={stopProgressAnimation}
-                    class="text-xs text-muted-foreground hover:text-foreground transition-colors">
-              Dismiss
-            </button>
+                    class="text-xs text-muted-foreground hover:text-foreground transition-colors">{$t('backups.dismiss')}</button>
           </div>
 
           <!-- Step indicators -->
@@ -573,8 +571,8 @@
 
           <!-- Timers -->
           <div class="flex items-center gap-4 text-xs text-muted-foreground">
-            <span>Elapsed: <span class="text-foreground font-medium">{formatSeconds(Math.round(progressElapsed / 1000))}</span></span>
-            <span>ETA: <span class="text-foreground font-medium">{progressETA > 0 ? formatSeconds(progressETA) : 'Almost done'}</span></span>
+            <span>{$t('backups.elapsed')}<span class="text-foreground font-medium">{formatSeconds(Math.round(progressElapsed / 1000))}</span></span>
+            <span>{$t('backups.eta')}<span class="text-foreground font-medium">{progressETA > 0 ? formatSeconds(progressETA) : 'Almost done'}</span></span>
             <span class="flex items-center gap-1 text-amber-400">
               <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
               {BACKUP_STEPS[progressStep]}
@@ -589,7 +587,7 @@
   {#if showStorageConfig}
     <div class="bg-card border border-border rounded-xl p-5 space-y-4 slide-in-right">
       <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold text-foreground">Storage Configuration</h2>
+        <h2 class="text-sm font-semibold text-foreground">{$t('backups.storage_config')}</h2>
         <button class="text-muted-foreground hover:text-foreground" on:click={() => showStorageConfig = false}>
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -599,20 +597,20 @@
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Site</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('site_detail.title')}</label>
           <select bind:value={storage_siteId}
                   class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             {#each sites as s}<option value={s.id}>{s.domain}</option>{/each}
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Destination</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('backups.destination')}</label>
           <select bind:value={storage_destination}
                   class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <option value="local">Local disk</option>
-            <option value="s3">Amazon S3 / S3-compatible</option>
-            <option value="b2">Backblaze B2</option>
-            <option value="sftp">FTP / SFTP</option>
+            <option value="local">{$t('backups.local_disk')}</option>
+            <option value="s3">{$t('backups.s3')}</option>
+            <option value="b2">{$t('backups.b2')}</option>
+            <option value="sftp">{$t('backups.sftp')}</option>
           </select>
         </div>
       </div>
@@ -620,12 +618,12 @@
       {#if storage_destination === 's3' || storage_destination === 'b2'}
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div class="space-y-1">
-            <label class="text-xs font-medium text-muted-foreground">Bucket name</label>
+            <label class="text-xs font-medium text-muted-foreground">{$t('backups.bucket_name')}</label>
             <input bind:value={storage_s3_bucket} placeholder="my-backup-bucket"
                    class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-medium text-muted-foreground">Region</label>
+            <label class="text-xs font-medium text-muted-foreground">{$t('backups.region')}</label>
             <input bind:value={storage_s3_region} placeholder="us-east-1"
                    class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
           </div>
@@ -635,17 +633,17 @@
       {#if storage_destination === 'sftp'}
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div class="space-y-1">
-            <label class="text-xs font-medium text-muted-foreground">Host</label>
+            <label class="text-xs font-medium text-muted-foreground">{$t('backups.host')}</label>
             <input bind:value={storage_sftp_host} placeholder="ftp.example.com"
                    class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-medium text-muted-foreground">Username</label>
+            <label class="text-xs font-medium text-muted-foreground">{$t('email.username')}</label>
             <input bind:value={storage_sftp_user} placeholder="backupuser"
                    class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-medium text-muted-foreground">Remote path</label>
+            <label class="text-xs font-medium text-muted-foreground">{$t('backups.remote_path')}</label>
             <input bind:value={storage_sftp_path} placeholder="/backups"
                    class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
           </div>
@@ -698,18 +696,18 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
               d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
           </svg>
-          <p class="font-medium text-foreground text-sm">No sites yet</p>
-          <p class="text-xs text-muted-foreground mt-1">Add a site first, then configure backup schedules.</p>
+          <p class="font-medium text-foreground text-sm">{$t('backups.no_sites_yet')}</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('backups.no_sites_desc')}</p>
         </div>
       {:else}
         <div class="bg-card border border-border rounded-xl overflow-hidden">
           <table class="w-full">
             <thead class="bg-muted/50">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Site</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden sm:table-cell">Schedule</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden md:table-cell">Next run</th>
-                <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">Actions</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">{$t('site_detail.title')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden sm:table-cell">{$t('common.schedule')}</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden md:table-cell">{$t('backups.col_next_run')}</th>
+                <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">{$t('common.actions')}</th>
               </tr>
             </thead>
             <tbody>
@@ -718,7 +716,7 @@
                   <td class="px-4 py-3">
                     <p class="text-sm font-medium text-foreground truncate max-w-[160px]">{row.domain}</p>
                     {#if row.loading}
-                      <p class="text-xs text-muted-foreground animate-pulse">Loading…</p>
+                      <p class="text-xs text-muted-foreground animate-pulse">{$t('common.loading')}</p>
                     {:else}
                       <p class="text-xs text-muted-foreground">{scheduleLabel(row.settings)}</p>
                     {/if}
@@ -795,7 +793,7 @@
       <!-- Size history chart (always shown when data exists) -->
       {#if !loading && recentHistory.length > 0}
         <div class="bg-card border border-border rounded-xl p-4">
-          <p class="text-xs font-medium text-muted-foreground mb-3">Backup size — last 7 days</p>
+          <p class="text-xs font-medium text-muted-foreground mb-3">{$t('backups.backup_size_chart')}</p>
           <div class="flex items-end gap-1 h-12">
             {#each last7Days as day}
               <div class="flex-1 flex flex-col items-center gap-0.5">
@@ -832,8 +830,8 @@
               d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21
                  3.582-4 8-4s8 1.79 8 4"/>
           </svg>
-          <p class="font-medium text-foreground text-sm">No backups yet</p>
-          <p class="text-xs text-muted-foreground mt-1">Run your first backup using the button above.</p>
+          <p class="font-medium text-foreground text-sm">{$t('backups.no_backups_yet')}</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('backups.no_backups_desc')}</p>
           <button
             class="mt-4 h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2"
             on:click={runBackupNow}
@@ -849,11 +847,11 @@
             <table class="w-full">
               <thead class="bg-muted/50">
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">When</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden sm:table-cell">Site</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Status</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden md:table-cell">Size</th>
-                  <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">Actions</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">{$t('backups.col_when')}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden sm:table-cell">{$t('site_detail.title')}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">{$t('common.status')}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden md:table-cell">{$t('common.size')}</th>
+                  <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">{$t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -899,15 +897,11 @@
                           <a
                             href={api.backups.download(backup.id)}
                             class="h-8 px-3 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-1 transition-colors"
-                          >
-                            Download
-                          </a>
+                          >{$t('common.download')}</a>
                         {/if}
                         {#if backup.status === 'running'}
                           <div class="flex items-center gap-1.5 text-xs text-amber-400">
-                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-                            In progress
-                          </div>
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>{$t('backups.in_progress')}</div>
                         {/if}
                       </div>
                     </td>
@@ -1001,7 +995,7 @@
        on:click|self={() => showAddSchedule = false}>
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl space-y-4 fade-up">
       <div class="flex items-center justify-between">
-        <h3 class="text-base font-bold text-foreground">Add Backup Schedule</h3>
+        <h3 class="text-base font-bold text-foreground">{$t('backups.add_schedule_title')}</h3>
         <button class="text-muted-foreground hover:text-foreground" on:click={() => showAddSchedule = false}>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -1010,7 +1004,7 @@
       </div>
 
       <div class="space-y-1">
-        <label class="text-xs font-medium text-muted-foreground">Site</label>
+        <label class="text-xs font-medium text-muted-foreground">{$t('site_detail.title')}</label>
         <select bind:value={sched_siteId}
                 class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
           {#each sites as s}<option value={s.id}>{s.domain}</option>{/each}
@@ -1019,17 +1013,17 @@
 
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Frequency</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('backups.frequency')}</label>
           <select bind:value={sched_frequency}
                   class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
-            <option value="hourly">Hourly</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
+            <option value="hourly">{$t('backups.hourly')}</option>
+            <option value="daily">{$t('backups.daily')}</option>
+            <option value="weekly">{$t('backups.weekly')}</option>
+            <option value="monthly">{$t('backups.monthly')}</option>
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Time (24h)</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('backups.time_24h')}</label>
           <input type="time" bind:value={sched_time}
                  class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
@@ -1037,12 +1031,12 @@
 
       <div class="grid grid-cols-2 gap-4">
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Keep daily backups</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('backups.keep_daily')}</label>
           <input type="number" bind:value={sched_retentionD} min="1" max="365"
                  class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Keep weekly backups</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('backups.keep_weekly')}</label>
           <input type="number" bind:value={sched_retentionW} min="1" max="52"
                  class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
@@ -1089,7 +1083,7 @@
                 1
               {/if}
             </div>
-            <span class="text-xs {restoreStep === 1 ? 'text-foreground font-medium' : 'text-muted-foreground'}">Preview</span>
+            <span class="text-xs {restoreStep === 1 ? 'text-foreground font-medium' : 'text-muted-foreground'}">{$t('site_detail.preview')}</span>
           </div>
           <div class="w-8 h-px bg-border"></div>
           <div class="flex items-center gap-1.5">
@@ -1097,7 +1091,7 @@
               {restoreStep === 2 ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}">
               2
             </div>
-            <span class="text-xs {restoreStep === 2 ? 'text-foreground font-medium' : 'text-muted-foreground'}">Confirm</span>
+            <span class="text-xs {restoreStep === 2 ? 'text-foreground font-medium' : 'text-muted-foreground'}">{$t('backups.confirm')}</span>
           </div>
         </div>
         <button class="text-muted-foreground hover:text-foreground" on:click={() => showRestoreModal = false}>
@@ -1110,34 +1104,34 @@
       {#if restoreStep === 1}
         <!-- Step 1: Preview -->
         <div>
-          <h3 class="text-base font-bold text-foreground mb-1">Restore Preview</h3>
-          <p class="text-sm text-muted-foreground">Review what will be restored for <strong class="text-foreground">{domain}</strong>.</p>
+          <h3 class="text-base font-bold text-foreground mb-1">{$t('backups.restore_preview')}</h3>
+          <p class="text-sm text-muted-foreground">{$t('backups.review_what_will_be_restored_for')}<strong class="text-foreground">{domain}</strong>.</p>
         </div>
 
         <!-- Backup details -->
         <div class="bg-muted/30 border border-border rounded-xl p-4 space-y-2 text-sm">
           <div class="flex justify-between">
-            <span class="text-muted-foreground">Date</span>
+            <span class="text-muted-foreground">{$t('common.date')}</span>
             <span class="text-foreground font-medium">{formatDateTime(restoreTarget.created_at)}</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-muted-foreground">Size</span>
+            <span class="text-muted-foreground">{$t('common.size')}</span>
             <span class="text-foreground font-medium">{formatBytes(restoreTarget.size_bytes)}</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-muted-foreground">Type</span>
+            <span class="text-muted-foreground">{$t('common.type')}</span>
             <span class="text-foreground font-medium capitalize">{restoreTarget.type?.replace(/_/g, ' ') ?? 'full'}</span>
           </div>
         </div>
 
         <!-- What will be restored -->
         <div class="space-y-2">
-          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">What to restore</p>
+          <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('backups.what_to_restore')}</p>
           <label class="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/20 hover:bg-muted/40 cursor-pointer transition-colors">
             <input type="checkbox" bind:checked={restoreFiles} class="w-4 h-4 accent-primary rounded" />
             <div>
-              <p class="text-sm font-medium text-foreground">Files</p>
-              <p class="text-xs text-muted-foreground">All site files, themes, plugins, uploads</p>
+              <p class="text-sm font-medium text-foreground">{$t('site_detail.group_files')}</p>
+              <p class="text-xs text-muted-foreground">{$t('backups.all_site_files_themes_plugins_uploads')}</p>
             </div>
             {#if restoreFiles}
               <svg class="w-4 h-4 text-green-400 ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1148,8 +1142,8 @@
           <label class="flex items-center gap-3 p-3 rounded-xl border border-border bg-muted/20 hover:bg-muted/40 cursor-pointer transition-colors">
             <input type="checkbox" bind:checked={restoreDatabase} class="w-4 h-4 accent-primary rounded" />
             <div>
-              <p class="text-sm font-medium text-foreground">Database</p>
-              <p class="text-xs text-muted-foreground">MySQL/MariaDB tables, posts, users, settings</p>
+              <p class="text-sm font-medium text-foreground">{$t('databases.col_database')}</p>
+              <p class="text-xs text-muted-foreground">{$t('backups.mysql_mariadb_tables_posts_users_setting')}</p>
             </div>
             {#if restoreDatabase}
               <svg class="w-4 h-4 text-green-400 ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1166,8 +1160,8 @@
               d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
           </svg>
           <div>
-            <p class="text-sm font-semibold text-red-400">This will overwrite ALL current files and database</p>
-            <p class="text-xs text-red-400/80 mt-0.5">This action cannot be undone. Make sure you have a recent backup before proceeding.</p>
+            <p class="text-sm font-semibold text-red-400">{$t('backups.this_will_overwrite_all_current_files_an')}</p>
+            <p class="text-xs text-red-400/80 mt-0.5">{$t('backups.this_action_cannot_be_undone_make_sure_y')}</p>
           </div>
         </div>
 
@@ -1201,7 +1195,7 @@
             </svg>
           </div>
           <div>
-            <h3 class="text-base font-bold text-foreground">Confirm Restore</h3>
+            <h3 class="text-base font-bold text-foreground">{$t('backups.confirm_restore')}</h3>
             <p class="text-sm text-muted-foreground mt-1">
               This will overwrite
               {#if restoreFiles && restoreDatabase}files and database{:else if restoreFiles}files only{:else}database only{/if}
@@ -1215,9 +1209,7 @@
         </div>
 
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">
-            Type <strong class="text-foreground">{domain}</strong> to confirm
-          </label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('common.type')}<strong class="text-foreground">{domain}</strong>{$t('databases.to_confirm')}</label>
           <input
             bind:value={restoreConfirmDomain}
             placeholder={domain}

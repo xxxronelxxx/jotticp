@@ -427,15 +427,13 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
         <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
       </svg>
-      <span class="text-amber-300">Viewing as <strong class="text-amber-200">{impersonatingEmail}</strong></span>
+      <span class="text-amber-300">{$t('reseller.viewing_as')}<strong class="text-amber-200">{impersonatingEmail}</strong></span>
     </div>
     <button
       on:click={returnToAdmin}
       class="h-7 px-3 rounded-lg bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-medium
              hover:bg-amber-500/30 transition-all duration-150 active:scale-95"
-    >
-      Return to Admin
-    </button>
+    >{$t('reseller.return_to_admin')}</button>
   </div>
 {/if}
 
@@ -471,9 +469,7 @@
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          New Package
-        </button>
+          </svg>{$t('reseller.new_package')}</button>
       {/if}
     </div>
   </div>
@@ -490,13 +486,13 @@
       <!-- Total clients -->
       <div class="bg-card border border-border rounded-xl p-4
                   transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Total Clients</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('reseller.total_clients')}</p>
         <div class="flex items-end justify-between">
           <p class="text-2xl font-bold text-foreground">{stats.total_clients}</p>
           {#if stats.active_clients < stats.total_clients}
             <span class="text-xs text-amber-400 mb-0.5">{stats.total_clients - stats.active_clients} suspended</span>
           {:else}
-            <span class="text-xs text-emerald-400 mb-0.5">All active</span>
+            <span class="text-xs text-emerald-400 mb-0.5">{$t('reseller.all_active')}</span>
           {/if}
         </div>
         <p class="text-xs text-muted-foreground mt-1">{stats.active_clients} active</p>
@@ -505,17 +501,17 @@
       <!-- Revenue -->
       <div class="bg-card border border-border rounded-xl p-4
                   transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Monthly Revenue</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('reseller.monthly_revenue')}</p>
         <p class="text-2xl font-bold text-emerald-400">
           {stats.total_revenue_monthly > 0 ? `$${Number(stats.total_revenue_monthly).toFixed(0)}` : 'N/A'}
         </p>
-        <p class="text-xs text-muted-foreground mt-1">recurring / month</p>
+        <p class="text-xs text-muted-foreground mt-1">{$t('reseller.recurring_month')}</p>
       </div>
 
       <!-- Resource utilization -->
       <div class="bg-card border border-border rounded-xl p-4
                   transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Avg Utilization</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('reseller.avg_utilization')}</p>
         <p class="text-2xl font-bold {avgResourcePct >= 80 ? 'text-red-400' : avgResourcePct >= 60 ? 'text-amber-400' : 'text-foreground'}">
           {avgResourcePct}%
         </p>
@@ -528,7 +524,7 @@
       <!-- Top client -->
       <div class="bg-card border border-border rounded-xl p-4
                   transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Top Client</p>
+        <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('reseller.top_client')}</p>
         {#if topClientBySites}
           <p class="text-sm font-semibold text-foreground truncate">{topClientBySites.display_name ?? topClientBySites.email.split('@')[0]}</p>
           <p class="text-xs text-muted-foreground mt-1">{topClientBySites.sites_count} sites</p>
@@ -582,8 +578,8 @@
               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
           </svg>
         </div>
-        <h3 class="text-sm font-medium text-foreground mb-1">No clients yet</h3>
-        <p class="text-xs text-muted-foreground">Clients will appear here after they sign up under a reseller account.</p>
+        <h3 class="text-sm font-medium text-foreground mb-1">{$t('reseller.no_clients')}</h3>
+        <p class="text-xs text-muted-foreground">{$t('reseller.no_clients_desc')}</p>
       </div>
     {:else}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -610,12 +606,10 @@
                   {/if}
                   {#if client.status === 'suspended'}
                     <span class="inline-flex items-center gap-1 text-xs font-medium text-amber-400">
-                      <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Suspended
-                    </span>
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>{$t('sites.suspended')}</span>
                   {:else}
                     <span class="inline-flex items-center gap-1 text-xs font-medium text-emerald-400">
-                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Active
-                    </span>
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>{$t('sites.active')}</span>
                   {/if}
                 </div>
               </div>
@@ -639,7 +633,7 @@
                     {client.sites_count}
                   </span>
                 </div>
-                <p class="text-[10px] text-muted-foreground">Sites</p>
+                <p class="text-[10px] text-muted-foreground">{$t('reseller.sites')}</p>
               </div>
 
               <!-- Disk donut -->
@@ -658,7 +652,7 @@
                     {diskPct}%
                   </span>
                 </div>
-                <p class="text-[10px] text-muted-foreground">Disk</p>
+                <p class="text-[10px] text-muted-foreground">{$t('reseller.disk')}</p>
               </div>
 
               <!-- Member since -->
@@ -683,7 +677,7 @@
               </button>
               {#if confirmRemoveClientId === client.id}
                 <div class="flex items-center gap-1.5">
-                  <span class="text-xs text-destructive">Remove?</span>
+                  <span class="text-xs text-destructive">{$t('servers.remove')}</span>
                   <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => removeClient(client)}>Yes</button>
                   <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmRemoveClientId = null}>No</button>
                 </div>
@@ -710,8 +704,8 @@
     <!-- Package templates section -->
     <div class="space-y-3">
       <div class="flex items-center justify-between">
-        <h2 class="text-sm font-semibold text-foreground">Default Templates</h2>
-        <span class="text-xs text-muted-foreground">Click "Use Template" to pre-fill a new package</span>
+        <h2 class="text-sm font-semibold text-foreground">{$t('reseller.default_templates')}</h2>
+        <span class="text-xs text-muted-foreground">{$t('reseller.click_use_template_to_pre_fill_a_new_pac')}</span>
       </div>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {#each PACKAGE_TEMPLATES as tpl, i}
@@ -724,7 +718,7 @@
               <div class="flex items-start justify-between mb-3">
                 <div>
                   <p class="font-semibold text-foreground">{tpl.name}</p>
-                  <p class="text-xs text-muted-foreground mt-0.5">Template</p>
+                  <p class="text-xs text-muted-foreground mt-0.5">{$t('reseller.template')}</p>
                 </div>
                 <span class="text-base font-bold {tc.icon}">
                   ${tpl.price_monthly}/mo
@@ -772,8 +766,8 @@
               d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
           </svg>
         </div>
-        <h3 class="text-sm font-medium text-foreground mb-1">No custom packages yet</h3>
-        <p class="text-xs text-muted-foreground mb-4">Use a template above or create from scratch.</p>
+        <h3 class="text-sm font-medium text-foreground mb-1">{$t('reseller.no_custom_packages_yet')}</h3>
+        <p class="text-xs text-muted-foreground mb-4">{$t('reseller.use_a_template_above_or_create_from_scra')}</p>
         <button on:click={() => openNewPackageModal()}
                 class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                        hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95">
@@ -782,7 +776,7 @@
       </div>
     {:else}
       <div>
-        <h2 class="text-sm font-semibold text-foreground mb-3">Your Packages</h2>
+        <h2 class="text-sm font-semibold text-foreground mb-3">{$t('reseller.your_packages')}</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {#each packages as pkg (pkg.id)}
             <div class="bg-card border border-border rounded-xl p-5 flex flex-col gap-4
@@ -800,7 +794,7 @@
                     {Number(pkg.price_monthly) > 0 ? `$${Number(pkg.price_monthly).toFixed(0)}` : 'Free'}
                   </p>
                   {#if Number(pkg.price_monthly) > 0}
-                    <p class="text-xs text-muted-foreground">/month</p>
+                    <p class="text-xs text-muted-foreground">{$t('reseller.per_month')}</p>
                   {/if}
                 </div>
               </div>
@@ -844,7 +838,7 @@
                 </button>
                 {#if confirmDeletePkgId === pkg.id}
                   <div class="flex items-center gap-1.5">
-                    <span class="text-xs text-destructive">Delete?</span>
+                    <span class="text-xs text-destructive">{$t('common.delete_confirm')}</span>
                     <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => deletePackage(pkg)}>Yes</button>
                     <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmDeletePkgId = null}>No</button>
                   </div>
@@ -871,11 +865,11 @@
       <div class="lg:col-span-2 bg-card border border-border rounded-xl p-5">
         <div class="flex items-start justify-between mb-4">
           <div>
-            <h3 class="text-sm font-semibold text-foreground">Revenue Overview</h3>
-            <p class="text-xs text-muted-foreground mt-0.5">Last 7 months</p>
+            <h3 class="text-sm font-semibold text-foreground">{$t('reseller.revenue_overview')}</h3>
+            <p class="text-xs text-muted-foreground mt-0.5">{$t('reseller.last_7_months')}</p>
           </div>
           {#if !stats || stats.total_revenue_monthly === 0}
-            <span class="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-lg">No billing data</span>
+            <span class="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-lg">{$t('reseller.no_billing_data')}</span>
           {:else}
             <span class="text-xs text-emerald-400 font-medium">${Number(stats.total_revenue_monthly).toFixed(0)}/mo</span>
           {/if}
@@ -907,8 +901,8 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             <div>
-              <p class="text-xs font-medium text-foreground">Connect billing module</p>
-              <p class="text-xs text-muted-foreground mt-0.5">Enable the billing integration to track revenue here.</p>
+              <p class="text-xs font-medium text-foreground">{$t('reseller.connect_billing')}</p>
+              <p class="text-xs text-muted-foreground mt-0.5">{$t('reseller.connect_billing_desc')}</p>
             </div>
           </div>
         {/if}
@@ -918,21 +912,21 @@
       <div class="space-y-3">
         <div class="bg-card border border-border rounded-xl p-4
                     transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-          <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Monthly Recurring</p>
+          <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('reseller.monthly_recurring_rev')}</p>
           <p class="text-2xl font-bold text-emerald-400">
             {stats && stats.total_revenue_monthly > 0 ? `$${Number(stats.total_revenue_monthly).toFixed(2)}` : 'N/A'}
           </p>
         </div>
         <div class="bg-card border border-border rounded-xl p-4
                     transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-          <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Paying Clients</p>
+          <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('reseller.paying_clients')}</p>
           <p class="text-2xl font-bold text-foreground">
             {stats ? stats.active_clients : '—'}
           </p>
         </div>
         <div class="bg-card border border-border rounded-xl p-4
                     transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
-          <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">Avg per Client</p>
+          <p class="text-xs text-muted-foreground uppercase tracking-wider mb-1">{$t('reseller.avg_per_client')}</p>
           <p class="text-2xl font-bold text-foreground">
             {#if stats && stats.active_clients > 0 && stats.total_revenue_monthly > 0}
               ${(Number(stats.total_revenue_monthly) / stats.active_clients).toFixed(2)}
@@ -968,13 +962,13 @@
 
       <form on:submit={savePackage} class="space-y-5">
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5">Package Name</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5">{$t('reseller.package_name')}</label>
           <input type="text" bind:value={pkgForm.name} required placeholder="e.g. Starter, Pro, Business"
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
 
         <div>
-          <p class="text-sm font-medium text-foreground mb-3">Resource Limits</p>
+          <p class="text-sm font-medium text-foreground mb-3">{$t('reseller.resource_limits')}</p>
           <div class="grid grid-cols-2 gap-3">
             {#each [
               { key: 'max_sites',          label: 'Max Sites',      unit: 'sites'    },
@@ -998,7 +992,7 @@
 
         <!-- Feature toggles -->
         <div>
-          <p class="text-sm font-medium text-foreground mb-2">Features</p>
+          <p class="text-sm font-medium text-foreground mb-2">{$t('reseller.features')}</p>
           <div class="bg-muted/20 rounded-xl border border-border divide-y divide-border">
             {#each Object.entries(featureLabels) as [key, label]}
               <label class="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-muted/30 transition-colors">

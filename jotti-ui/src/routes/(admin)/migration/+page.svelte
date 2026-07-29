@@ -292,8 +292,8 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
               </svg>
             </div>
-            <p class="text-sm font-medium text-foreground">Drop archive here or click to browse</p>
-            <p class="text-xs text-muted-foreground">Max 2 GB · .tar.gz, .tgz, .tar</p>
+            <p class="text-sm font-medium text-foreground">{$t('migration.drop_zone')}</p>
+            <p class="text-xs text-muted-foreground">{$t('migration.drop_zone_hint')}</p>
           </div>
         {/if}
       </div>
@@ -302,7 +302,7 @@
       {#if uploading}
         <div>
           <div class="flex items-center justify-between text-xs text-muted-foreground mb-1.5">
-            <span>Uploading…</span>
+            <span>{$t('migration.uploading')}</span>
             <span>{uploadProgress}%</span>
           </div>
           <div class="h-2 bg-muted rounded-full overflow-hidden">
@@ -346,9 +346,7 @@
         <h3 class="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
           <svg class="w-4 h-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-          What gets imported
-        </h3>
+          </svg>{$t('migration.what_imported')}</h3>
         <ul class="space-y-2">
           {#each [
             { icon: 'M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z', label: 'Site files & docroot' },
@@ -374,26 +372,22 @@
         </h3>
         {#if activeSource === 'cpanel'}
           <ol class="space-y-1.5 text-xs text-muted-foreground list-decimal list-inside leading-relaxed">
-            <li>Log into cPanel → <strong class="text-foreground">Backup Wizard</strong></li>
-            <li>Click <strong class="text-foreground">Full Backup</strong></li>
-            <li>Choose <strong class="text-foreground">Download</strong> and wait for it to generate</li>
-            <li>Download the <code class="font-mono bg-muted px-1 rounded">cpmove-*.tar.gz</code> file</li>
-            <li>Upload it here</li>
+            <li>{$t('migration.log_into_cpanel')}<strong class="text-foreground">{$t('migration.backup_wizard')}</strong></li>
+            <li>{$t('migration.click')}<strong class="text-foreground">{$t('migration.full_backup')}</strong></li>
+            <li>{$t('migration.choose')}<strong class="text-foreground">{$t('common.download')}</strong>{$t('migration.and_wait_for_it_to_generate')}</li>
+            <li>{$t('migration.download_the')}<code class="font-mono bg-muted px-1 rounded">{$t('migration.cpmove_targz')}</code>{$t('migration.file')}</li>
+            <li>{$t('migration.cpanel_step5')}</li>
           </ol>
-          <p class="text-xs text-muted-foreground mt-3 italic">
-            Alternatively, use <code class="font-mono bg-muted px-1 rounded">pkgacct</code> from WHM root.
-          </p>
+          <p class="text-xs text-muted-foreground mt-3 italic">{$t('migration.alternatively_use')}<code class="font-mono bg-muted px-1 rounded">{$t('migration.pkgacct')}</code>{$t('migration.from_whm_root')}</p>
         {:else}
           <ol class="space-y-1.5 text-xs text-muted-foreground list-decimal list-inside leading-relaxed">
-            <li>Log into Plesk → <strong class="text-foreground">Websites & Domains</strong></li>
-            <li>Click <strong class="text-foreground">Backup Manager</strong></li>
-            <li>Click <strong class="text-foreground">Back Up Now</strong></li>
-            <li>Download the generated <code class="font-mono bg-muted px-1 rounded">.tar</code> file</li>
-            <li>Upload it here</li>
+            <li>{$t('migration.log_into_plesk')}<strong class="text-foreground">{$t('migration.websites_domains')}</strong></li>
+            <li>{$t('migration.click')}<strong class="text-foreground">{$t('migration.backup_manager')}</strong></li>
+            <li>{$t('migration.click')}<strong class="text-foreground">{$t('migration.back_up_now')}</strong></li>
+            <li>{$t('migration.download_the_generated')}<code class="font-mono bg-muted px-1 rounded">{$t('migration.tar')}</code>{$t('migration.file')}</li>
+            <li>{$t('migration.cpanel_step5')}</li>
           </ol>
-          <p class="text-xs text-muted-foreground mt-3 italic">
-            Also works with Plesk Migrator exported archives.
-          </p>
+          <p class="text-xs text-muted-foreground mt-3 italic">{$t('migration.plesk_alt')}</p>
         {/if}
       </div>
     </div>
@@ -408,7 +402,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
           </svg>
         </div>
-        <h2 class="text-sm font-semibold text-foreground">Migration Jobs</h2>
+        <h2 class="text-sm font-semibold text-foreground">{$t('migration.migration_jobs')}</h2>
       </div>
       <button
         on:click={loadJobs}
@@ -416,9 +410,7 @@
       >
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-        </svg>
-        Refresh
-      </button>
+        </svg>{$t('common.refresh')}</button>
     </div>
 
     {#if jobsLoading && jobs.length === 0}
@@ -441,8 +433,8 @@
             <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
           </svg>
         </div>
-        <p class="text-sm font-medium text-foreground mb-1">No migration jobs yet</p>
-        <p class="text-xs text-muted-foreground">Upload a cPanel or Plesk backup above to get started</p>
+        <p class="text-sm font-medium text-foreground mb-1">{$t('migration.no_jobs')}</p>
+        <p class="text-xs text-muted-foreground">{$t('migration.no_jobs_desc')}</p>
       </div>
     {:else}
       <div class="divide-y divide-border">
@@ -545,7 +537,7 @@
                 <!-- Warnings -->
                 {#if r.warnings && r.warnings.length > 0}
                   <div class="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3">
-                    <p class="text-xs font-medium text-yellow-400 mb-1.5">Warnings</p>
+                    <p class="text-xs font-medium text-yellow-400 mb-1.5">{$t('migration.warnings')}</p>
                     <ul class="space-y-0.5">
                       {#each r.warnings as w}
                         <li class="text-xs text-yellow-300/80 flex items-start gap-1.5">
@@ -562,7 +554,7 @@
                 <!-- Errors -->
                 {#if r.errors && r.errors.length > 0}
                   <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-3">
-                    <p class="text-xs font-medium text-red-400 mb-1.5">Errors</p>
+                    <p class="text-xs font-medium text-red-400 mb-1.5">{$t('migration.errors')}</p>
                     <ul class="space-y-0.5">
                       {#each r.errors as err}
                         <li class="text-xs text-red-300/80 flex items-start gap-1.5">

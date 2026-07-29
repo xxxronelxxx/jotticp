@@ -225,9 +225,7 @@
     >
       <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-      </svg>
-      Add Token
-    </button>
+      </svg>{$t('cloudflare.add_token')}</button>
   </div>
 
   <!-- Tokens table card -->
@@ -273,9 +271,7 @@
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-          Add Token
-        </button>
+          </svg>{$t('cloudflare.add_token')}</button>
       </div>
 
     {:else}
@@ -283,12 +279,12 @@
         <table class="w-full text-sm">
           <thead class="bg-muted/30">
             <tr>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Label</th>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Domain</th>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Zone ID</th>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Proxy</th>
-              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">Created</th>
-              <th class="px-4 py-2.5 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">Actions</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('settings.label')}</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('sites.domain')}</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('cloudflare.col_zone_id')}</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('cloudflare.col_proxy')}</th>
+              <th class="px-4 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('common.created')}</th>
+              <th class="px-4 py-2.5 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wide">{$t('common.actions')}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-border">
@@ -364,9 +360,9 @@
                     <!-- Delete button -->
                     {#if confirmDeleteTokenId === tok.id}
                       <div class="flex items-center gap-1.5">
-                        <span class="text-xs text-destructive">Remove?</span>
-                        <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => deleteToken(tok.id)}>Yes</button>
-                        <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmDeleteTokenId = null}>No</button>
+                        <span class="text-xs text-destructive">{$t('servers.remove')}</span>
+                        <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={() => deleteToken(tok.id)}>{$t("common.yes")}</button>
+                        <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmDeleteTokenId = null}>{$t("common.no")}</button>
                       </div>
                     {:else}
                       <button
@@ -398,34 +394,28 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h3 class="text-sm font-semibold text-foreground">Setup Guide</h3>
+      <h3 class="text-sm font-semibold text-foreground">{$t('cloudflare.setup_guide')}</h3>
     </div>
     <div class="space-y-3 text-sm text-muted-foreground">
-      <p>
-        JottiCP uses Cloudflare's DNS Edit API to create, update, and delete records inside your zone automatically
-        whenever a site is provisioned or removed.
-      </p>
+      <p>{$t('cloudflare.jotticp_uses_cloudflares_dns_edit_api_to')}</p>
 
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="bg-muted/30 border border-border rounded-lg p-3">
-          <p class="text-xs font-semibold text-foreground mb-1">1 — Create API Token</p>
-          <p class="text-xs">In Cloudflare: My Profile → API Tokens → Create Token. Use the <em>Edit zone DNS</em> template and restrict it to the specific zone.</p>
+          <p class="text-xs font-semibold text-foreground mb-1">{$t('cloudflare.guide_step1')}</p>
+          <p class="text-xs">{$t('cloudflare.in_cloudflare_my_profile_api_tokens_crea')}<em>{$t('cloudflare.edit_zone_dns')}</em>{$t('cloudflare.template_and_restrict_it_to_the_specific')}</p>
         </div>
         <div class="bg-muted/30 border border-border rounded-lg p-3">
-          <p class="text-xs font-semibold text-foreground mb-1">2 — Copy Zone ID</p>
-          <p class="text-xs">Open your domain in the Cloudflare dashboard. The Zone ID is the 32-character hex string shown in the right sidebar of the Overview tab.</p>
+          <p class="text-xs font-semibold text-foreground mb-1">{$t('cloudflare.guide_step2')}</p>
+          <p class="text-xs">{$t('cloudflare.guide_step2_desc')}</p>
         </div>
         <div class="bg-muted/30 border border-border rounded-lg p-3">
-          <p class="text-xs font-semibold text-foreground mb-1">3 — Add &amp; Sync</p>
-          <p class="text-xs">Paste the token and Zone ID here, then click Sync to push existing records immediately. JottiCP will keep the zone in sync going forward.</p>
+          <p class="text-xs font-semibold text-foreground mb-1">{$t('cloudflare.3_add_amp_sync')}</p>
+          <p class="text-xs">{$t('cloudflare.guide_step3_desc')}</p>
         </div>
       </div>
 
       <p class="text-xs">
-        <span class="font-medium text-foreground">Required permission:</span> Zone → DNS → Edit.
-        Restrict the token to a single zone for least-privilege access.
-        The API Token is stored encrypted at rest and is never returned in API responses.
-      </p>
+        <span class="font-medium text-foreground">{$t('cloudflare.required_perm')}</span>{$t('cloudflare.zone_dns_edit_restrict_the_token_to_a_si')}</p>
     </div>
   </div>
 </div>
@@ -442,8 +432,8 @@
       <!-- Modal header -->
       <div class="flex items-center justify-between mb-5">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Add Cloudflare Token</h2>
-          <p class="text-xs text-muted-foreground mt-0.5">Connect a Cloudflare zone for automatic DNS sync</p>
+          <h2 class="text-base font-semibold text-foreground">{$t('cloudflare.modal_title')}</h2>
+          <p class="text-xs text-muted-foreground mt-0.5">{$t('cloudflare.modal_desc')}</p>
         </div>
         <button
           on:click={closeModal}
@@ -459,8 +449,7 @@
       <div class="space-y-4">
         <!-- Label -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-label">
-            Label <span class="text-red-400">*</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-label">{$t('settings.label')}<span class="text-red-400">*</span>
           </label>
           <input
             id="cf-label"
@@ -473,8 +462,7 @@
 
         <!-- API Token -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-token">
-            API Token <span class="text-red-400">*</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-token">{$t('cloudflare.api_token')}<span class="text-red-400">*</span>
           </label>
           <div class="relative">
             <input
@@ -506,8 +494,7 @@
 
         <!-- Zone ID -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-zone">
-            Zone ID <span class="text-red-400">*</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-zone">{$t('cloudflare.col_zone_id')}<span class="text-red-400">*</span>
           </label>
           <input
             id="cf-zone"
@@ -521,8 +508,7 @@
 
         <!-- Domain -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-domain">
-            Domain <span class="text-red-400">*</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="cf-domain">{$t('sites.domain')}<span class="text-red-400">*</span>
           </label>
           <input
             id="cf-domain"
@@ -536,8 +522,8 @@
         <!-- Proxy toggle -->
         <div class="flex items-center justify-between rounded-lg border border-border px-3 py-3">
           <div>
-            <p class="text-sm font-medium text-foreground">Enable Proxy (orange cloud)</p>
-            <p class="text-xs text-muted-foreground mt-0.5">Route traffic through Cloudflare's network</p>
+            <p class="text-sm font-medium text-foreground">{$t('cloudflare.proxy_label')}</p>
+            <p class="text-xs text-muted-foreground mt-0.5">{$t('cloudflare.proxy_desc')}</p>
           </div>
           <button
             type="button"
@@ -567,9 +553,7 @@
         <button
           on:click={closeModal}
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-        >
-          Cancel
-        </button>
+        >{$t('common.cancel')}</button>
         <button
           on:click={createToken}
           disabled={modalSaving}

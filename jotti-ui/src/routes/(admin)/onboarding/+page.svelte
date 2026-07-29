@@ -236,7 +236,7 @@
             <button on:click={() => goToStep(3)} disabled={saving}
                     class="flex-1 h-10 rounded-lg bg-[var(--accent)] text-white font-medium text-sm
                            hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50">
-              {saving ? 'Saving...' : 'Next →'}
+              {saving ? $t('onboarding.saving') : $t('onboarding.next')}
             </button>
           </div>
         </div>
@@ -326,7 +326,7 @@
                     class="h-9 px-4 rounded-lg border border-border text-sm
                            text-muted-foreground hover:bg-muted hover:text-foreground
                            transition-colors disabled:opacity-50">
-              {checkingPropagation ? 'Checking...' : 'Refresh Propagation'}
+              {checkingPropagation ? $t('onboarding.checking') : $t('onboarding.check_propagation')}
             </button>
             {#if propagationStatus}
               <span class="text-sm {propagationStatus.ok ? 'text-green-600' : 'text-amber-500'}">
@@ -408,7 +408,7 @@
                     class="w-full h-10 rounded-lg border border-border text-sm font-medium
                            text-foreground hover:bg-muted
                            transition-colors disabled:opacity-50">
-              {siteCreating ? 'Creating...' : 'Create Site'}
+              {siteCreating ? $t('onboarding.creating') : $t('onboarding.create_site')}
             </button>
           {/if}
 
@@ -416,12 +416,12 @@
             <button on:click={() => goToStep(4)}
                     class="flex-1 h-10 rounded-lg border border-border text-sm
                            text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
-              Back
+              {$t('onboarding.back')}
             </button>
             <button on:click={() => goToStep(6)}
                     class="flex-1 h-10 rounded-lg bg-[var(--accent)] text-white font-medium text-sm
                            hover:bg-[var(--accent-hover)] transition-colors">
-              {siteCreated ? 'Next →' : 'Skip for now →'}
+              {siteCreated ? $t('onboarding.next') : $t('onboarding.skip_for_now')}
             </button>
           </div>
         </div>
@@ -460,7 +460,7 @@
           <button on:click={completeWizard} disabled={saving}
                   class="w-full h-10 rounded-lg bg-[var(--accent)] text-white font-medium text-sm
                          hover:bg-[var(--accent-hover)] transition-colors disabled:opacity-50">
-            {saving ? 'Finishing...' : 'Go to Dashboard →'}
+            {saving ? $t('onboarding.finishing') : $t('onboarding.go_to_dashboard')}
           </button>
         </div>
       {/if}

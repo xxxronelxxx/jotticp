@@ -527,7 +527,7 @@
       <div class="bg-card border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
         <div class="flex items-center gap-2 mb-1">
           <div class="text-2xl font-bold text-foreground">{mysqlCount}</div>
-          <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">MySQL</span>
+          <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20">{$t('databases.mysql')}</span>
         </div>
         <div class="text-xs text-muted-foreground">{$t('databases.total_mysql')}</div>
       </div>
@@ -536,7 +536,7 @@
       <div class="bg-card border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/20">
         <div class="flex items-center gap-2 mb-1">
           <div class="text-2xl font-bold text-foreground">{pgCount}</div>
-          <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">PG</span>
+          <span class="px-1.5 py-0.5 rounded-full text-xs font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">{$t('databases.pg')}</span>
         </div>
         <div class="text-xs text-muted-foreground">{$t('databases.total_pg')}</div>
       </div>
@@ -805,9 +805,7 @@
                       <svg class="w-4 h-4 animate-spin text-primary" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
-                      </svg>
-                      Loading stats…
-                    </div>
+                      </svg>{$t('databases.loading_stats')}</div>
                   {:else}
                     {@const stats = statsCache[db.id]}
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
@@ -942,7 +940,7 @@
     <div class="fixed inset-0" on:click={() => { if (!createLoading) showCreateModal = false; }}></div>
     <div class="relative bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto fade-up">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-base font-semibold text-foreground">Create Database</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('databases.create')}</h2>
         <button
           on:click={() => showCreateModal = false}
           disabled={createLoading}
@@ -958,7 +956,7 @@
 
         <!-- Type selection -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-2">Database Type</label>
+          <label class="block text-sm font-medium text-foreground mb-2">{$t('databases.db_type')}</label>
           <div class="grid grid-cols-3 gap-2">
             {#each CREATE_TYPES as type}
               {@const cfg = dbCfg(type)}
@@ -976,7 +974,7 @@
 
         <!-- Associated site -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-site">Associated Site</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-site">{$t('databases.associated_site')}</label>
           <select
             id="create-site"
             bind:value={newDb.site_id}
@@ -991,7 +989,7 @@
 
         <!-- DB name -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-name">Database Name</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-name">{$t('databases.db_name')}</label>
           <input
             id="create-name"
             type="text"
@@ -1003,12 +1001,12 @@
             title="Must start with a letter or underscore; letters, numbers and underscores only"
             class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
           />
-          <p class="text-xs text-muted-foreground mt-1">Lowercase letters, numbers, underscores. Max 64 chars.</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('databases.db_name_hint')}</p>
         </div>
 
         <!-- Username (auto-generated, editable) -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-user">Database Username</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-user">{$t('databases.db_user_label')}</label>
           <input
             id="create-user"
             type="text"
@@ -1016,12 +1014,12 @@
             placeholder="Auto-generated"
             class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground font-mono placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
           />
-          <p class="text-xs text-muted-foreground mt-1">Will be auto-generated from your site prefix if left blank.</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('databases.db_user_hint')}</p>
         </div>
 
         <!-- Password -->
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-pw">Password</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="create-pw">{$t('auth.password')}</label>
           <div class="flex gap-2">
             <div class="relative flex-1">
               <input
@@ -1056,9 +1054,7 @@
             >
               <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-              </svg>
-              Generate
-            </button>
+              </svg>{$t('email.generate')}</button>
           </div>
           <!-- Strength meter -->
           {#if newDb.db_password}
@@ -1073,7 +1069,7 @@
               </p>
             </div>
           {/if}
-          <p class="text-xs text-muted-foreground mt-1">Min 12 chars with uppercase, lowercase, number and special char.</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('databases.min_12_chars_with_uppercase_lowercase_nu')}</p>
         </div>
 
         {#if createError}
@@ -1127,7 +1123,7 @@
     <div class="relative bg-card border border-border rounded-2xl p-6 w-full max-w-xl shadow-2xl fade-up">
       <div class="flex items-center justify-between mb-5">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Connection Details</h2>
+          <h2 class="text-base font-semibold text-foreground">{$t('databases.connection_details')}</h2>
           <p class="text-xs text-muted-foreground mt-0.5">{db.db_name}</p>
         </div>
         <button
@@ -1169,7 +1165,7 @@
         <!-- Password field with toggle -->
         <div class="col-span-2">
           <div class="flex items-center justify-between mb-0.5">
-            <span class="text-xs text-muted-foreground">Password</span>
+            <span class="text-xs text-muted-foreground">{$t('auth.password')}</span>
             <button
               on:click={() => showConnPassword = !showConnPassword}
               class="text-xs text-muted-foreground hover:text-primary inline-flex items-center gap-1"
@@ -1180,7 +1176,7 @@
           <div class="font-mono text-xs bg-background border border-border rounded-lg px-2.5 py-1.5 text-foreground">
             {showConnPassword ? '(see your saved password)' : '••••••••••••'}
           </div>
-          <p class="text-xs text-muted-foreground mt-1">Password is not stored in JottiCP. Use the one you set at creation time.</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('databases.password_is_not_stored_in_jotticp_use_th')}</p>
         </div>
       </div>
 
@@ -1211,9 +1207,7 @@
               <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
-              Copy
-            </button>
+              </svg>{$t('common.copy')}</button>
           </div>
         </div>
         <pre class="bg-[#0d1117] rounded-lg p-4 text-xs font-mono overflow-x-auto text-slate-300 leading-relaxed max-h-40">{getSnippet(db, connTab)}</pre>
@@ -1242,11 +1236,8 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-foreground">Export Coming Soon</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            Direct SQL export for <strong class="text-foreground">{db.db_name}</strong> is available in the next release.
-            In the meantime, use <strong class="text-foreground">phpMyAdmin</strong> to export your database.
-          </p>
+          <h2 class="text-base font-semibold text-foreground">{$t('databases.export_coming_soon')}</h2>
+          <p class="text-sm text-muted-foreground mt-1">{$t('databases.direct_sql_export_for')}<strong class="text-foreground">{db.db_name}</strong>{$t('databases.is_available_in_the_next_release_in_the_')}<strong class="text-foreground">{$t('databases.phpmyadmin')}</strong>{$t('databases.to_export_your_database')}</p>
         </div>
       </div>
       <div class="flex gap-3 justify-end">
@@ -1293,12 +1284,10 @@
       </div>
 
       <form on:submit={handleImport} class="space-y-4">
-        <div class="rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-sm text-amber-400">
-          SQL import via the API is available in the next release. You can import now using phpMyAdmin.
-        </div>
+        <div class="rounded-lg border border-amber-500/20 bg-amber-500/5 px-4 py-3 text-sm text-amber-400">{$t('databases.sql_import_via_the_api_is_available_in_t')}</div>
 
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="import-file">SQL File</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="import-file">{$t('databases.sql_file')}</label>
           <input
             id="import-file"
             type="file"
@@ -1311,7 +1300,7 @@
         {#if importError}
           <div role="alert" class="text-sm text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-lg px-3 py-2.5">
             {importError}
-            <a href="/databases/{db.id}" class="ml-1 underline hover:no-underline">Open phpMyAdmin instead</a>
+            <a href="/databases/{db.id}" class="ml-1 underline hover:no-underline">{$t('databases.open_phpmyadmin_instead')}</a>
           </div>
         {/if}
 
@@ -1356,18 +1345,13 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-foreground">Delete Database?</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            This will permanently delete <strong class="text-foreground">{db.db_name}</strong> and all its data.
-            This action cannot be undone.
-          </p>
+          <h2 class="text-base font-semibold text-foreground">{$t('databases.delete_database')}</h2>
+          <p class="text-sm text-muted-foreground mt-1">{$t('email.this_will_permanently_delete')}<strong class="text-foreground">{db.db_name}</strong>{$t('databases.and_all_its_data_this_action_cannot_be_u')}</p>
         </div>
       </div>
 
       <div class="mb-4">
-        <label class="block text-sm font-medium text-foreground mb-1.5" for="delete-confirm">
-          Type <span class="font-mono text-red-400">{db.db_name}</span> to confirm
-        </label>
+        <label class="block text-sm font-medium text-foreground mb-1.5" for="delete-confirm">{$t('common.type')}<span class="font-mono text-red-400">{db.db_name}</span>{$t('databases.to_confirm')}</label>
         <input
           id="delete-confirm"
           type="text"
@@ -1388,9 +1372,7 @@
           on:click={confirmDelete}
           disabled={deleteConfirmName !== db.db_name}
           class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-150 active:scale-95"
-        >
-          Delete Database
-        </button>
+        >{$t('databases.delete_database')}</button>
       </div>
     </div>
   </div>

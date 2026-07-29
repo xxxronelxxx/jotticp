@@ -2,9 +2,9 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { api } from '$api/client';
+  import { t } from '$lib/i18n';
   import type { User } from '$api/client';
   import { auth, currentUser } from '$stores/auth';
-  import { t } from '$lib/i18n';
 
   // ── State ──────────────────────────────────────────────────────────────────
   let users: User[] = [];
@@ -572,9 +572,7 @@
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-        </svg>
-        Permissions
-      </button>
+        </svg>{$t('users.permissions')}</button>
       <button
         on:click={openInviteModal}
         class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
@@ -582,9 +580,7 @@
       >
         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-        </svg>
-        Invite User
-      </button>
+        </svg>{$t('users.invite_user')}</button>
     </div>
   </div>
 
@@ -616,14 +612,12 @@
   {#if showActivityLog}
     <div class="bg-card border border-border rounded-xl overflow-hidden fade-up">
       <div class="flex items-center justify-between px-4 py-3 border-b border-border">
-        <h2 class="text-sm font-semibold text-foreground">Activity Log</h2>
+        <h2 class="text-sm font-semibold text-foreground">{$t('users.activity_log')}</h2>
         {#if activityLoading}
-          <span class="text-xs text-muted-foreground">Loading...</span>
+          <span class="text-xs text-muted-foreground">{$t('common.loading')}</span>
         {:else}
           <button on:click={loadActivityLog}
-                  class="text-xs text-muted-foreground hover:text-foreground transition-colors">
-            Refresh
-          </button>
+                  class="text-xs text-muted-foreground hover:text-foreground transition-colors">{$t('common.refresh')}</button>
         {/if}
       </div>
       {#if activityLoading}
@@ -635,7 +629,7 @@
       {:else if activityError}
         <p class="text-sm text-destructive text-center py-10">{activityError}</p>
       {:else if activityLog.length === 0}
-        <p class="text-sm text-muted-foreground text-center py-10">No activity recorded yet.</p>
+        <p class="text-sm text-muted-foreground text-center py-10">{$t('users.no_activity')}</p>
       {:else}
         <div class="space-y-0.5 p-2 max-h-96 overflow-y-auto">
           {#each activityLog as event (event.id)}
@@ -682,9 +676,7 @@
               </div>
               <!-- Failed badge -->
               {#if event.success === false}
-                <span class="text-xs text-red-400 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded-full whitespace-nowrap shrink-0">
-                  Failed
-                </span>
+                <span class="text-xs text-red-400 bg-red-500/10 border border-red-500/20 px-1.5 py-0.5 rounded-full whitespace-nowrap shrink-0">{$t('users.failed')}</span>
               {/if}
             </div>
           {/each}
@@ -715,10 +707,10 @@
       bind:value={roleFilter}
       class="h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground appearance-none focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
     >
-      <option value="">All roles</option>
-      <option value="admin">Admin</option>
-      <option value="reseller">Reseller</option>
-      <option value="user">User</option>
+      <option value="">{$t('users.all_roles')}</option>
+      <option value="admin">{$t('users.admin_role')}</option>
+      <option value="reseller">{$t('nav.reseller')}</option>
+      <option value="user">{$t('users.user_role')}</option>
     </select>
 
     <!-- View toggle -->
@@ -773,9 +765,7 @@
       {#if users.length === 0}
         <button on:click={openInviteModal}
                 class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
-                       hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95">
-          Invite User
-        </button>
+                       hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95">{$t('users.invite_user')}</button>
       {/if}
     </div>
 
@@ -815,15 +805,15 @@
           <div class="mt-3 pt-3 border-t border-border grid grid-cols-3 gap-2 text-center mb-3">
             <div>
               <p class="text-lg font-bold text-foreground">{u.site_count ?? 0}</p>
-              <p class="text-[10px] text-muted-foreground">Sites</p>
+              <p class="text-[10px] text-muted-foreground">{$t('dashboard.sites')}</p>
             </div>
             <div>
               <p class="text-lg font-bold text-foreground">{u.email_count ?? 0}</p>
-              <p class="text-[10px] text-muted-foreground">Emails</p>
+              <p class="text-[10px] text-muted-foreground">{$t('reseller.emails')}</p>
             </div>
             <div>
               <p class="text-lg font-bold text-foreground">{u.db_count ?? 0}</p>
-              <p class="text-[10px] text-muted-foreground">DBs</p>
+              <p class="text-[10px] text-muted-foreground">{$t('users.perm_dbs')}</p>
             </div>
           </div>
 
@@ -832,12 +822,10 @@
             <span>Joined {formatDateShort(user.created_at)}</span>
             {#if u.status === 'suspended'}
               <span class="flex items-center gap-1 text-amber-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>Suspended
-              </span>
+                <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>{$t('sites.suspended')}</span>
             {:else}
               <span class="flex items-center gap-1 text-emerald-400">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>Active
-              </span>
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>{$t('sites.active')}</span>
             {/if}
           </div>
 
@@ -892,13 +880,13 @@
                 class="rounded border-border text-primary focus:ring-primary/50"
               />
             </th>
-            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left">User</th>
-            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden sm:table-cell">Role</th>
-            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden lg:table-cell">2FA</th>
-            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden md:table-cell">Joined</th>
-            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden lg:table-cell">Last Login</th>
-            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden sm:table-cell">Status</th>
-            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-right sr-only">Actions</th>
+            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left">{$t('users.user_role')}</th>
+            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden sm:table-cell">{$t('users.col_role')}</th>
+            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden lg:table-cell">{$t('users.col_2fa')}</th>
+            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden md:table-cell">{$t('users.col_joined')}</th>
+            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden lg:table-cell">{$t('users.col_last_login')}</th>
+            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-left hidden sm:table-cell">{$t('common.status')}</th>
+            <th class="px-4 py-3 text-xs font-medium text-muted-foreground uppercase text-right sr-only">{$t('common.actions')}</th>
           </tr>
         </thead>
         <tbody>
@@ -969,14 +957,10 @@
               <td class="px-4 py-3 hidden sm:table-cell">
                 {#if u.status === 'suspended'}
                   <span class="inline-flex items-center gap-1.5 text-xs font-medium text-amber-400">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                    Suspended
-                  </span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>{$t('sites.suspended')}</span>
                 {:else}
                   <span class="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    Active
-                  </span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>{$t('sites.active')}</span>
                 {/if}
               </td>
 
@@ -1068,13 +1052,11 @@
       on:click={bulkSuspend}
       disabled={bulkLoading}
       class="text-foreground hover:text-amber-400 transition-colors disabled:opacity-50"
-    >
-      Suspend
-    </button>
+    >{$t('users.suspend')}</button>
     {#if confirmBulkDelete}
       <div class="flex items-center gap-1.5">
         <span class="text-xs text-destructive">Delete {selectedIds.size} users?</span>
-        <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={bulkDelete}>Yes</button>
+        <button class="text-xs px-2 py-1 rounded bg-destructive text-white hover:bg-destructive/90" on:click={bulkDelete}>{$t('common.yes')}</button>
         <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmBulkDelete = false}>No</button>
       </div>
     {:else}
@@ -1107,10 +1089,8 @@
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-4xl shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-5">
         <div>
-          <h2 class="text-base font-semibold text-foreground">Permission Matrix</h2>
-          <p class="text-xs text-muted-foreground mt-0.5">
-            Click a cell to cycle permissions for non-admin users: Full → Own → None
-          </p>
+          <h2 class="text-base font-semibold text-foreground">{$t('users.perm_matrix_title')}</h2>
+          <p class="text-xs text-muted-foreground mt-0.5">{$t('users.perm_matrix_desc')}</p>
         </div>
         <button on:click={() => showPermissionsModal = false}
                 class="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground
@@ -1131,7 +1111,7 @@
         ] as [label, cls]}
           <span class="text-xs px-2 py-0.5 rounded-full {cls}">{label}</span>
         {/each}
-        <span class="text-xs text-muted-foreground ml-2">Admins always have Full access (read-only)</span>
+        <span class="text-xs text-muted-foreground ml-2">{$t('users.full_access_admin')}</span>
       </div>
 
       <!-- Matrix table -->
@@ -1139,7 +1119,7 @@
         <table class="w-full text-sm border-collapse">
           <thead>
             <tr class="border-b border-border">
-              <th class="text-left py-2 pr-4 text-xs font-medium text-muted-foreground min-w-[180px]">User</th>
+              <th class="text-left py-2 pr-4 text-xs font-medium text-muted-foreground min-w-[180px]">{$t('users.user_role')}</th>
               {#each permColumns as col}
                 <th class="text-center py-2 px-2 text-xs font-medium text-muted-foreground whitespace-nowrap">
                   {col.label}
@@ -1213,7 +1193,7 @@
        role="dialog" aria-modal="true" aria-label="Invite user">
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-base font-semibold text-foreground">Invite User</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('users.invite_user')}</h2>
         <button on:click={() => showInviteModal = false}
                 class="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1224,20 +1204,20 @@
 
       <form on:submit={handleInvite} class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="invite-email">Email</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="invite-email">{$t('nav.email')}</label>
           <input id="invite-email" type="email" bind:value={inviteForm.email} required
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="invite-name">Full Name</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="invite-name">{$t('users.invite_form_name')}</label>
           <input id="invite-name" type="text" bind:value={inviteForm.full_name}
                  placeholder="Optional"
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
 
         <div>
-          <p class="block text-sm font-medium text-foreground mb-2">Role</p>
+          <p class="block text-sm font-medium text-foreground mb-2">{$t('users.col_role')}</p>
           <div class="flex gap-2">
             {#each [
               { value: 'user',     label: 'User'     },
@@ -1259,8 +1239,8 @@
 
         <div class="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border">
           <div>
-            <p class="text-sm font-medium text-foreground">Send invitation email</p>
-            <p class="text-xs text-muted-foreground">User receives a link to set their password</p>
+            <p class="text-sm font-medium text-foreground">{$t('users.invite_form_send_email')}</p>
+            <p class="text-xs text-muted-foreground">{$t('users.user_receives_a_link_to_set_their_passwo')}</p>
           </div>
           <button type="button"
                   on:click={() => { inviteForm.send_email = !inviteForm.send_email; if (!inviteForm.send_email) generatedPassword = generatePassword(); }}
@@ -1273,7 +1253,7 @@
 
         {#if !inviteForm.send_email}
           <div>
-            <label class="block text-sm font-medium text-foreground mb-1.5">Temporary Password</label>
+            <label class="block text-sm font-medium text-foreground mb-1.5">{$t('users.temporary_password')}</label>
             <div class="flex gap-2">
               <code class="flex-1 h-9 rounded-lg border border-border bg-background px-3 text-sm font-mono text-foreground flex items-center truncate">
                 {generatedPassword}
@@ -1323,7 +1303,7 @@
        role="dialog" aria-modal="true" aria-label="Edit user">
     <div class="bg-card border border-border rounded-2xl p-6 w-full max-w-lg shadow-2xl">
       <div class="flex items-center justify-between mb-5">
-        <h2 class="text-base font-semibold text-foreground">Edit User</h2>
+        <h2 class="text-base font-semibold text-foreground">{$t('users.edit_title')}</h2>
         <button on:click={() => showEditModal = false}
                 class="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-foreground transition-colors">
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1334,19 +1314,19 @@
 
       <form on:submit={handleEdit} class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="edit-name">Full Name</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="edit-name">{$t('users.invite_form_name')}</label>
           <input id="edit-name" type="text" bind:value={editForm.full_name}
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="edit-email">Email</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="edit-email">{$t('nav.email')}</label>
           <input id="edit-email" type="email" bind:value={editForm.email} required
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
 
         <div>
-          <p class="block text-sm font-medium text-foreground mb-2">Role</p>
+          <p class="block text-sm font-medium text-foreground mb-2">{$t('users.col_role')}</p>
           <div class="flex gap-2">
             {#each [
               { value: 'user',     label: 'User'     },
@@ -1367,9 +1347,7 @@
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="edit-password">
-            New Password
-            <span class="text-xs text-muted-foreground font-normal ml-1">(leave blank to keep current)</span>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="edit-password">{$t('onboarding.new_password')}<span class="text-xs text-muted-foreground font-normal ml-1">{$t('users.leave_blank_to_keep_current')}</span>
           </label>
           <input id="edit-password" type="password" bind:value={editForm.new_password} minlength="8"
                  class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
@@ -1412,18 +1390,13 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-base font-semibold text-foreground">Delete User</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            This will permanently delete <strong class="text-foreground">{deleteTarget.email}</strong> and all their data.
-            This action cannot be undone.
-          </p>
+          <h2 class="text-base font-semibold text-foreground">{$t('users.delete_title')}</h2>
+          <p class="text-sm text-muted-foreground mt-1">{$t('email.this_will_permanently_delete')}<strong class="text-foreground">{deleteTarget.email}</strong>{$t('users.and_all_their_data_this_action_cannot_be')}</p>
         </div>
       </div>
 
       <div class="mb-4">
-        <label class="block text-sm font-medium text-foreground mb-1.5">
-          Type <code class="font-mono text-red-400">{deleteTarget.email}</code> to confirm
-        </label>
+        <label class="block text-sm font-medium text-foreground mb-1.5">{$t('common.type')}<code class="font-mono text-red-400">{deleteTarget.email}</code>{$t('databases.to_confirm')}</label>
         <input type="text" bind:value={deleteConfirmEmail}
                placeholder={deleteTarget.email}
                class="w-full h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500" />

@@ -612,7 +612,7 @@
                     </div>
                     <div>
                       <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.key_type')}</div>
-                      <div class="text-foreground font-medium">RSA 2048</div>
+                      <div class="text-foreground font-medium">{$t('ssl.rsa_2048')}</div>
                     </div>
                     <div>
                       <div class="text-xs text-muted-foreground uppercase mb-1">{$t('ssl.auto_renew')}</div>
@@ -755,27 +755,25 @@
               on:click={wildcardNext}
               class="flex-1 h-9 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                      hover:bg-primary/90 transition-all duration-150 active:scale-95"
-            >
-              Next: DNS Challenge
-            </button>
+            >{$t('ssl.wildcard_next')}</button>
           </div>
         </div>
 
       {:else if wildcardStep === 2}
         <div>
-          <h2 class="text-base font-semibold text-foreground mb-1">Add DNS TXT Record</h2>
-          <p class="text-sm text-muted-foreground mb-4">Add this TXT record to your DNS to prove domain ownership. Then click "Verify DNS".</p>
+          <h2 class="text-base font-semibold text-foreground mb-1">{$t('ssl.wildcard_add_txt')}</h2>
+          <p class="text-sm text-muted-foreground mb-4">{$t('ssl.wildcard_add_txt_desc')}</p>
           <div class="bg-muted/40 rounded-lg p-3 space-y-2 text-xs font-mono mb-4">
             <div class="flex items-start gap-2">
-              <span class="text-muted-foreground shrink-0">Name:</span>
+              <span class="text-muted-foreground shrink-0">{$t('ssl.wildcard_name')}</span>
               <span class="text-amber-400 break-all">_acme-challenge.{wildcardDomain}</span>
             </div>
             <div class="flex items-start gap-2">
-              <span class="text-muted-foreground shrink-0">Type:</span>
-              <span class="text-blue-400">TXT</span>
+              <span class="text-muted-foreground shrink-0">{$t('ssl.wildcard_type')}</span>
+              <span class="text-blue-400">{$t('ssl.txt')}</span>
             </div>
             <div class="flex items-start gap-2">
-              <span class="text-muted-foreground shrink-0">Value:</span>
+              <span class="text-muted-foreground shrink-0">{$t('ssl.wildcard_value')}</span>
               <span class="text-green-400 break-all">{wildcardToken}</span>
             </div>
           </div>
@@ -808,12 +806,11 @@
 
       {:else if wildcardStep === 3}
         <div>
-          <h2 class="text-base font-semibold text-foreground mb-1">Issue Certificate</h2>
+          <h2 class="text-base font-semibold text-foreground mb-1">{$t('ssl.issue')}</h2>
           <div class="flex items-center gap-2 text-sm text-green-400 mb-4">
             <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            DNS record verified — ready to issue <code class="ml-1 text-primary">*.{wildcardDomain}</code>
+            </svg>{$t('ssl.dns_record_verified_ready_to_issue')}<code class="ml-1 text-primary">*.{wildcardDomain}</code>
           </div>
           {#if wildcardError}
             <div role="alert" class="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2.5 mb-4">
@@ -871,7 +868,7 @@
 
       <div class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-foreground mb-1.5" for="issue-domain">Domain</label>
+          <label class="block text-sm font-medium text-foreground mb-1.5" for="issue-domain">{$t('ssl.domain')}</label>
           <input
             id="issue-domain"
             type="text"
@@ -879,7 +876,7 @@
             placeholder="example.com"
             class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
           />
-          <p class="text-xs text-muted-foreground mt-1">Must match an existing site. A Let's Encrypt HTTP-01 challenge will be queued.</p>
+          <p class="text-xs text-muted-foreground mt-1">{$t('ssl.issue_desc')}</p>
         </div>
 
         {#if issueError}
@@ -937,10 +934,7 @@
         </div>
         <div>
           <h2 class="text-base font-semibold text-foreground">{$t('ssl.revoke_modal_title')}</h2>
-          <p class="text-sm text-muted-foreground mt-1">
-            This will permanently revoke the SSL certificate for <strong class="text-foreground">{target.domain}</strong>.
-            HTTPS will stop working immediately. This cannot be undone.
-          </p>
+          <p class="text-sm text-muted-foreground mt-1">{$t('ssl.this_will_permanently_revoke_the_ssl_cer')}<strong class="text-foreground">{target.domain}</strong>{$t('ssl.https_will_stop_working_immediately_this')}</p>
         </div>
       </div>
       <div class="flex gap-3 justify-end">
@@ -953,9 +947,7 @@
         <button
           on:click={confirmRevoke}
           class="h-9 px-4 rounded-lg bg-red-500/10 text-red-400 border border-red-500/20 text-sm font-medium hover:bg-red-500/20 inline-flex items-center gap-2 transition-all duration-150 active:scale-95"
-        >
-          Revoke Certificate
-        </button>
+        >{$t('ssl.revoke_btn')}</button>
       </div>
     </div>
   </div>

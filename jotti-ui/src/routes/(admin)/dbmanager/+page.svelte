@@ -507,7 +507,7 @@
           <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
         </svg>
       </div>
-      <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Databases</span>
+      <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('dbmanager.databases')}</span>
     </div>
 
     <!-- Site filter -->
@@ -517,7 +517,7 @@
         class="w-full h-8 px-2.5 rounded-lg border border-border bg-background text-xs
                text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary"
       >
-        <option value="">All sites</option>
+        <option value="">{$t('dbmanager.all_sites')}</option>
         {#each sites as site}
           <option value={site.id}>{site.domain}</option>
         {/each}
@@ -533,7 +533,7 @@
             <path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
             <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
           </svg>
-          <p class="text-xs text-muted-foreground">No databases found.</p>
+          <p class="text-xs text-muted-foreground">{$t('dbmanager.no_dbs')}</p>
         </div>
       {:else}
         {#each filteredDbs as db (db.id)}
@@ -563,7 +563,7 @@
               <div class="pl-8 py-2">
                 <div class="flex items-center gap-2">
                   <div class="w-3 h-3 rounded-full border border-border border-t-primary animate-spin"></div>
-                  <span class="text-xs text-muted-foreground">Loading…</span>
+                  <span class="text-xs text-muted-foreground">{$t('common.loading')}</span>
                 </div>
               </div>
             {:else}
@@ -595,7 +595,7 @@
     {#if savedQueries.length > 0}
       <div class="border-t border-border shrink-0">
         <div class="px-3 py-2 flex items-center justify-between">
-          <span class="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Saved Queries</span>
+          <span class="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{$t('dbmanager.saved_queries')}</span>
         </div>
         <div class="max-h-40 overflow-y-auto">
           {#each savedQueries as sq}
@@ -645,7 +645,7 @@
               </svg>
             </div>
             <div>
-              <h1 class="text-base font-semibold text-foreground">Database Manager</h1>
+              <h1 class="text-base font-semibold text-foreground">{$t('dbmanager.title')}</h1>
               <p class="text-xs text-muted-foreground">{databases.length} database{databases.length !== 1 ? 's' : ''} available</p>
             </div>
           </div>
@@ -660,9 +660,7 @@
             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
               <rect x="3" y="11" width="18" height="11" rx="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0110 0v4"/>
-            </svg>
-            Connection Info
-          </button>
+            </svg>{$t('dbmanager.connection_info')}</button>
         </div>
 
         <!-- Body -->
@@ -695,16 +693,14 @@
                   <path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/>
                 </svg>
               </div>
-              <h3 class="text-base font-semibold text-foreground mb-1">No databases yet</h3>
-              <p class="text-sm text-muted-foreground mb-5">Create a database from the Sites page.</p>
+              <h3 class="text-base font-semibold text-foreground mb-1">{$t('databases.no_databases')}</h3>
+              <p class="text-sm text-muted-foreground mb-5">{$t('dbmanager.no_dbs_yet_desc')}</p>
               <a href="/sites"
                  class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
                         hover:bg-primary/90 inline-flex items-center gap-2 transition-colors">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                </svg>
-                Go to Sites
-              </a>
+                </svg>{$t('dbmanager.go_to_sites')}</a>
             </div>
 
           {:else}
@@ -712,8 +708,8 @@
             <!-- Quick Actions card -->
             <div class="bg-card border border-border rounded-xl overflow-hidden">
               <div class="px-5 py-3.5 border-b border-border">
-                <h2 class="text-sm font-semibold text-foreground">Quick Actions</h2>
-                <p class="text-xs text-muted-foreground mt-0.5">Common database management tasks</p>
+                <h2 class="text-sm font-semibold text-foreground">{$t('dbmanager.quick_actions')}</h2>
+                <p class="text-xs text-muted-foreground mt-0.5">{$t('dbmanager.quick_actions_desc')}</p>
               </div>
               <div class="p-5 grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <!-- Connection Info -->
@@ -733,8 +729,8 @@
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-medium text-foreground group-hover:text-blue-500 transition-colors">Connection Info</p>
-                    <p class="text-xs text-muted-foreground mt-0.5">View host, credentials and connection strings</p>
+                    <p class="text-sm font-medium text-foreground group-hover:text-blue-500 transition-colors">{$t('dbmanager.connection_info')}</p>
+                    <p class="text-xs text-muted-foreground mt-0.5">{$t('dbmanager.connection_info_desc')}</p>
                   </div>
                 </button>
 
@@ -754,8 +750,8 @@
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-medium text-foreground group-hover:text-primary transition-colors">SQL Query Runner</p>
-                    <p class="text-xs text-muted-foreground mt-0.5">Run queries against your database</p>
+                    <p class="text-sm font-medium text-foreground group-hover:text-primary transition-colors">{$t('dbmanager.sql_query_runner')}</p>
+                    <p class="text-xs text-muted-foreground mt-0.5">{$t('dbmanager.sql_query_runner_desc')}</p>
                   </div>
                 </button>
 
@@ -776,8 +772,8 @@
                     </svg>
                   </div>
                   <div>
-                    <p class="text-sm font-medium text-foreground group-hover:text-emerald-500 transition-colors">Database Credentials</p>
-                    <p class="text-xs text-muted-foreground mt-0.5">View connection info and credentials</p>
+                    <p class="text-sm font-medium text-foreground group-hover:text-emerald-500 transition-colors">{$t('dbmanager.db_credentials')}</p>
+                    <p class="text-xs text-muted-foreground mt-0.5">{$t('dbmanager.db_credentials_desc')}</p>
                   </div>
                 </button>
               </div>
@@ -787,7 +783,7 @@
             <div class="bg-card border border-border rounded-xl overflow-hidden">
               <div class="px-5 py-3.5 border-b border-border flex items-center justify-between">
                 <div>
-                  <h2 class="text-sm font-semibold text-foreground">Your Databases</h2>
+                  <h2 class="text-sm font-semibold text-foreground">{$t('dbmanager.your_databases')}</h2>
                   <p class="text-xs text-muted-foreground mt-0.5">{filteredDbs.length} database{filteredDbs.length !== 1 ? 's' : ''}</p>
                 </div>
               </div>
@@ -795,12 +791,12 @@
                 <table class="w-full text-sm">
                   <thead>
                     <tr class="border-b border-border bg-muted/30">
-                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Name</th>
-                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Type</th>
-                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Size</th>
-                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">User</th>
-                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">Host</th>
-                      <th class="px-5 py-2.5 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">Actions</th>
+                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('common.name')}</th>
+                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('common.type')}</th>
+                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('common.size')}</th>
+                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('users.user_role')}</th>
+                      <th class="px-5 py-2.5 text-left text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('sites.host_label')}</th>
+                      <th class="px-5 py-2.5 text-right text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('common.actions')}</th>
                     </tr>
                   </thead>
                   <tbody class="divide-y divide-border">
@@ -857,8 +853,8 @@
             {#if filteredDbs.some(d => d.size_mb > 0)}
               <div class="bg-card border border-border rounded-xl overflow-hidden">
                 <div class="px-5 py-3.5 border-b border-border">
-                  <h2 class="text-sm font-semibold text-foreground">Storage Overview</h2>
-                  <p class="text-xs text-muted-foreground mt-0.5">Top databases by size</p>
+                  <h2 class="text-sm font-semibold text-foreground">{$t('dbmanager.storage_overview')}</h2>
+                  <p class="text-xs text-muted-foreground mt-0.5">{$t('dbmanager.storage_overview_desc')}</p>
                 </div>
                 <div class="p-5 space-y-2">
                   {#each [...filteredDbs].sort((a, b) => b.size_mb - a.size_mb).slice(0, 8) as db}
@@ -940,9 +936,7 @@
               type="button"
               on:click={exportCsv}
               class="h-7 px-2.5 rounded-md text-xs font-medium text-muted-foreground hover:bg-muted transition-colors"
-            >
-              Export CSV
-            </button>
+            >{$t('dbmanager.export_csv')}</button>
             <label class="h-7 px-2.5 rounded-md text-xs font-medium text-muted-foreground hover:bg-muted
                           transition-colors cursor-pointer inline-flex items-center
                           {importLoading ? 'opacity-50 pointer-events-none' : ''}">
@@ -967,9 +961,7 @@
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
               <rect x="3" y="11" width="18" height="11" rx="2"/>
               <path d="M7 11V7a5 5 0 0110 0v4"/>
-            </svg>
-            Credentials
-          </button>
+            </svg>{$t('dbmanager.credentials')}</button>
         </div>
       </div>
 
@@ -981,15 +973,15 @@
               <svg class="w-10 h-10 mx-auto text-muted-foreground mb-3 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18M10 6h4M10 18h4M3 6a1 1 0 011-1h16a1 1 0 011 1v12a1 1 0 01-1 1H4a1 1 0 01-1-1V6z" />
               </svg>
-              <p class="text-sm font-medium text-foreground mb-1">No table selected</p>
-              <p class="text-xs text-muted-foreground">Choose a table from the left panel to browse rows.</p>
+              <p class="text-sm font-medium text-foreground mb-1">{$t('dbmanager.no_table_selected')}</p>
+              <p class="text-xs text-muted-foreground">{$t('dbmanager.no_table_desc')}</p>
             </div>
           </div>
         {:else if browseLoading}
           <div class="flex-1 flex items-center justify-center">
             <div class="flex flex-col items-center gap-3">
               <div class="w-6 h-6 rounded-full border-2 border-border border-t-primary animate-spin"></div>
-              <span class="text-xs text-muted-foreground">Loading rows…</span>
+              <span class="text-xs text-muted-foreground">{$t('dbmanager.loading_rows')}</span>
             </div>
           </div>
         {:else if browseResult}
@@ -1027,16 +1019,14 @@
                               autofocus
                             />
                             <button type="button" on:click={commitEdit}
-                                    class="h-5 px-1.5 rounded bg-primary text-primary-foreground text-[10px] font-medium">
-                              Save
-                            </button>
+                                    class="h-5 px-1.5 rounded bg-primary text-primary-foreground text-[10px] font-medium">{$t('common.save')}</button>
                             <button type="button" on:click={cancelEdit}
                                     class="h-5 px-1.5 rounded bg-muted text-muted-foreground text-[10px] hover:bg-muted/80">
                               ✕
                             </button>
                           </div>
                         {:else if cell === null}
-                          <span class="text-muted-foreground italic opacity-60">NULL</span>
+                          <span class="text-muted-foreground italic opacity-60">{$t('dbmanager.null')}</span>
                         {:else}
                           {String(cell)}
                         {/if}
@@ -1054,7 +1044,7 @@
               <span class="text-xs text-muted-foreground">
                 Page {browsePage + 1} of {totalBrowsePages}
                 · {browseResult.total.toLocaleString()} total rows
-                · <span class="text-primary/70">double-click cell to edit</span>
+                · <span class="text-primary/70">{$t('dbmanager.double_click_edit')}</span>
               </span>
               <div class="flex items-center gap-1.5">
                 <button
@@ -1077,7 +1067,7 @@
             {:else}
               <span class="text-xs text-muted-foreground">
                 {browseResult.total.toLocaleString()} row{browseResult.total !== 1 ? 's' : ''}
-                · <span class="text-primary/70">double-click any cell to edit</span>
+                · <span class="text-primary/70">{$t('dbmanager.double_click_any_cell_to_edit')}</span>
               </span>
               <span></span>
             {/if}
@@ -1156,9 +1146,7 @@
                 {:else}
                   <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/>
-                  </svg>
-                  Run Query
-                  <span class="text-[9px] opacity-50 font-normal">Ctrl+↵</span>
+                  </svg>{$t('dbmanager.run_query')}<span class="text-[9px] opacity-50 font-normal">{$t('dbmanager.ctrl')}</span>
                 {/if}
               </button>
 
@@ -1183,9 +1171,7 @@
               >
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-                Format SQL
-              </button>
+                </svg>{$t('dbmanager.format_sql')}</button>
 
               <button
                 type="button"
@@ -1197,11 +1183,9 @@
                 <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V7l-4-4z"/>
                   <path stroke-linecap="round" stroke-linejoin="round" d="M17 3v4H7V3M12 17a2 2 0 100-4 2 2 0 000 4z"/>
-                </svg>
-                Save
-              </button>
+                </svg>{$t('common.save')}</button>
 
-              <span class="text-xs text-muted-foreground">Results limited to 1000 rows</span>
+              <span class="text-xs text-muted-foreground">{$t('dbmanager.results_limited_to_1000_rows')}</span>
 
               {#if queryResult}
                 <div class="flex items-center gap-2 ml-auto">
@@ -1218,9 +1202,7 @@
                     >
                       <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      CSV
-                    </button>
+                      </svg>{$t('dbmanager.csv')}</button>
                   {/if}
                 </div>
               {/if}
@@ -1241,9 +1223,7 @@
                 <button type="button" on:click={saveQuery}
                         disabled={!saveQueryLabel.trim()}
                         class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium
-                               hover:bg-primary/90 disabled:opacity-50 transition-colors">
-                  Save
-                </button>
+                               hover:bg-primary/90 disabled:opacity-50 transition-colors">{$t('common.save')}</button>
                 <button type="button" on:click={() => showSaveDialog = false}
                         class="h-9 px-3 rounded-lg border border-border text-sm text-muted-foreground
                                hover:bg-muted transition-colors">
@@ -1266,7 +1246,7 @@
           <!-- EXPLAIN result -->
           {#if explainResult}
             <div class="flex-1 overflow-auto p-4">
-              <p class="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">EXPLAIN ANALYZE output:</p>
+              <p class="text-xs font-semibold text-muted-foreground mb-2 uppercase tracking-wider">{$t('dbmanager.explain_analyze_output')}</p>
               <pre class="text-xs font-mono text-foreground bg-muted/20 rounded-xl p-4 overflow-auto
                           whitespace-pre-wrap border border-border leading-relaxed">{explainResult}</pre>
             </div>
@@ -1310,7 +1290,7 @@
                           title="Click to copy"
                         >
                           {#if cell === null}
-                            <span class="text-muted-foreground italic opacity-60">NULL</span>
+                            <span class="text-muted-foreground italic opacity-60">{$t('dbmanager.null')}</span>
                           {:else}
                             {String(cell)}
                           {/if}
@@ -1329,7 +1309,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
-                <p class="text-sm font-medium text-foreground">Query executed</p>
+                <p class="text-sm font-medium text-foreground">{$t('dbmanager.query_executed')}</p>
                 <p class="text-xs text-muted-foreground mt-1">
                   {queryResult.affected_rows} row(s) affected in {queryResult.duration_ms}ms
                 </p>
@@ -1343,23 +1323,18 @@
         <div class="flex-1 overflow-auto p-5">
           {#if tables.length === 0}
             <div class="flex items-center justify-center h-32">
-              <p class="text-sm text-muted-foreground">Select a database to view its schema.</p>
+              <p class="text-sm text-muted-foreground">{$t('dbmanager.select_a_database_to_view_its_schema')}</p>
             </div>
           {:else}
             <div class="flex items-center justify-between mb-4">
-              <p class="text-xs text-muted-foreground">
-                Schema for <strong class="text-foreground font-mono">{selectedDb.db_name}</strong>
+              <p class="text-xs text-muted-foreground">{$t('dbmanager.schema_for')}<strong class="text-foreground font-mono">{selectedDb.db_name}</strong>
                 · {tables.length} tables
               </p>
               <div class="flex items-center gap-3 text-xs text-muted-foreground">
                 <span class="flex items-center gap-1">
-                  <span class="inline-block w-3 h-3 rounded bg-amber-500/20 border border-amber-500/30"></span>
-                  PK — primary key
-                </span>
+                  <span class="inline-block w-3 h-3 rounded bg-amber-500/20 border border-amber-500/30"></span>{$t('dbmanager.pk_primary_key')}</span>
                 <span class="flex items-center gap-1">
-                  <span class="inline-block w-3 h-3 rounded bg-blue-500/20 border border-blue-500/30"></span>
-                  FK — foreign key
-                </span>
+                  <span class="inline-block w-3 h-3 rounded bg-blue-500/20 border border-blue-500/30"></span>{$t('dbmanager.fk_foreign_key')}</span>
               </div>
             </div>
 
@@ -1379,7 +1354,7 @@
                         <div class="flex items-center gap-1.5">
                           <span class="text-[11px] font-mono text-foreground">{col}</span>
                           {#if col === 'id'}
-                            <span class="text-[9px] bg-amber-500/10 text-amber-500 dark:text-amber-400 px-1 py-0.5 rounded font-medium">PK</span>
+                            <span class="text-[9px] bg-amber-500/10 text-amber-500 dark:text-amber-400 px-1 py-0.5 rounded font-medium">{$t('dbmanager.pk')}</span>
                           {:else if col.endsWith('_id')}
                             <span class="text-[9px] bg-blue-500/10 text-blue-500 dark:text-blue-400 px-1 py-0.5 rounded font-medium">
                               FK → {getRefTable(col)}
@@ -1388,7 +1363,7 @@
                         </div>
                       {/each}
                     {:else}
-                      <span class="text-[11px] text-muted-foreground italic">Browse table to see columns</span>
+                      <span class="text-[11px] text-muted-foreground italic">{$t('dbmanager.browse_table_to_see_columns')}</span>
                     {/if}
                   </div>
                   <!-- Size -->
@@ -1415,7 +1390,7 @@
       <!-- Header -->
       <div class="flex items-start justify-between mb-5">
         <div>
-          <h3 class="text-base font-semibold text-foreground">Database Credentials</h3>
+          <h3 class="text-base font-semibold text-foreground">{$t('dbmanager.db_credentials')}</h3>
           <p class="text-xs text-muted-foreground font-mono mt-0.5">{credsDb.db_name}</p>
         </div>
         <button
@@ -1467,7 +1442,7 @@
 
         <!-- Password row with reveal toggle -->
         <div class="flex items-center gap-3">
-          <span class="text-xs text-muted-foreground w-28 shrink-0">Password</span>
+          <span class="text-xs text-muted-foreground w-28 shrink-0">{$t('auth.password')}</span>
           <div class="flex-1 flex items-center gap-2 min-w-0">
             <code class="flex-1 text-xs font-mono text-foreground bg-muted/40 rounded-lg px-3 py-2
                          border border-border truncate">{credsPassword}</code>
@@ -1500,7 +1475,7 @@
         <!-- URL-style connection string -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Connection URL</span>
+            <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('dbmanager.connection_url')}</span>
             <button
               type="button"
               on:click={() => copyToClipboard(buildUrlConnectionString(credsDb!), 'url')}
@@ -1519,7 +1494,7 @@
         <!-- CLI connection string -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
-            <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">CLI Connection String</span>
+            <span class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{$t('dbmanager.cli_connection_string')}</span>
             <button
               type="button"
               on:click={() => copyToClipboard(buildConnectionString(credsDb!), 'cli')}
@@ -1546,9 +1521,7 @@
         >
           <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
             <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l-4 3 4 3M16 9l4 3-4 3M12 5l-2 14"/>
-          </svg>
-          Open Query Editor
-        </button>
+          </svg>{$t('dbmanager.open_query_editor')}</button>
         <button
           type="button"
           on:click={() => showCredsModal = false}

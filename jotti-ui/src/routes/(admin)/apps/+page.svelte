@@ -359,7 +359,7 @@
       {#if confirmUpdateAll}
         <div class="flex items-center gap-1.5 fade-up">
           <span class="text-xs text-amber-400">Update all {updatableInstalls.length} app{updatableInstalls.length !== 1 ? 's' : ''}?</span>
-          <button class="text-xs px-2 py-1 rounded bg-amber-500 text-white hover:bg-amber-500/90" on:click={updateAll}>Yes</button>
+          <button class="text-xs px-2 py-1 rounded bg-amber-500 text-white hover:bg-amber-500/90" on:click={updateAll}>{$t('common.yes')}</button>
           <button class="text-xs px-2 py-1 rounded bg-muted" on:click={() => confirmUpdateAll = false}>No</button>
         </div>
       {:else}
@@ -390,18 +390,18 @@
     <!-- ── Installed Apps ─────────────────────────────────────────────── -->
     {#if installations.length > 0}
       <div class="space-y-3 fade-up">
-        <h2 class="text-sm font-semibold text-foreground">Installed Applications</h2>
+        <h2 class="text-sm font-semibold text-foreground">{$t('apps.installed_apps')}</h2>
         <div class="bg-card border border-border rounded-xl overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full">
               <thead class="bg-muted/50">
                 <tr>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">App</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden sm:table-cell">Domain</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden md:table-cell">Version</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden lg:table-cell">Health</th>
-                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">Status</th>
-                  <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">Actions</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">{$t('apps.col_app')}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden sm:table-cell">{$t('common.domain')}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden md:table-cell">{$t('apps.col_version')}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase hidden lg:table-cell">{$t('cron.health_col')}</th>
+                  <th class="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase">{$t('common.status')}</th>
+                  <th class="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase">{$t('common.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -421,9 +421,7 @@
                         <div>
                           <span class="font-medium text-foreground text-sm">{app?.name ?? inst.app_id}</span>
                           {#if hasUpdate}
-                            <span class="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">
-                              Update available
-                            </span>
+                            <span class="ml-2 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">{$t('apps.update_available')}</span>
                           {/if}
                         </div>
                       </div>
@@ -438,7 +436,7 @@
                       {#if hasUpdate}
                         <span class="ml-1 text-xs text-amber-400">→ {newVer}</span>
                       {:else}
-                        <span class="ml-1 text-[10px] text-green-400 font-medium">Up to date</span>
+                        <span class="ml-1 text-[10px] text-green-400 font-medium">{$t('apps.up_to_date')}</span>
                       {/if}
                     </td>
                     <!-- Health column -->
@@ -448,9 +446,7 @@
                         <span class="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/10 text-green-400 border border-green-500/20 font-medium">
                           <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                          </svg>
-                          No vulnerabilities
-                        </span>
+                          </svg>{$t('apps.no_vulnerabilities')}</span>
                         <!-- Last updated -->
                         {#if inst.installed_at}
                           <p class="text-[10px] text-muted-foreground">Updated {timeAgo(inst.installed_at)}</p>
@@ -468,9 +464,7 @@
                       <div class="flex gap-1.5 justify-end items-center flex-wrap">
                         {#if inst.admin_url}
                           <a href={inst.admin_url} target="_blank" rel="noopener"
-                             class="h-8 px-3 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-1 transition-colors duration-200">
-                            Open
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                             class="h-8 px-3 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-1 transition-colors duration-200">{$t('apps.open')}<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
                             </svg>
@@ -483,9 +477,7 @@
                           >
                             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                            </svg>
-                            Update
-                          </button>
+                            </svg>{$t('apps.update')}</button>
                         {:else if inst.status === 'active'}
                           <button
                             class="h-8 px-3 rounded-lg border border-border text-xs text-muted-foreground hover:bg-muted hover:text-foreground transition-colors duration-200"
@@ -541,9 +533,7 @@
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-            </svg>
-            Popular
-          </button>
+            </svg>{$t('apps.popular')}</button>
           <button
             class="h-9 px-3 transition-colors duration-200 inline-flex items-center gap-1.5
                    {sortMode === 'alpha' ? 'bg-primary text-primary-foreground' : 'bg-background text-muted-foreground hover:bg-muted hover:text-foreground'}"
@@ -551,9 +541,7 @@
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/>
-            </svg>
-            A–Z
-          </button>
+            </svg>{$t('apps.alpha')}</button>
         </div>
       </div>
 
@@ -576,12 +564,12 @@
 
     <!-- Stats strip -->
     <div class="flex gap-5 text-sm text-muted-foreground">
-      <span><strong class="text-foreground">{apps.length}</strong> apps available</span>
+      <span><strong class="text-foreground">{apps.length}</strong>{$t('apps.apps_available')}</span>
       {#if installations.length > 0}
-        <span><strong class="text-foreground">{installations.length}</strong> installed</span>
+        <span><strong class="text-foreground">{installations.length}</strong>{$t('apps.installed')}</span>
       {/if}
       {#if searchQuery || activeCategory !== 'all'}
-        <span><strong class="text-foreground">{filteredApps.length}</strong> matching</span>
+        <span><strong class="text-foreground">{filteredApps.length}</strong>{$t('apps.matching')}</span>
       {/if}
       {#if updatableInstalls.length > 0}
         <span class="text-amber-400"><strong>{updatableInstalls.length}</strong> update{updatableInstalls.length !== 1 ? 's' : ''} available</span>
@@ -595,8 +583,8 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
-        <p class="font-medium text-foreground">No apps found</p>
-        <p class="text-sm text-muted-foreground mt-1">Try a different search or category.</p>
+        <p class="font-medium text-foreground">{$t('apps.no_apps')}</p>
+        <p class="text-sm text-muted-foreground mt-1">{$t('apps.no_apps_desc')}</p>
       </div>
     {:else}
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -616,9 +604,7 @@
               </div>
               <div class="flex flex-col items-end gap-1">
                 {#if installed}
-                  <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full text-xs font-medium">
-                    Installed
-                  </span>
+                  <span class="bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full text-xs font-medium">{$t('plugins.installed_tab')}</span>
                   {#if hasUpdate}
                     <span class="bg-amber-500/10 text-amber-400 border border-amber-500/20 px-2 py-0.5 rounded-full text-[10px] font-medium">
                       {installed.version} → {newVer}
@@ -707,14 +693,14 @@
       <!-- Site + path -->
       <div class="grid grid-cols-2 gap-3">
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Deploy to site</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('apps.deploy_to')}</label>
           <select bind:value={installSiteId}
                   class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary">
             {#each sites as s}<option value={s.id}>{s.domain}</option>{/each}
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Subdirectory (optional)</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('apps.subdirectory')}</label>
           <input bind:value={installSubdir} placeholder="/"
                  class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
@@ -722,19 +708,19 @@
 
       <!-- Common config fields -->
       <div class="space-y-1">
-        <label class="text-xs font-medium text-muted-foreground">Site title</label>
+        <label class="text-xs font-medium text-muted-foreground">{$t('apps.site_title')}</label>
         <input bind:value={installTitle} placeholder="My {selectedApp.name} Site"
                class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
       </div>
 
       <div class="grid grid-cols-2 gap-3">
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Admin email</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('apps.admin_email')}</label>
           <input type="email" bind:value={installEmail} placeholder="admin@example.com"
                  class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-medium text-muted-foreground">Admin password</label>
+          <label class="text-xs font-medium text-muted-foreground">{$t('apps.admin_password')}</label>
           <input type="password" bind:value={installPassword} placeholder="Strong password"
                  class="h-9 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary" />
         </div>
@@ -819,9 +805,7 @@
       </div>
 
       <!-- Info -->
-      <div class="rounded-lg bg-muted/40 border border-border p-3 text-xs text-muted-foreground">
-        The update process will: <strong class="text-foreground">Back up</strong> your files, then <strong class="text-foreground">Download</strong> the new version, <strong class="text-foreground">Install</strong> it, and <strong class="text-foreground">Verify</strong> the result.
-      </div>
+      <div class="rounded-lg bg-muted/40 border border-border p-3 text-xs text-muted-foreground">{$t('apps.the_update_process_will')}<strong class="text-foreground">{$t('apps.back_up')}</strong>{$t('apps.your_files_then')}<strong class="text-foreground">{$t('common.download')}</strong>{$t('apps.the_new_version')}<strong class="text-foreground">{$t('common.install')}</strong>{$t('apps.it_and')}<strong class="text-foreground">{$t('apps.step_verify')}</strong>{$t('apps.the_result')}</div>
 
       <!-- Progress (shown while updating) -->
       {#if updating}

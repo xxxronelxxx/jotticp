@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
+  import { t } from '$lib/i18n';
   import { api } from '$api/client';
 
   // ── Props ──────────────────────────────────────────────────────────────────

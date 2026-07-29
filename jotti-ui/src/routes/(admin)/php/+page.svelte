@@ -431,14 +431,14 @@
         </div>
         <div>
           <h3 class="text-base font-semibold text-foreground">Apply {pendingPreset.label} preset?</h3>
-          <p class="text-sm text-muted-foreground mt-0.5">This will override the current settings form values. You can still cancel before applying.</p>
+          <p class="text-sm text-muted-foreground mt-0.5">{$t('php.this_will_override_the_current_settings_')}</p>
         </div>
       </div>
       <div class="flex gap-3">
         <button
           class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors duration-200"
           on:click={confirmPreset}
-        >Apply Preset</button>
+        >{$t('cache.apply_preset')}</button>
         <button
           class="h-9 px-4 rounded-lg border border-border text-sm text-muted-foreground hover:bg-muted hover:text-foreground transition-colors duration-200"
           on:click={() => pendingPreset = null}
@@ -523,7 +523,7 @@
                 PHP {ver}
               </span>
               {#if ver === '8.3' || ver === '8.4'}
-                <span class="text-xs bg-green-400/10 text-green-400 border border-green-400/20 px-1.5 py-0.5 rounded-full font-medium">Latest</span>
+                <span class="text-xs bg-green-400/10 text-green-400 border border-green-400/20 px-1.5 py-0.5 rounded-full font-medium">{$t('php.latest')}</span>
               {/if}
             </div>
             <!-- Status -->
@@ -631,9 +631,7 @@
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-            </svg>
-            Site settings
-          </a>
+            </svg>{$t('php.site_settings')}</a>
         </div>
       {/if}
     </div>
@@ -643,11 +641,11 @@
 
       <!-- Global PHP Settings card -->
       <div class="bg-card border border-border rounded-xl p-6">
-        <h2 class="text-base font-semibold text-foreground mb-3">Global PHP Settings</h2>
+        <h2 class="text-base font-semibold text-foreground mb-3">{$t('php.global_settings')}</h2>
 
         <!-- INI Presets -->
         <div class="mb-4">
-          <p class="text-xs font-medium text-muted-foreground mb-2">Quick Presets</p>
+          <p class="text-xs font-medium text-muted-foreground mb-2">{$t('php.quick_presets')}</p>
           <div class="grid grid-cols-2 gap-2">
             {#each iniPresets as preset}
               <button
@@ -663,10 +661,7 @@
 
         {#if ioncubeExt}
           <div class="mb-4 p-3 rounded-lg border border-amber-500/30 bg-amber-500/10 text-xs text-amber-300">
-            <strong class="font-semibold">IonCube Loader</strong> requires manual installation.
-            Download from <a href="https://ioncube.com" target="_blank" rel="noopener" class="underline hover:text-amber-200">ioncube.com</a>,
-            place <code class="font-mono bg-amber-500/10 px-1 py-0.5 rounded">ioncube_loader.so</code> in the PHP extension dir, then restart PHP-FPM.
-          </div>
+            <strong class="font-semibold">{$t('php.ioncube_title')}</strong>{$t('php.requires_manual_installation_download_fr')}<a href="https://ioncube.com" target="_blank" rel="noopener" class="underline hover:text-amber-200">{$t('php.ioncubecom')}</a>{$t('php.place')}<code class="font-mono bg-amber-500/10 px-1 py-0.5 rounded">{$t('php.ioncube_loaderso')}</code>{$t('php.in_the_php_extension_dir_then_restart_ph')}</div>
         {/if}
 
         <dl class="divide-y divide-border">
@@ -674,8 +669,8 @@
           <!-- memory_limit -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">memory_limit</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Max memory per script</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.memory_limit')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.memory_limit_desc')}</dd>
             </div>
             <input
               class="w-24 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-right font-mono"
@@ -687,8 +682,8 @@
           <!-- max_execution_time -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">max_execution_time</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Seconds before timeout</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.max_exec_time')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.max_exec_time_desc')}</dd>
             </div>
             <input
               class="w-24 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-right font-mono"
@@ -700,8 +695,8 @@
           <!-- upload_max_filesize -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">upload_max_filesize</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Max uploaded file size</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.upload_max_filesize')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.upload_max_filesize_desc')}</dd>
             </div>
             <input
               class="w-24 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-right font-mono"
@@ -713,8 +708,8 @@
           <!-- post_max_size -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">post_max_size</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Max POST body size</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.post_max_size')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.post_max_size_desc')}</dd>
             </div>
             <input
               class="w-24 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-right font-mono"
@@ -726,8 +721,8 @@
           <!-- max_input_vars -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">max_input_vars</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Max form input variables</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.max_input_vars')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.max_input_vars_desc')}</dd>
             </div>
             <input
               class="w-24 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-right font-mono"
@@ -739,8 +734,8 @@
           <!-- error_reporting mode -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">error_reporting</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Production hides errors; dev shows all</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.error_reporting')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.error_reporting_desc')}</dd>
             </div>
             <div class="flex rounded-lg border border-border overflow-hidden text-xs">
               <button
@@ -757,8 +752,8 @@
           <!-- display_errors -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">display_errors</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Show errors in browser output</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.display_errors')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.display_errors_desc')}</dd>
             </div>
             <button
               class="inline-flex h-5 w-9 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -778,8 +773,8 @@
           <!-- opcache.enable -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">opcache.enable</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">Opcode cache for performance</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.opcache')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.opcache_desc')}</dd>
             </div>
             <button
               class="inline-flex h-5 w-9 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -799,8 +794,8 @@
           <!-- opcache.memory_consumption -->
           <div class="flex items-center justify-between py-3 gap-3">
             <div class="min-w-0">
-              <dt class="text-sm font-medium text-foreground">opcache.memory_consumption</dt>
-              <dd class="text-xs text-muted-foreground mt-0.5">OPcache memory in MB</dd>
+              <dt class="text-sm font-medium text-foreground">{$t('php.opcache_memory')}</dt>
+              <dd class="text-xs text-muted-foreground mt-0.5">{$t('php.opcache_memory_desc')}</dd>
             </div>
             <input
               class="w-24 h-9 rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 text-right font-mono disabled:opacity-50"
@@ -817,9 +812,7 @@
             <p class="text-xs text-amber-400 flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01"/>
-              </svg>
-              Unsaved changes — click "Apply Changes" to save.
-            </p>
+              </svg>{$t('php.unsaved_changes_click_apply_changes_to_s')}</p>
           </div>
         {/if}
       </div>
@@ -828,7 +821,7 @@
       <div class="xl:col-span-2 bg-card border border-border rounded-xl p-6">
         <div class="flex items-center justify-between gap-3 mb-4 flex-wrap">
           <div>
-            <h2 class="text-base font-semibold text-foreground">PHP Extensions</h2>
+            <h2 class="text-base font-semibold text-foreground">{$t('php.php_extensions')}</h2>
             <p class="text-sm text-muted-foreground mt-0.5">
               {enabledExtensions.length} enabled · {allExtensions.length - enabledExtensions.length} disabled
             </p>
@@ -842,9 +835,7 @@
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-              </svg>
-              Health Check
-            </button>
+              </svg>{$t('php.health_check')}</button>
             <!-- Extension search -->
             <div class="relative min-w-48">
               <svg class="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -863,7 +854,7 @@
         {#if healthCheckResult}
           <div class="mb-5 space-y-2 fade-up">
             <div class="flex items-center justify-between mb-2">
-              <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Health Check Results</p>
+              <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{$t('php.health_check_results')}</p>
               <button
                 class="text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
                 on:click={() => healthCheckResult = null}
@@ -906,8 +897,8 @@
           </div>
         {:else if allExtensions.length === 0}
           <div class="py-12 flex flex-col items-center gap-2 text-center">
-            <p class="text-sm font-medium text-foreground">No extensions found</p>
-            <p class="text-xs text-muted-foreground">Select a site above to load its PHP extensions.</p>
+            <p class="text-sm font-medium text-foreground">{$t('php.no_extensions')}</p>
+            <p class="text-xs text-muted-foreground">{$t('php.no_extensions_desc')}</p>
           </div>
         {:else}
           <div class="space-y-5">
@@ -932,7 +923,7 @@
                         <code class="font-mono text-xs font-medium truncate">{ext.name}</code>
                         <div class="flex items-center gap-1 flex-shrink-0">
                           {#if ext.dev_only}
-                            <span class="text-[10px] font-semibold px-1 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 leading-none">Dev</span>
+                            <span class="text-[10px] font-semibold px-1 py-0.5 rounded bg-orange-500/10 text-orange-400 border border-orange-500/20 leading-none">{$t('php.dev')}</span>
                           {/if}
                           <!-- Mini toggle indicator -->
                           <div
@@ -968,7 +959,7 @@
     {#if installedVersions.length > 0}
       <div class="bg-card border border-border rounded-xl overflow-hidden">
         <div class="border-b border-border px-6 pt-4">
-          <h2 class="text-base font-semibold text-foreground mb-3">Per-Version INI Settings</h2>
+          <h2 class="text-base font-semibold text-foreground mb-3">{$t('php.per_version_ini')}</h2>
           <!-- Tab bar -->
           <div class="flex gap-1 -mb-px">
             {#each installedVersions as ver}
@@ -990,10 +981,7 @@
         <div class="p-6">
           <div class="flex items-start gap-4 mb-4">
             <div>
-              <p class="text-sm text-muted-foreground">
-                Showing INI overrides applied to all <span class="font-medium text-foreground">{activeVerCount}</span> site{activeVerCount !== 1 ? 's' : ''} running PHP <span class="font-mono font-medium text-foreground">{activeVer}</span>.
-                Per-site settings can be adjusted from each site's PHP tab.
-              </p>
+              <p class="text-sm text-muted-foreground">{$t('php.showing_ini_overrides_applied_to_all')}<span class="font-medium text-foreground">{activeVerCount}</span> site{activeVerCount !== 1 ? 's' : ''} running PHP <span class="font-mono font-medium text-foreground">{activeVer}</span>{$t('php.per_site_settings_can_be_adjusted_from_e')}</p>
             </div>
           </div>
 
@@ -1002,9 +990,9 @@
             <table class="w-full text-sm">
               <thead class="bg-muted/50">
                 <tr>
-                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">INI Directive</th>
-                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Value (this form)</th>
-                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">Notes</th>
+                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('php.ini_directive')}</th>
+                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('php.ini_value')}</th>
+                  <th class="px-4 py-2.5 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">{$t('php.ini_notes')}</th>
                 </tr>
               </thead>
               <tbody>
