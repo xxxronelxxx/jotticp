@@ -55,6 +55,13 @@
   // Version comparison table
   let showVersionCompare = false;
 
+  // PHP version management
+  let showVersionManager = false;
+  let phpVersions: Array<{ version: string; installed: boolean; available: boolean }> = [];
+  let versionsLoading = false;
+  let installingVersion = '';
+  let removingVersion = '';
+
   // Extension health check
   let healthCheckResult: null | { issues: HealthIssue[] } = null;
   let healthChecking = false;
@@ -200,6 +207,52 @@
       loading = false;
     }
   });
+
+  // ── PHP Version Management ──────────────────────────────────────────────────
+
+  async function loadPhpVersions() {
+    versionsLoading = true;
+    try {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+      const r = await fetch('/api/v1/php/versions', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (r.ok) {
+        phpVersions = await r.json() as Array<{ version: string; installed: boolean; available: boolean }>;
+      }
+    } catch { /* ignore */ }
+    versionsLoading = false;
+  }
+
+  async function installPhpVersion(ver: string) {
+    installingVersion = ver;
+    try {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+      const r = await fetch(`/api/v1/php/versions/${ver}/install`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const result = await r.json() as { success: boolean; message: string };
+      showToast(result.message, result.success ? 'success' : 'error');
+      if (result.success) await loadPhpVersions();
+    } catch { showToast('Installation request failed', 'error'); }
+    installingVersion = '';
+  }
+
+  async function removePhpVersion(ver: string) {
+    removingVersion = ver;
+    try {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+      const r = await fetch(`/api/v1/php/versions/${ver}/remove`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const result = await r.json() as { success: boolean; message: string };
+      showToast(result.message, result.success ? 'success' : 'error');
+      if (result.success) await loadPhpVersions();
+    } catch { showToast('Removal request failed', 'error'); }
+    removingVersion = '';
+  }
 
   // ── Derived ────────────────────────────────────────────────────────────────
   $: selectedSite = sites.find(s => s.id === selectedSiteId);
@@ -541,6 +594,71 @@
           </div>
         {/each}
       </div>
+
+        <!-- Manage Versions button -->
+        <div class="mt-4 flex items-center justify-between gap-3 flex-wrap">
+          <button
+            class="h-9 px-4 rounded-lg border border-border text-sm text-foreground hover:bg-muted inline-flex items-center gap-2 transition-colors"
+            on:click={async () => { showVersionManager = !showVersionManager; if (showVersionManager) await loadPhpVersions(); }}
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/></svg>
+            {showVersionManager ? $t('common.close') : ($t('php.manage_versions') || 'Manage Versions')}
+          </button>
+        </div>
+
+        {#if showVersionManager}
+          <div class="mt-4 border-t border-border pt-4 fade-up">
+            <h3 class="text-sm font-semibold text-foreground mb-3">{$t('php.installable_versions')}</h3>
+            {#if versionsLoading}
+              <p class="text-sm text-muted-foreground">{$t('common.loading')}</p>
+            {:else if phpVersions.length === 0}
+              <p class="text-sm text-muted-foreground">{$t('common.no_results')}</p>
+            {:else}
+              <div class="space-y-2">
+                {#each phpVersions as pv}
+                  <div class="flex items-center justify-between py-2 px-3 rounded-lg border border-border bg-background">
+                    <div class="flex items-center gap-3">
+                      <span class="text-sm font-medium text-foreground">PHP {pv.version}</span>
+                      {#if pv.installed}
+                        <span class="text-xs bg-green-400/10 text-green-400 px-2 py-0.5 rounded-full font-medium">{$t('php.installed')}</span>
+                      {:else if pv.available}
+                        <span class="text-xs bg-blue-400/10 text-blue-400 px-2 py-0.5 rounded-full font-medium">{$t('php.available_to_install')}</span>
+                      {:else}
+                        <span class="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full font-medium">{$t('php.not_available')}</span>
+                      {/if}
+                    </div>
+                    <div class="flex gap-2">
+                      {#if pv.installed}
+                        <button
+                          class="h-8 px-3 rounded-lg border border-red-500/20 text-red-400 text-xs font-medium hover:bg-red-500/10 inline-flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                          on:click={() => removePhpVersion(pv.version)}
+                          disabled={removingVersion === pv.version}
+                        >
+                          {removingVersion === pv.version ? $t('common.loading') : $t('php.remove')}
+                        </button>
+                      {:else if pv.available}
+                        <button
+                          class="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 inline-flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                          on:click={() => installPhpVersion(pv.version)}
+                          disabled={installingVersion === pv.version}
+                        >
+                          {installingVersion === pv.version ? $t('common.loading') : $t('php.install')}
+                        </button>
+                      {:else}
+                        <span class="text-xs text-muted-foreground py-1">—</span>
+                      {/if}
+                    </div>
+                  </div>
+                {/each}
+              </div>
+            {/if}
+            {#if installingVersion}
+              <div class="mt-3 p-3 rounded-lg bg-blue-400/5 border border-blue-400/20">
+                <p class="text-xs text-blue-400">{$t('php.install_progress')}</p>
+              </div>
+            {/if}
+          </div>
+        {/if}
 
       <!-- Version Compare toggle -->
       <div class="mt-4 border-t border-border pt-4">

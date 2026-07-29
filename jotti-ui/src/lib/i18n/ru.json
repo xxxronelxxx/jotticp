@@ -1302,7 +1302,15 @@
     "in_the_php_extension_dir_then_restart_ph": "in the PHP extension dir, then restart PHP-FPM.",
     "unsaved_changes_click_apply_changes_to_s": "Unsaved changes — click \"Apply Changes\" to save.",
     "showing_ini_overrides_applied_to_all": "Showing INI overrides applied to all",
-    "per_site_settings_can_be_adjusted_from_e": ".\n                Per-site settings can be adjusted from each site's PHP tab."
+    "per_site_settings_can_be_adjusted_from_e": ".\n                Per-site settings can be adjusted from each site's PHP tab.",
+    "manage_versions": "Управление версиями",
+    "installable_versions": "Доступные версии PHP",
+    "installed": "Установлена",
+    "available_to_install": "Доступна",
+    "not_available": "Недоступна",
+    "install": "Установить",
+    "remove": "Удалить",
+    "install_progress": "Установка… Это может занять несколько минут."
   },
   "cache": {
     "title": "Управление кэшем",

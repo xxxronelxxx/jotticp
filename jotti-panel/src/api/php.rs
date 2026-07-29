@@ -148,6 +148,21 @@ struct SiteInfo {
     domain:      String,
 }
 
+// ── PHP Version types ─────────────────────────────────────────────────────────
+
+#[derive(Debug, Serialize)]
+pub struct PhpVersionInfo {
+    pub version: String,
+    pub installed: bool,
+    pub available: bool,  // available in apt repo
+}
+
+#[derive(Debug, Serialize)]
+pub struct PhpVersionActionResponse {
+    pub success: bool,
+    pub message: String,
+}
+
 // ── Router ────────────────────────────────────────────────────────────────────
 
 pub fn router() -> Router<Arc<AppState>> {
@@ -161,6 +176,9 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/api/v1/php/settings/{site_id}",              get(get_settings).put(update_settings))
         .route("/api/v1/php/info/{site_id}",                  get(php_info))
         .route("/api/v1/php/version/{site_id}",               put(change_php_version))
+        .route("/api/v1/php/versions",                        get(list_php_versions))
+        .route("/api/v1/php/versions/{version}/install",      post(install_php_version))
+        .route("/api/v1/php/versions/{version}/remove",       post(remove_php_version))
 }
 
 // ── Access helpers ────────────────────────────────────────────────────────────
@@ -512,6 +530,143 @@ async fn change_php_version(
     })).await;
 
     Ok(StatusCode::OK)
+}
+
+// ── PHP Version Management ──────────────────────────────────────────────────────
+
+const PHP_VERSIONS: &[&str] = &["7.4", "8.0", "8.1", "8.2", "8.3", "8.4"];
+
+async fn list_php_versions() -> ApiResult<Json<Vec<PhpVersionInfo>>> {
+    let mut versions = Vec::new();
+
+    for ver in PHP_VERSIONS {
+        let fpm_service = format!("php{}-fpm", ver);
+        let installed = std::path::Path::new(&format!("/usr/sbin/php-fpm{}", ver)).exists()
+            || std::process::Command::new("which")
+                .arg(&format!("php-fpm{}", ver))
+                .output()
+                .map(|o| o.status.success())
+                .unwrap_or(false);
+
+        // Check if package is available in apt
+        let available = if installed {
+            true
+        } else {
+            std::process::Command::new("apt-cache")
+                .args(["show", &format!("php{}-fpm", ver)])
+                .output()
+                .map(|o| o.status.success())
+                .unwrap_or(false)
+        };
+
+        versions.push(PhpVersionInfo {
+            version: ver.to_string(),
+            installed,
+            available,
+        });
+    }
+
+    Ok(Json(versions))
+}
+
+async fn install_php_version(
+    Path(version): Path<String>,
+) -> ApiResult<Json<PhpVersionActionResponse>> {
+    if !PHP_VERSIONS.contains(&version.as_str()) {
+        return Err(ApiError::Validation(format!("Unsupported PHP version: {}", version)));
+    }
+
+    // Run apt-get install in background
+    let result = std::process::Command::new("apt-get")
+        .args([
+            "install", "-y", "-qq",
+            &format!("php{}-fpm", version),
+            &format!("php{}", version),
+            &format!("php{}-cli", version),
+            &format!("php{}-common", version),
+            &format!("php{}-mbstring", version),
+            &format!("php{}-xml", version),
+            &format!("php{}-curl", version),
+            &format!("php{}-gd", version),
+            &format!("php{}-mysql", version),
+            &format!("php{}-pgsql", version),
+            &format!("php{}-sqlite3", version),
+            &format!("php{}-bcmath", version),
+            &format!("php{}-intl", version),
+            &format!("php{}-zip", version),
+            &format!("php{}-opcache", version),
+            &format!("php{}-soap", version),
+            &format!("php{}-redis", version),
+            &format!("php{}-imagick", version),
+            &format!("php{}-bz2", version),
+        ])
+        .output();
+
+    match result {
+        Ok(output) if output.status.success() => {
+            Ok(Json(PhpVersionActionResponse {
+                success: true,
+                message: format!("PHP {} installed successfully", version),
+            }))
+        }
+        Ok(output) => {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            let error_msg = if stderr.contains("E: Unable to locate package") {
+                format!("PHP {} packages not found in repository. Run 'apt-get update' first.", version)
+            } else if stderr.contains("E: Could not get lock") {
+                "Another apt process is running. Wait and try again.".to_string()
+            } else {
+                stderr.trim().to_string()
+            };
+            Ok(Json(PhpVersionActionResponse {
+                success: false,
+                message: error_msg,
+            }))
+        }
+        Err(e) => Ok(Json(PhpVersionActionResponse {
+            success: false,
+            message: format!("Installation failed: {}", e),
+        })),
+    }
+}
+
+async fn remove_php_version(
+    Path(version): Path<String>,
+) -> ApiResult<Json<PhpVersionActionResponse>> {
+    if !PHP_VERSIONS.contains(&version.as_str()) {
+        return Err(ApiError::Validation(format!("Unsupported PHP version: {}", version)));
+    }
+
+    let result = std::process::Command::new("apt-get")
+        .args([
+            "remove", "-y", "-qq",
+            &format!("php{}-fpm", version),
+            &format!("php{}", version),
+            &format!("php{}-cli", version),
+            &format!("php{}-common", version),
+            &format!("php{}-.*", version),
+        ])
+        .output();
+
+    match result {
+        Ok(output) if output.status.success() => {
+            Ok(Json(PhpVersionActionResponse {
+                success: true,
+                message: format!("PHP {} removed successfully", version),
+            }))
+        }
+        Ok(output) => {
+            let stderr = String::from_utf8_lossy(&output.stderr);
+            Ok(Json(PhpVersionActionResponse {
+                success: false,
+                message: stderr.trim().to_string(),
+            }))
+        }
+        Err(e) => Ok(Json(PhpVersionActionResponse {
+            success: false,
+            message: format!("Removal failed: {}", e),
+        })),
+    }
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────

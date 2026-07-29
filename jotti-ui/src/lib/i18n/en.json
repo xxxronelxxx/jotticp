@@ -1302,7 +1302,15 @@
     "in_the_php_extension_dir_then_restart_ph": "in the PHP extension dir, then restart PHP-FPM.",
     "unsaved_changes_click_apply_changes_to_s": "Unsaved changes — click \"Apply Changes\" to save.",
     "showing_ini_overrides_applied_to_all": "Showing INI overrides applied to all",
-    "per_site_settings_can_be_adjusted_from_e": ".\n                Per-site settings can be adjusted from each site's PHP tab."
+    "per_site_settings_can_be_adjusted_from_e": ".\n                Per-site settings can be adjusted from each site's PHP tab.",
+    "manage_versions": "Manage Versions",
+    "installable_versions": "Installable PHP Versions",
+    "installed": "Installed",
+    "available_to_install": "Available",
+    "not_available": "Not Available",
+    "install": "Install",
+    "remove": "Remove",
+    "install_progress": "Installing… This may take a few minutes. The page will update when complete."
   },
   "cache": {
     "title": "Cache Management",
