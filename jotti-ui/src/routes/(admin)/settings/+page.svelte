@@ -165,8 +165,9 @@
   onMount(async () => {
     loading = true;
     try {
-      const [genRes, lic] = await Promise.all([
+      const [genRes, brandRes, lic] = await Promise.all([
         fetch('/api/v1/settings', { headers: authHeaders() }).then(r => r.ok ? r.json() as Promise<Record<string, unknown>> : Promise.resolve({})).catch(() => ({})),
+        fetch('/api/v1/branding', { headers: authHeaders() }).then(r => r.ok ? r.json() as Promise<Record<string, unknown>> : Promise.resolve({})).catch(() => ({})),
         api.license.get().catch(() => null),
       ]);
       const data = genRes as Record<string, unknown>;
@@ -181,6 +182,9 @@
       if (data.timezone) settings.timezone = String(data.timezone);
       if (data.date_format) settings.date_format = String(data.date_format);
       if (data.default_php) settings.default_php = String(data.default_php);
+      const bd = brandRes as Record<string, unknown>;
+      if (bd.panel_name) branding.panel_name = String(bd.panel_name);
+      if (bd.primary_color) branding.primary_color = String(bd.primary_color);
       if (lic) {
         license.tier = lic.tier;
         license.domain = lic.domain ?? '';
@@ -1038,12 +1042,24 @@
 
           <button
             disabled={brandingLoading}
-            on:click={() => {
+            on:click={async () => {
               brandingLoading = true;
-              setTimeout(() => {
-                brandingLoading = false;
+              try {
+                const r = await fetch('/api/v1/branding', {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json', ...authHeaders() },
+                  body: JSON.stringify({
+                    panel_name: branding.panel_name,
+                    primary_color: branding.primary_color,
+                  }),
+                });
+                if (!r.ok) throw new Error(`HTTP ${r.status}`);
                 showToast('Branding saved', 'success');
-              }, 800);
+              } catch {
+                showToast('Failed to save branding', 'error');
+              } finally {
+                brandingLoading = false;
+              }
             }}
             class="h-9 px-4 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 inline-flex items-center gap-2 transition-all duration-150 active:scale-95 disabled:opacity-50"
           >
