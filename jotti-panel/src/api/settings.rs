@@ -580,7 +580,7 @@ const MANAGED_SERVICES: &[(&str, &str)] = &[
     ("cloudflared",  "Cloudflare Tunnel"),
     ("fail2ban",     "Fail2ban"),
     ("jotti-panel",  "Jotti Panel"),
-    ("orbit-ui",     "Orbit UI"),
+    ("orbit-ui",     "Jotti UI"),
 ];
 
 async fn get_services(claims: Claims) -> ApiResult<Json<Vec<ServiceStatus>>> {

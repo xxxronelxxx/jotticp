@@ -19,14 +19,20 @@ export const currentLang = writable<Language>(getStoredLang());
 export const isRTL = derived(currentLang, $lang => $lang === 'ar');
 export const t = derived(currentLang, $lang => {
     const dict = translations[$lang] || translations.ru;
-    return (key: string): string => {
+    return (key: string, opts?: { values?: Record<string, string | number> }): string => {
         const parts = key.split('.');
         let val: unknown = dict;
         for (const part of parts) {
             if (typeof val !== 'object' || val === null) return key;
             val = (val as Record<string, unknown>)[part];
         }
-        return typeof val === 'string' ? val : key;
+        let result = typeof val === 'string' ? val : key;
+        if (opts?.values) {
+            for (const [k, v] of Object.entries(opts.values)) {
+                result = result.replace(new RegExp(`\\{${k}\\}`, 'g'), String(v));
+            }
+        }
+        return result;
     };
 });
 

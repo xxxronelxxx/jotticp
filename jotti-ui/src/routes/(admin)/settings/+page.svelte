@@ -7,11 +7,11 @@
 
   // ── State ──────────────────────────────────────────────────────────────────
   type TabKey = 'general' | 'branding' | 'smtp' | 'smtp-limits' | 'security' | 'api-keys' | 'advanced';
-  let activeTab: TabKey = 'general';
-  let loading = true;
+  let activeTab = $state<TabKey>('general');
+  let loading = $state(true);
 
   // ── General ────────────────────────────────────────────────────────────────
-  let settings = {
+  let settings = $state({
     panel_domain: '',
     panel_email: '',
     company_name: '',
@@ -20,31 +20,31 @@
     default_webserver: 'nginx' as 'nginx' | 'apache' | 'ols',
     language: 'en',
     date_format: 'MM/DD/YYYY',
-  };
-  let generalLoading = false;
+  });
+  let generalLoading = $state(false);
 
   // ── Branding ───────────────────────────────────────────────────────────────
-  let branding = {
+  let branding = $state({
     panel_name: 'JottiCP',
     primary_color: '#6366f1',
-  };
-  let logoPreview = '';
-  let faviconPreview = '';
-  let brandingLoading = false;
+  });
+  let logoPreview = $state('');
+  let faviconPreview = $state('');
+  let brandingLoading = $state(false);
 
   // ── SMTP ───────────────────────────────────────────────────────────────────
-  let smtpConfig = {
+  let smtpConfig = $state({
     host: '',
     port: 587,
     user: '',
     password: '',
     from: '',
     encryption: 'starttls' as 'none' | 'tls' | 'starttls',
-  };
-  let showSmtpPassword = false;
-  let smtpTestEmail = '';
-  let smtpTestResult: { success: boolean; message: string } | null = null;
-  let smtpTestLoading = false;
+  });
+  let showSmtpPassword = $state(false);
+  let smtpTestEmail = $state('');
+  let smtpTestResult = $state<{ success: boolean; message: string } | null>(null);
+  let smtpTestLoading = $state(false);
   let smtpSaveLoading = false;
 
   // ── Security ───────────────────────────────────────────────────────────────

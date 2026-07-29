@@ -66,7 +66,7 @@
         label: tr('admin.system'),
         color: 'text-slate-400',
         items: [
-          { href: '/logs',        label: tr('nav.logs'),      icon: 'doc-text'  },
+          { href: '/audit-log',   label: tr('nav.logs'),      icon: 'doc-text'  },
           { href: '/audit-log',   label: tr('admin.audit_log'), icon: 'audit'     },
           { href: '/dbmanager',   label: tr('nav.dbmanager'), icon: 'table'     },
           { href: '/users',       label: tr('nav.users'),     icon: 'users'     },
