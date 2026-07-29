@@ -537,10 +537,11 @@ async fn change_php_version(
 const PHP_VERSIONS: &[&str] = &["7.4", "8.0", "8.1", "8.2", "8.3", "8.4"];
 
 async fn list_php_versions() -> ApiResult<Json<Vec<PhpVersionInfo>>> {
+    let os_id = get_os_id();
+    let can_add_repo = os_id == "debian" || os_id == "ubuntu";
     let mut versions = Vec::new();
 
     for ver in PHP_VERSIONS {
-        let fpm_service = format!("php{}-fpm", ver);
         let installed = std::path::Path::new(&format!("/usr/sbin/php-fpm{}", ver)).exists()
             || std::process::Command::new("which")
                 .arg(&format!("php-fpm{}", ver))
@@ -548,16 +549,15 @@ async fn list_php_versions() -> ApiResult<Json<Vec<PhpVersionInfo>>> {
                 .map(|o| o.status.success())
                 .unwrap_or(false);
 
-        // Check if package is available in apt
-        let available = if installed {
-            true
-        } else {
-            std::process::Command::new("apt-cache")
-                .args(["show", &format!("php{}-fpm", ver)])
-                .output()
-                .map(|o| o.status.success())
-                .unwrap_or(false)
-        };
+        // Check if package is available in current apt repos
+        let in_apt = std::process::Command::new("apt-cache")
+            .args(["show", &format!("php{}-fpm", ver)])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false);
+
+        // Available if installed, in apt repos, or OS supports sury PPA
+        let available = installed || in_apt || can_add_repo;
 
         versions.push(PhpVersionInfo {
             version: ver.to_string(),
@@ -576,20 +576,85 @@ async fn install_php_version(
         return Err(ApiError::Validation(format!("Unsupported PHP version: {}", version)));
     }
 
-    // Run apt-get install in background
+    // First, ensure sury PHP repo is available for non-default versions
+    let os_id = get_os_id();
+    let sury_needed = matches!(os_id.as_str(), "debian" | "ubuntu")
+        && !std::process::Command::new("apt-cache")
+            .args(["show", &format!("php{}-fpm", version)])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false);
+
+    if sury_needed {
+        // Add sury repo
+        let add_repo = if os_id == "debian" {
+            let codename = get_debian_codename();
+            if codename.is_empty() {
+                return Ok(Json(PhpVersionActionResponse {
+                    success: false,
+                    message: "Cannot detect Debian version for PHP repo setup.".into(),
+                }));
+            }
+            // Install dependencies and add sury repo
+            let _ = std::process::Command::new("apt-get")
+                .args(["install", "-y", "-qq", "curl", "gnupg2", "ca-certificates"])
+                .output();
+            std::process::Command::new("bash")
+                .args(["-c", &format!(
+                    "curl -sSL https://packages.sury.org/php/apt.gpg 2>/dev/null | gpg --dearmor -o /usr/share/keyrings/sury-php.gpg 2>/dev/null && \
+                     echo 'deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org/php/ {codename} main' > /etc/apt/sources.list.d/sury-php.list",
+                    codename = codename
+                )])
+                .output()
+        } else if os_id == "ubuntu" {
+            let codename = get_ubuntu_codename();
+            if codename.is_empty() {
+                return Ok(Json(PhpVersionActionResponse {
+                    success: false,
+                    message: "Cannot detect Ubuntu version for PHP repo setup.".into(),
+                }));
+            }
+            let _ = std::process::Command::new("apt-get")
+                .args(["install", "-y", "-qq", "software-properties-common", "ca-certificates"])
+                .output();
+            std::process::Command::new("add-apt-repository")
+                .args(["-y", "ppa:ondrej/php"])
+                .output()
+        } else {
+            return Ok(Json(PhpVersionActionResponse {
+                success: false,
+                message: format!("Unsupported OS for automatic PHP repo setup: {}", os_id),
+            }));
+        };
+
+        if let Ok(ref out) = add_repo {
+            if !out.status.success() {
+                let stderr = String::from_utf8_lossy(&out.stderr);
+                return Ok(Json(PhpVersionActionResponse {
+                    success: false,
+                    message: format!("Failed to add PHP repository: {}", stderr.trim()),
+                }));
+            }
+        }
+
+        // Update package list
+        let _ = std::process::Command::new("apt-get")
+            .args(["update", "-qq"])
+            .output();
+    }
+
+    // Install PHP packages
     let result = std::process::Command::new("apt-get")
         .args([
             "install", "-y", "-qq",
             &format!("php{}-fpm", version),
             &format!("php{}", version),
             &format!("php{}-cli", version),
-            &format!("php{}-common", version),
             &format!("php{}-mbstring", version),
             &format!("php{}-xml", version),
             &format!("php{}-curl", version),
             &format!("php{}-gd", version),
             &format!("php{}-mysql", version),
-            &format!("php{}-pgsql", version),
             &format!("php{}-sqlite3", version),
             &format!("php{}-bcmath", version),
             &format!("php{}-intl", version),
@@ -612,7 +677,7 @@ async fn install_php_version(
         Ok(output) => {
             let stderr = String::from_utf8_lossy(&output.stderr);
             let error_msg = if stderr.contains("E: Unable to locate package") {
-                format!("PHP {} packages not found in repository. Run 'apt-get update' first.", version)
+                format!("PHP {} packages not found even after adding repository.", version)
             } else if stderr.contains("E: Could not get lock") {
                 "Another apt process is running. Wait and try again.".to_string()
             } else {
@@ -629,6 +694,43 @@ async fn install_php_version(
         })),
     }
 }
+
+/// Detect OS ID from /etc/os-release
+fn get_os_id() -> String {
+    let content = std::fs::read_to_string("/etc/os-release").unwrap_or_default();
+    for line in content.lines() {
+        if let Some(val) = line.strip_prefix("ID=") {
+            return val.trim_matches('"').to_lowercase();
+        }
+    }
+    String::new()
+}
+
+/// Get Debian codename from /etc/os-release
+fn get_debian_codename() -> String {
+    let content = std::fs::read_to_string("/etc/os-release").unwrap_or_default();
+    for line in content.lines() {
+        if let Some(val) = line.strip_prefix("VERSION_CODENAME=") {
+            return val.trim_matches('"').to_string();
+        }
+    }
+    // Fallback: try lsb_release
+    std::process::Command::new("lsb_release")
+        .args(["-sc"])
+        .output()
+        .ok()
+        .and_then(|o| {
+            let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
+            if s.is_empty() { None } else { Some(s) }
+        })
+        .unwrap_or_default()
+}
+
+/// Get Ubuntu codename
+fn get_ubuntu_codename() -> String {
+    get_debian_codename()
+}
+
 
 async fn remove_php_version(
     Path(version): Path<String>,
