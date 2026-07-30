@@ -179,6 +179,9 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/api/v1/php/versions",                        get(list_php_versions))
         .route("/api/v1/php/versions/{version}/install",      post(install_php_version))
         .route("/api/v1/php/versions/{version}/remove",       post(remove_php_version))
+        .route("/api/v1/php/versions/{version}/extensions",   get(list_php_ext_packages))
+        .route("/api/v1/php/versions/{version}/extensions/{ext}/install", post(install_php_ext_package))
+        .route("/api/v1/php/versions/{version}/extensions/{ext}/remove",  post(remove_php_ext_package))
 }
 
 // ── Access helpers ────────────────────────────────────────────────────────────
@@ -768,6 +771,141 @@ async fn remove_php_version(
             success: false,
             message: format!("Removal failed: {}", e),
         })),
+    }
+}
+
+// ── PHP Extension Package Management (apt packages) ───────────────────────────
+
+#[derive(Debug, Serialize)]
+pub struct PhpExtPackage {
+    pub name:        String,
+    pub installed:   bool,
+    pub available:   bool,
+    pub description: String,
+}
+
+async fn list_php_ext_packages(
+    Path(version): Path<String>,
+) -> ApiResult<Json<Vec<PhpExtPackage>>> {
+    if !PHP_VERSIONS.contains(&version.as_str()) {
+        return Err(ApiError::Validation("Invalid PHP version".into()));
+    }
+
+    let prefix = format!("php{}-", version);
+    let mut packages = Vec::new();
+
+    // Common PHP extension packages
+    let ext_names = [
+        "amqp", "apcu", "ast", "bcmath", "bz2", "curl", "dba", "decimal", "ds", "enchant",
+        "excel", "gd", "gearman", "geoip", "gmp", "gnupg", "grpc", "http", "igbinary",
+        "imagick", "imap", "inotify", "interbase", "ldap", "lzf", "mailparse", "maxminddb",
+        "mbstring", "mcrypt", "memcache", "memcached", "mongo", "msgpack", "mysql", "oauth",
+        "odbc", "opcache", "pdf", "pgsql", "phalcon", "phpdbg", "protobuf", "pspell",
+        "psr", "raphf", "rdkafka", "recode", "redis", "rrd", "sqlite3", "ssh2", "swoole",
+        "sybase", "tidy", "timezonedb", "trader", "uuid", "vips", "xdebug", "xls", "xml",
+        "xmlrpc", "xsl", "yac", "yaml", "zend", "zip", "zookeeper", "zstd",
+    ];
+
+    for ext in ext_names {
+        let pkg = format!("{}{}", prefix, ext);
+        let installed = std::process::Command::new("dpkg")
+            .args(["-l", &pkg])
+            .output()
+            .map(|o| String::from_utf8_lossy(&o.stdout).contains("ii "))
+            .unwrap_or(false);
+
+        let available = if installed {
+            true
+        } else {
+            std::process::Command::new("apt-cache")
+                .args(["show", &pkg])
+                .output()
+                .map(|o| o.status.success())
+                .unwrap_or(false)
+        };
+
+        let description = if installed || available {
+            std::process::Command::new("apt-cache")
+                .args(["show", &pkg])
+                .output()
+                .ok()
+                .and_then(|o| {
+                    let s = String::from_utf8_lossy(&o.stdout);
+                    s.lines().find(|l| l.starts_with("Description-en:") || l.starts_with("Description:"))
+                        .map(|l| l.split_once(':').map(|(_, v)| v.trim().to_string()).unwrap_or_default())
+                })
+                .unwrap_or_default()
+        } else {
+            String::new()
+        };
+
+        if available || installed {
+            packages.push(PhpExtPackage {
+                name: ext.to_string(),
+                installed,
+                available,
+                description,
+            });
+        }
+    }
+
+    packages.sort_by(|a, b| a.name.cmp(&b.name));
+    Ok(Json(packages))
+}
+
+async fn install_php_ext_package(
+    Path((version, ext)): Path<(String, String)>,
+) -> Json<PhpVersionActionResponse> {
+    let pkg = format!("php{}-{}", version, ext);
+    let result = std::process::Command::new("apt-get")
+        .args(["install", "-y", "-qq", &pkg])
+        .output();
+
+    match result {
+        Ok(out) if out.status.success() => Json(PhpVersionActionResponse {
+            success: true,
+            message: format!("{} installed", pkg),
+        }),
+        Ok(out) => {
+            let stderr = String::from_utf8_lossy(&out.stderr).trim().to_string();
+            Json(PhpVersionActionResponse {
+                success: false,
+                message: if stderr.contains("E: Unable to locate package") {
+                    format!("Package {} not found", pkg)
+                } else { stderr },
+            })
+        }
+        Err(e) => Json(PhpVersionActionResponse {
+            success: false,
+            message: format!("Failed: {}", e),
+        }),
+    }
+}
+
+async fn remove_php_ext_package(
+    Path((version, ext)): Path<(String, String)>,
+) -> Json<PhpVersionActionResponse> {
+    let pkg = format!("php{}-{}", version, ext);
+    let result = std::process::Command::new("apt-get")
+        .args(["remove", "-y", "-qq", &pkg])
+        .output();
+
+    match result {
+        Ok(out) if out.status.success() => Json(PhpVersionActionResponse {
+            success: true,
+            message: format!("{} removed", pkg),
+        }),
+        Ok(out) => {
+            let stderr = String::from_utf8_lossy(&out.stderr).trim().to_string();
+            Json(PhpVersionActionResponse {
+                success: false,
+                message: stderr,
+            })
+        }
+        Err(e) => Json(PhpVersionActionResponse {
+            success: false,
+            message: format!("Failed: {}", e),
+        }),
     }
 }
 

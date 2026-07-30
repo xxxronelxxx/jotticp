@@ -105,6 +105,8 @@ pub fn router() -> Router<Arc<AppState>> {
         .route("/api/v1/host/stats",                  get(get_host_stats))
         .route("/api/v1/host/services",               get(get_services))
         .route("/api/v1/host/services/{name}/restart", post(restart_service))
+        .route("/api/v1/webserver/litespeed/status",   get(litespeed_status))
+        .route("/api/v1/webserver/litespeed/install",  post(install_litespeed))
         .route("/api/v1/host/top-sites",              get(get_top_sites))
 }
 
@@ -722,4 +724,102 @@ async fn get_top_sites(
     top.truncate(10);
 
     Ok(Json(top))
+}
+
+// ── LiteSpeed / OpenLiteSpeed Installation ────────────────────────────────────
+
+#[derive(Debug, Serialize)]
+pub struct LsStatusResponse {
+    pub installed: bool,
+    pub version:   Option<String>,
+    pub running:   bool,
+}
+
+#[derive(Debug, Serialize)]
+pub struct LsInstallResponse {
+    pub success: bool,
+    pub message: String,
+}
+
+async fn litespeed_status() -> Json<LsStatusResponse> {
+    let installed = std::path::Path::new("/usr/local/lsws/bin/lswsctrl").exists();
+    let running = if installed {
+        std::process::Command::new("systemctl")
+            .args(["is-active", "lsws"])
+            .output()
+            .map(|o| o.status.success())
+            .unwrap_or(false)
+    } else {
+        false
+    };
+    let version = if installed {
+        std::process::Command::new("/usr/local/lsws/bin/lswsctrl")
+            .arg("version")
+            .output()
+            .ok()
+            .and_then(|o| {
+                let s = String::from_utf8_lossy(&o.stdout).trim().to_string();
+                if s.is_empty() { None } else { Some(s) }
+            })
+    } else {
+        None
+    };
+    Json(LsStatusResponse { installed, version, running })
+}
+
+async fn install_litespeed() -> Json<LsInstallResponse> {
+    // Add LiteSpeed repo and install
+    let add_repo = std::process::Command::new("bash")
+        .args(["-c", "curl -sSL https://repo.litespeed.sh | bash 2>/dev/null"])
+        .output();
+
+    if let Ok(ref out) = add_repo {
+        if !out.status.success() {
+            let stderr = String::from_utf8_lossy(&out.stderr).trim().to_string();
+            return Json(LsInstallResponse {
+                success: false,
+                message: if stderr.is_empty() { "Failed to add LiteSpeed repository".into() } else { stderr },
+            });
+        }
+    } else if add_repo.is_err() {
+        return Json(LsInstallResponse {
+            success: false,
+            message: "Failed to run LiteSpeed repo setup".into(),
+        });
+    }
+
+    // Install OpenLiteSpeed
+    let install = std::process::Command::new("apt-get")
+        .args(["install", "-y", "-qq", "openlitespeed"])
+        .output();
+
+    match install {
+        Ok(out) if out.status.success() => {
+            // Ensure service is enabled and running
+            let _ = std::process::Command::new("systemctl")
+                .args(["enable", "--now", "lsws"])
+                .output();
+
+            // Restrict admin UI to localhost
+            let _ = std::process::Command::new("sed")
+                .args(["-i", r#"s/address.*:7080/address 127.0.0.1:7080/"#, "/usr/local/lsws/admin/conf/admin_config.conf"])
+                .output();
+
+            Json(LsInstallResponse {
+                success: true,
+                message: "OpenLiteSpeed installed and running".into(),
+            })
+        }
+        Ok(out) => {
+            let stderr = String::from_utf8_lossy(&out.stderr).trim().to_string();
+            Json(LsInstallResponse {
+                success: false,
+                message: if stderr.is_empty() { "Failed to install OpenLiteSpeed".into() } else { stderr },
+            })
+        }
+        Err(e) => Json(LsInstallResponse {
+            success: false,
+            message: format!("Installation failed: {}", e),
+        }),
+    }
 }
