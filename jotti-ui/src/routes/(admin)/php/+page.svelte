@@ -201,6 +201,7 @@
         selectedSiteId = sites[0].id;
         await loadExtensions();
       }
+      await checkLiteSpeed();
     } catch (err: unknown) {
       loadError = (err as { message?: string })?.message ?? 'Failed to load sites';
     } finally {
@@ -297,6 +298,8 @@
 
   // Visible versions for compare table (installed + 8.3 fallback)
   $: compareVersions = installedVersions.length > 0 ? installedVersions : ['8.0', '8.1', '8.2', '8.3'];
+
+  $: extPkgVersion, loadExtPackages();
 
   // ── Data ───────────────────────────────────────────────────────────────────
   async function loadExtensions() {
@@ -439,6 +442,85 @@
     toast = msg;
     toastType = type;
     toastTimer = setTimeout(() => (toast = ''), 4000);
+  }
+
+  // ── Web Server State ──────────────────────────────────────────────────────
+  let lsInstalled = false;
+  let lsVersion = '';
+  let lsChecking = true;
+  let lsInstalling = false;
+
+  async function checkLiteSpeed() {
+    lsChecking = true;
+    try {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+      const r = await fetch('/api/v1/webserver/litespeed/status', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (r.ok) {
+        const data = await r.json() as { installed: boolean; version?: string };
+        lsInstalled = data.installed;
+        lsVersion = data.version || '';
+      }
+    } catch {}
+    lsChecking = false;
+  }
+
+  async function installLiteSpeed() {
+    lsInstalling = true;
+    try {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+      const r = await fetch('/api/v1/webserver/litespeed/install', {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await r.json() as { success: boolean; message: string };
+      showToast(data.message, data.success ? 'success' : 'error');
+      if (data.success) await checkLiteSpeed();
+    } catch { showToast('Install failed', 'error'); }
+    lsInstalling = false;
+  }
+
+  // ── PHP Extension Packages State ──────────────────────────────────────────
+  let extPkgVersion = '8.3';
+  let extPackages: Array<{ name: string; installed: boolean; available: boolean; description: string }> = [];
+  let extPkgLoading = false;
+  let extPkgError = '';
+
+  async function loadExtPackages() {
+    extPkgLoading = true;
+    extPkgError = '';
+    try {
+      const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+      const r = await fetch(`/api/v1/php/versions/${extPkgVersion}/extensions`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (r.ok) extPackages = await r.json() as Array<{ name: string; installed: boolean; available: boolean; description: string }>;
+      else extPkgError = 'Failed to load extensions';
+    } catch { extPkgError = 'Network error'; }
+    extPkgLoading = false;
+  }
+
+  async function installExtPkg(name: string) {
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+    const r = await fetch(`/api/v1/php/versions/${extPkgVersion}/extensions/${name}/install`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    const data = await r.json() as { success: boolean; message: string };
+    showToast(data.message, data.success ? 'success' : 'error');
+    if (data.success) await loadExtPackages();
+  }
+
+  async function removeExtPkg(name: string) {
+    const token = typeof localStorage !== 'undefined' ? localStorage.getItem('orbit_access_token') : null;
+    const r = await fetch(`/api/v1/php/versions/${extPkgVersion}/extensions/${name}/remove`, {
+      method: 'POST',
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    const data = await r.json() as { success: boolean; message: string };
+    showToast(data.message, data.success ? 'success' : 'error');
+    if (data.success) await loadExtPackages();
   }
 </script>
 
@@ -706,6 +788,81 @@
           </div>
         {/if}
       </div>
+    </div>
+
+    <!-- ── Web Server Management ────────────────────────────────── -->
+    <div class="bg-card border border-border rounded-xl p-6 fade-up mt-6">
+      <h2 class="text-base font-semibold text-foreground mb-4">Web Servers</h2>
+      <div class="space-y-3">
+        <!-- nginx status -->
+        <div class="flex items-center justify-between py-2 px-3 rounded-lg border border-border bg-background">
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-foreground">Nginx</span>
+            <span class="text-xs bg-green-400/10 text-green-400 px-2 py-0.5 rounded-full">Installed</span>
+          </div>
+          <span class="text-xs text-muted-foreground">System package</span>
+        </div>
+        <!-- LiteSpeed status -->
+        <div class="flex items-center justify-between py-2 px-3 rounded-lg border border-border bg-background">
+          <div class="flex items-center gap-3">
+            <span class="text-sm font-medium text-foreground">OpenLiteSpeed</span>
+            {#if lsInstalled}
+              <span class="text-xs bg-green-400/10 text-green-400 px-2 py-0.5 rounded-full">Installed</span>
+            {:else if lsChecking}
+              <span class="text-xs text-muted-foreground">Checking...</span>
+            {:else}
+              <span class="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-full">Not installed</span>
+            {/if}
+          </div>
+          {#if lsInstalled}
+            <span class="text-xs text-muted-foreground">{lsVersion || ''}</span>
+          {:else if lsInstalling}
+            <span class="text-xs text-blue-400">Installing…</span>
+          {:else}
+            <button
+              class="h-8 px-3 rounded-lg bg-primary text-primary-foreground text-xs font-medium hover:bg-primary/90 inline-flex items-center gap-1.5 transition-colors disabled:opacity-50"
+              on:click={installLiteSpeed}
+              disabled={lsInstalling}
+            >Install</button>
+          {/if}
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PHP Extension Packages ──────────────────────────────── -->
+    <div class="bg-card border border-border rounded-xl p-6 fade-up mt-6">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-base font-semibold text-foreground">PHP Extension Packages</h2>
+          <p class="text-sm text-muted-foreground mt-0.5">Install system PHP extensions via apt for a specific version</p>
+        </div>
+        <select class="h-9 rounded-lg border border-border bg-background px-3 text-sm" bind:value={extPkgVersion}>
+          {#each phpVersions as v}
+            <option value={v.version}>PHP {v.version}</option>
+          {/each}
+        </select>
+      </div>
+
+      {#if extPkgLoading}
+        <p class="text-sm text-muted-foreground">Loading...</p>
+      {:else if extPkgError}
+        <p class="text-sm text-red-400">{extPkgError}</p>
+      {:else}
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 max-h-80 overflow-y-auto">
+          {#each extPackages as pkg}
+            <div class="flex items-center justify-between py-1.5 px-2 rounded-lg border border-border bg-background text-xs">
+              <span class="font-mono text-foreground truncate">{pkg.name}</span>
+              {#if pkg.installed}
+                <button class="text-red-400 hover:text-red-300 shrink-0 ml-1" on:click={() => removeExtPkg(pkg.name)} title="Remove">✕</button>
+              {:else if pkg.available}
+                <button class="text-primary hover:text-primary/80 shrink-0 ml-1 font-medium" on:click={() => installExtPkg(pkg.name)}>+</button>
+              {:else}
+                <span class="text-muted-foreground shrink-0 ml-1">—</span>
+              {/if}
+            </div>
+          {/each}
+        </div>
+      {/if}
     </div>
 
     <!-- ── Site selector + flush ─────────────────────────────────────────── -->
